@@ -31,6 +31,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'kol' => \App\Http\Middleware\EnsureKol::class,
             'profile.complete' => \App\Http\Middleware\CheckProfileComplete::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'force.json' => \App\Http\Middleware\ForceJson::class,
+            'impersonate' => \App\Http\Middleware\AdminImpersonation::class,
+        ]);
+
+        $middleware->web(append: [
+            \App\Http\Middleware\AdminImpersonation::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

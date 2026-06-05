@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Enums\UserRole;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity;
 
 class UserManagement extends Component
 {
@@ -48,6 +50,39 @@ class UserManagement extends Component
     {
         $user->update(['is_verified' => true]);
         session()->flash('success', 'User berhasil diverifikasi.');
+    }
+
+    public function impersonate(User $user): void
+    {
+        if (!auth()->user()->isAdmin()) {
+            session()->flash('error', 'Anda tidak memiliki izin untuk melakukan impersonasi.');
+            return;
+        }
+
+        if ($user->isAdmin()) {
+            session()->flash('error', 'Tidak dapat melakukan impersonasi ke admin lain.');
+            return;
+        }
+
+        session()->put('original_admin_id', auth()->id());
+
+        activity()
+            ->performedOn($user)
+            ->causedBy(auth()->user())
+            ->withProperties(['impersonated_user_id' => $user->id, 'impersonated_user_email' => $user->email])
+            ->log('Admin melakukan impersonasi ke user');
+
+        Auth::login($user);
+
+        session()->flash('success', 'Anda sekarang login sebagai ' . $user->name);
+
+        if ($user->isBrand()) {
+            $this->redirect(route('brand.dashboard'), navigate: true);
+        } elseif ($user->isKol()) {
+            $this->redirect(route('kol.dashboard'), navigate: true);
+        } else {
+            $this->redirect(route('home'), navigate: true);
+        }
     }
 
     public function render()

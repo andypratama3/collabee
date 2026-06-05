@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\TrackingController;
 use App\Livewire\ExploreCampaigns;
 use App\Livewire\Kol\Campaign\Detail as CampaignDetail;
 use Illuminate\Support\Facades\Route;
@@ -35,3 +36,5 @@ Route::middleware('auth')->group(function () {
     Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
     Route::get('/notifications', \App\Livewire\Shared\Notification\Index::class)->name('notifications.index');
 });
+
+Route::get('/track/{trackingCode}', [TrackingController::class, 'click'])->name('track.click');

@@ -28,6 +28,8 @@ class Content extends Model implements HasMedia
         'deadline_at',
         'post_url',
         'posted_at',
+        'tracking_code',
+        'click_count',
     ];
 
     protected function casts(): array

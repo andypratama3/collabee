@@ -80,8 +80,11 @@
                                 @else
                                     <button wire:click="ban({{ $user->id }})" class="px-3 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200">Nonaktifkan</button>
                                 @endif
-                                @if (!$user->is_verified)
+                                                        @if (!$user->is_verified)
                                     <button wire:click="verify({{ $user->id }})" class="px-3 py-1 text-xs font-medium text-indigo-700 bg-indigo-100 rounded-lg hover:bg-indigo-200">Verifikasi</button>
+                                @endif
+                                @if(!$user->isAdmin())
+                                    <button wire:click="impersonate({{ $user->id }})" class="px-3 py-1 text-xs font-medium text-orange-700 bg-orange-100 rounded-lg hover:bg-orange-200">Login sebagai User</button>
                                 @endif
                             </div>
                         </td>

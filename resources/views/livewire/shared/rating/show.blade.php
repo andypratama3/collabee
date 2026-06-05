@@ -1,7 +1,7 @@
 <div>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Rating & Review</h2>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Rating & Review</h2>
         </div>
 
         <div class="px-6 py-6 space-y-6">
@@ -11,10 +11,10 @@
                     <div>
                         <div class="flex gap-0.5">
                             @for($i = 1; $i <= 5; $i++)
-                                <span class="text-lg {{ $i <= round($stats['average']) ? 'text-yellow-400' : 'text-gray-200' }}">★</span>
+                                <span class="text-lg {{ $i <= round($stats['average']) ? 'text-yellow-400' : 'text-gray-200 dark:text-gray-600' }}">★</span>
                             @endfor
                         </div>
-                        <p class="text-sm text-gray-500">{{ $stats['count'] }} review</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $stats['count'] }} review</p>
                     </div>
                 </div>
 
@@ -27,10 +27,10 @@
                     ] as $key => $label)
                         <div>
                             <div class="flex items-center justify-between text-sm mb-1">
-                                <span class="text-gray-600">{{ $label }}</span>
-                                <span class="font-medium text-gray-900">{{ number_format($stats['dimensions'][$key], 1) }}</span>
+                                <span class="text-gray-600 dark:text-gray-400">{{ $label }}</span>
+                                <span class="font-medium text-gray-900 dark:text-gray-100">{{ number_format($stats['dimensions'][$key], 1) }}</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                 <div class="bg-yellow-400 h-2 rounded-full transition-all"
                                      style="width: {{ ($stats['dimensions'][$key] / 5) * 100 }}%"></div>
                             </div>
@@ -39,8 +39,8 @@
                 </div>
             @else
                 <div class="text-center py-8">
-                    <p class="text-gray-400 text-lg mb-1">★</p>
-                    <p class="text-sm text-gray-500">Belum ada rating.</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-lg mb-1">★</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada rating.</p>
                 </div>
             @endif
         </div>

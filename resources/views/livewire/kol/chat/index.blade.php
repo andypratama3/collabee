@@ -1,12 +1,12 @@
 <div>
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Messages</h1>
-            <p class="mt-1 text-sm text-gray-500">Chat with brands about collaborations</p>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Messages</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Chat with brands about collaborations</p>
         </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         @forelse($rooms as $room)
             @php
                 $isBrand = auth()->user()->isBrand();
@@ -15,19 +15,19 @@
                 $lastMessage = $room->messages->first();
             @endphp
             <a href="{{ route($isBrand ? 'brand.chat.show' : 'kol.chat.show', $room) }}"
-               class="flex items-center px-6 py-4 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 {{ $unread > 0 ? 'bg-indigo-50' : '' }}">
-                <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm shrink-0">
+               class="flex items-center px-4 sm:px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700 last:border-b-0 {{ $unread > 0 ? 'bg-indigo-50 dark:bg-indigo-900/20' : '' }}">
+                <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-sm shrink-0">
                     {{ strtoupper(substr($otherUser?->name ?? '?', 0, 2)) }}
                 </div>
                 <div class="ml-3 flex-1 min-w-0">
                     <div class="flex items-center justify-between">
-                        <span class="text-sm font-medium text-gray-900 truncate">{{ $otherUser?->name ?? 'Unknown' }}</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $otherUser?->name ?? 'Unknown' }}</span>
                         @if($lastMessage)
-                            <span class="text-xs text-gray-400 shrink-0 ml-2">{{ $lastMessage->created_at->diffForHumans() }}</span>
+                            <span class="text-xs text-gray-400 dark:text-gray-500 shrink-0 ml-2">{{ $lastMessage->created_at->diffForHumans() }}</span>
                         @endif
                     </div>
                     <div class="flex items-center justify-between mt-0.5">
-                        <span class="text-sm text-gray-500 truncate">
+                        <span class="text-sm text-gray-500 dark:text-gray-400 truncate">
                             @if($lastMessage)
                                 {{ $lastMessage->type === 'offer' ? 'Sent an offer' : $lastMessage->body }}
                             @else
@@ -41,10 +41,7 @@
                 </div>
             </a>
         @empty
-            <div class="px-6 py-12 text-center text-gray-500">
-                <p class="text-lg font-medium text-gray-400 mb-1">No conversations yet</p>
-                <p class="text-sm">Accept a hiring invitation to start chatting</p>
-            </div>
+            <x-empty-state icon="message" title="No conversations yet" description="Accept a hiring invitation to start chatting" />
         @endforelse
     </div>
 </div>
