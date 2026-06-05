@@ -6,11 +6,16 @@ use App\Enums\UserRole;
 use App\Models\BrandProfile;
 use App\Models\KolProfile;
 use App\Models\User;
+use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class RegistrationService
 {
+    public function __construct(
+        private readonly NotificationService $notificationService
+    ) {}
+
     public function registerBrand(array $data): User
     {
         return DB::transaction(function () use ($data) {
@@ -33,6 +38,14 @@ class RegistrationService
             ]);
 
             $user->sendEmailVerificationNotification();
+
+            $this->notificationService->send(
+                $user,
+                'welcome',
+                'Selamat datang di Collabee!',
+                'Akun Brand Anda berhasil dibuat. Silakan lengkapi profil untuk mulai mencari KOL.',
+                ['user' => $user]
+            );
 
             return $user;
         });
@@ -60,6 +73,14 @@ class RegistrationService
             ]);
 
             $user->sendEmailVerificationNotification();
+
+            $this->notificationService->send(
+                $user,
+                'welcome',
+                'Selamat datang di Collabee!',
+                'Akun KOL Anda berhasil dibuat. Lengkapi portofolio untuk mulai mendapatkan proyek.',
+                ['user' => $user]
+            );
 
             return $user;
         });

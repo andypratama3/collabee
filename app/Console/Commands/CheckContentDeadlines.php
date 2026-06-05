@@ -4,13 +4,20 @@ namespace App\Console\Commands;
 
 use App\Enums\ContentStatus;
 use App\Models\Content;
+use App\Services\Notification\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class CheckContentDeadlines extends Command
 {
     protected $signature = 'content:check-deadlines';
-    protected $description = 'Auto-escalate content submissions past deadline for escalation';
+    protected $description = 'Auto-escalate content submissions past deadline';
+
+    public function __construct(
+        private readonly NotificationService $notificationService
+    ) {
+        parent::__construct();
+    }
 
     public function handle(): int
     {
@@ -26,21 +33,45 @@ class CheckContentDeadlines extends Command
         $count = 0;
 
         foreach ($overdue as $content) {
+            $content->update(['status' => ContentStatus::ESCALATED]);
+
+            $brandUser = $content->brandProfile?->user;
+            $kolUser = $content->kolProfile?->user;
+
+            if ($brandUser) {
+                $this->notificationService->send(
+                    $brandUser,
+                    'content_reminder',
+                    'Konten melewati batas waktu',
+                    "Konten untuk campaign telah melewati batas waktu persetujuan dan otomatis dieskalasi.",
+                    ['content' => $content]
+                );
+            }
+
+            if ($kolUser) {
+                $this->notificationService->send(
+                    $kolUser,
+                    'content_reminder',
+                    'Konten dieskalasi',
+                    "Konten Anda telah dieskalasi karena melewati batas waktu. Segera hubungi brand untuk tindak lanjut.",
+                    ['content' => $content]
+                );
+            }
+
             activity()
                 ->performedOn($content)
                 ->withProperties([
                     'content_id' => $content->id,
                     'agreement_id' => $content->agreement_id,
-                    'status' => $content->status->value,
+                    'status' => ContentStatus::ESCALATED->value,
                     'deadline_at' => $content->deadline_at?->toDateTimeString(),
-                    'submitted_at' => $content->submitted_at?->toDateTimeString(),
                 ])
-                ->log('Konten melewati batas waktu persetujuan, perlu eskalasi');
+                ->log('Konten dieskalasi karena melewati batas waktu');
 
             $count++;
         }
 
-        $this->info("Checked {$count} overdue content(s) for escalation.");
+        $this->info("Escalated {$count} overdue content(s).");
 
         return Command::SUCCESS;
     }

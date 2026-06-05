@@ -9,6 +9,7 @@ use App\Models\BrandProfile;
 use App\Models\Content;
 use App\Models\ContentRevision;
 use App\Models\KolProfile;
+use App\Services\Notification\NotificationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,9 @@ use Illuminate\Support\Collection as BaseCollection;
 
 class ContentService
 {
+    public function __construct(
+        private readonly NotificationService $notificationService
+    ) {}
     public function upload(KolProfile $kolProfile, Agreement $agreement, array $data, BaseCollection $files): Content
     {
         return DB::transaction(function () use ($kolProfile, $agreement, $data, $files) {
@@ -40,7 +44,7 @@ class ContentService
 
     public function submit(Content $content): Content
     {
-        return DB::transaction(function () use ($content) {
+        $result = DB::transaction(function () use ($content) {
             $content->update([
                 'status' => ContentStatus::SUBMITTED,
                 'submitted_at' => now(),
@@ -50,11 +54,21 @@ class ContentService
 
             return $content->fresh();
         });
+
+        $this->notificationService->send(
+            $result->brandProfile->user,
+            'content_reminder',
+            'Konten baru siap direview',
+            "KOL {$result->kolProfile->display_name} telah mengirimkan konten untuk ditinjau.",
+            ['content' => $result]
+        );
+
+        return $result;
     }
 
     public function approve(Content $content): Content
     {
-        return DB::transaction(function () use ($content) {
+        $result = DB::transaction(function () use ($content) {
             $content->update([
                 'status' => ContentStatus::APPROVED,
                 'approved_at' => now(),
@@ -62,11 +76,21 @@ class ContentService
 
             return $content->fresh();
         });
+
+        $this->notificationService->send(
+            $result->kolProfile->user,
+            'content_reminder',
+            'Konten disetujui',
+            "Konten Anda telah disetujui oleh brand {$result->brandProfile->brand_name}. Escrow akan segera dirilis.",
+            ['content' => $result]
+        );
+
+        return $result;
     }
 
     public function requestRevision(Content $content, string $notes): Content
     {
-        return DB::transaction(function () use ($content, $notes) {
+        $result = DB::transaction(function () use ($content, $notes) {
             $content->update([
                 'status' => ContentStatus::REVISION_REQUESTED,
             ]);
@@ -80,6 +104,16 @@ class ContentService
 
             return $content->fresh();
         });
+
+        $this->notificationService->send(
+            $result->kolProfile->user,
+            'content_reminder',
+            'Revisi konten diminta',
+            "Brand {$result->brandProfile->brand_name} meminta revisi untuk konten Anda.",
+            ['content' => $result]
+        );
+
+        return $result;
     }
 
     public function reject(Content $content, string $reason): Content

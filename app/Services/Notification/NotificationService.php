@@ -20,7 +20,7 @@ class NotificationService
     {
         return match ($type) {
             'welcome' => isset($data['user']) ? new WelcomeMail($data['user']) : null,
-            'hiring' => isset($data['hiring']) ? new HiringNotificationMail($data['hiring']) : null,
+            'hiring' => isset($data['hiring']) && $data['hiring'] instanceof \App\Models\Hiring ? new HiringNotificationMail($data['hiring']) : null,
             'payment' => isset($data['payment']) ? new PaymentConfirmationMail($data['payment']) : null,
             'content_reminder' => isset($data['content']) ? new ContentReminderMail($data['content']) : null,
             default => null,

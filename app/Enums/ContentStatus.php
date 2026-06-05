@@ -11,4 +11,5 @@ enum ContentStatus: string
     case APPROVED = 'approved';
     case POSTED = 'posted';
     case REJECTED = 'rejected';
+    case ESCALATED = 'escalated';
 }

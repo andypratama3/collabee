@@ -10,13 +10,18 @@ use App\Models\ChatRoom;
 use App\Models\Hiring;
 use App\Models\HiringApplication;
 use App\Models\KolProfile;
+use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB;
 
 class HiringService
 {
+    public function __construct(
+        private readonly NotificationService $notificationService
+    ) {}
+
     public function apply(Campaign $campaign, KolProfile $kolProfile, array $data): HiringApplication
     {
-        return DB::transaction(function () use ($campaign, $kolProfile, $data) {
+        $application = DB::transaction(function () use ($campaign, $kolProfile, $data) {
             if ($campaign->status !== CampaignStatus::OPEN) {
                 throw new \RuntimeException('This campaign is not accepting applications.');
             }
@@ -37,11 +42,21 @@ class HiringService
 
             return $application;
         });
+
+        $this->notificationService->send(
+            $campaign->brandProfile->user,
+            'hiring',
+            'Ada lamaran baru',
+            "KOL {$kolProfile->display_name} melamar campaign {$campaign->title}.",
+            ['hiring' => $application]
+        );
+
+        return $application;
     }
 
     public function brandHire(Campaign $campaign, BrandProfile $brandProfile, KolProfile $kolProfile, array $data): Hiring
     {
-        return DB::transaction(function () use ($campaign, $brandProfile, $kolProfile, $data) {
+        $hiring = DB::transaction(function () use ($campaign, $brandProfile, $kolProfile, $data) {
             $existing = Hiring::where('campaign_id', $campaign->id)
                 ->where('kol_profile_id', $kolProfile->id)
                 ->first();
@@ -54,7 +69,7 @@ class HiringService
                 throw new \RuntimeException('All KOL slots for this campaign are filled.');
             }
 
-            $hiring = Hiring::create([
+            return Hiring::create([
                 'campaign_id' => $campaign->id,
                 'brand_profile_id' => $brandProfile->id,
                 'kol_profile_id' => $kolProfile->id,
@@ -64,14 +79,22 @@ class HiringService
                 'proposed_budget' => $data['proposed_budget'] ?? $campaign->budget_per_kol,
                 'expires_at' => now()->addDays(7),
             ]);
-
-            return $hiring;
         });
+
+        $this->notificationService->send(
+            $kolProfile->user,
+            'hiring',
+            'Tawaran hiring baru',
+            "Brand {$brandProfile->brand_name} ingin merekrut Anda untuk campaign {$campaign->title}.",
+            ['hiring' => $hiring]
+        );
+
+        return $hiring;
     }
 
     public function accept(Hiring $hiring): Hiring
     {
-        return DB::transaction(function () use ($hiring) {
+        $result = DB::transaction(function () use ($hiring) {
             if ($hiring->status !== HiringStatus::PENDING) {
                 throw new \RuntimeException('Only pending hirings can be accepted.');
             }
@@ -93,11 +116,21 @@ class HiringService
 
             return $hiring->fresh();
         });
+
+        $this->notificationService->send(
+            $result->campaign->brandProfile->user,
+            'hiring',
+            'KOL menerima tawaran',
+            "{$result->kolProfile->display_name} telah menerima tawaran hiring untuk campaign {$result->campaign->title}.",
+            ['hiring' => $result]
+        );
+
+        return $result;
     }
 
     public function reject(Hiring $hiring, ?string $reason = null): Hiring
     {
-        return DB::transaction(function () use ($hiring, $reason) {
+        $result = DB::transaction(function () use ($hiring, $reason) {
             if ($hiring->status !== HiringStatus::PENDING) {
                 throw new \RuntimeException('Only pending hirings can be rejected.');
             }
@@ -109,6 +142,16 @@ class HiringService
 
             return $hiring->fresh();
         });
+
+        $this->notificationService->send(
+            $result->campaign->brandProfile->user,
+            'hiring',
+            'KOL menolak tawaran',
+            "{$result->kolProfile->display_name} menolak tawaran untuk campaign {$result->campaign->title}." . ($reason ? " Alasan: {$reason}" : ''),
+            ['hiring' => $result]
+        );
+
+        return $result;
     }
 
     public function cancel(Hiring $hiring, ?string $reason = null): Hiring

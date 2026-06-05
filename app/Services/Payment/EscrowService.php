@@ -6,13 +6,18 @@ use App\Enums\EscrowStatus;
 use App\Enums\PaymentStatus;
 use App\Models\EscrowTransaction;
 use App\Models\Payment;
+use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB;
 
 class EscrowService
 {
+    public function __construct(
+        private readonly NotificationService $notificationService
+    ) {}
+
     public function holdFunds(Payment $payment): EscrowTransaction
     {
-        return DB::transaction(function () use ($payment) {
+        $escrow = DB::transaction(function () use ($payment) {
             $amount = $payment->amount;
             $platformFee = $amount * 0.10;
             $kolAmount = $amount - $platformFee;
@@ -30,6 +35,16 @@ class EscrowService
 
             return $escrow;
         });
+
+        $this->notificationService->send(
+            $payment->agreement->hiring->kolProfile->user,
+            'payment',
+            'Pembayaran diterima',
+            "Pembayaran untuk campaign sebesar Rp " . number_format($payment->amount, 0, ',', '.') . " telah diterima dan dana diamankan di escrow.",
+            ['payment' => $payment]
+        );
+
+        return $escrow;
     }
 
     public function releaseEscrow(EscrowTransaction $escrow, string $trigger = 'content_approved'): void
@@ -46,6 +61,14 @@ class EscrowService
 
             $escrow->payment->update(['status' => PaymentStatus::RELEASED]);
         });
+
+        $this->notificationService->send(
+            $escrow->payment->agreement->hiring->kolProfile->user,
+            'payment',
+            'Dana escrow dirilis',
+            "Dana sebesar Rp " . number_format($escrow->kol_amount, 0, ',', '.') . " telah dirilis ke wallet Anda.",
+            ['payment' => $escrow->payment]
+        );
     }
 
     public function autoReleaseEscrow(): void
