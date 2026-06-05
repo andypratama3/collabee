@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Route;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        channels: __DIR__.'/../routes/channels.php',
+        health: '/up',
+        then: function () {
+            Route::middleware(['web', 'auth', 'user.active', 'verified'])
+                ->group(base_path('routes/brand.php'));
+
+            Route::middleware(['web', 'auth', 'user.active', 'verified'])
+                ->group(base_path('routes/kol.php'));
+
+            Route::middleware(['web', 'auth', 'user.active'])
+                ->group(base_path('routes/admin.php'));
+        },
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'user.active' => \App\Http\Middleware\CheckUserIsActive::class,
+            'verified' => \App\Http\Middleware\EnsureEmailVerified::class,
+            'brand' => \App\Http\Middleware\EnsureBrand::class,
+            'kol' => \App\Http\Middleware\EnsureKol::class,
+            'profile.complete' => \App\Http\Middleware\CheckProfileComplete::class,
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+        //
+    })->create();
