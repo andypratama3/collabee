@@ -20,7 +20,7 @@ class AgreementService
 
             $campaign = $hiring->campaign;
             $agreedBudget = $hiring->agreed_budget ?? $hiring->proposed_budget;
-            $platformFeePercent = 5.00;
+            $platformFeePercent = 10.00;
             $platformFee = $agreedBudget * ($platformFeePercent / 100);
             $totalAmount = $agreedBudget;
 
@@ -30,7 +30,7 @@ class AgreementService
                 'total_amount' => $totalAmount,
                 'platform_fee_percent' => $platformFeePercent,
                 'terms' => $this->generateTerms($campaign, $agreedBudget, $platformFeePercent),
-                'status' => 'pending',
+                'status' => 'draft',
                 'expires_at' => now()->addDays(30),
             ]);
 
@@ -42,7 +42,7 @@ class AgreementService
     {
         return DB::transaction(function () use ($agreement) {
             if ($agreement->brand_signed_at) {
-                throw new \RuntimeException('Agreement already signed by brand.');
+                throw new \RuntimeException('Perjanjian sudah ditandatangani oleh Brand.');
             }
 
             $agreement->update([
@@ -60,7 +60,7 @@ class AgreementService
     {
         return DB::transaction(function () use ($agreement) {
             if ($agreement->kol_signed_at) {
-                throw new \RuntimeException('Agreement already signed by KOL.');
+                throw new \RuntimeException('Perjanjian sudah ditandatangani oleh KOL.');
             }
 
             $agreement->update([
@@ -103,28 +103,36 @@ class AgreementService
         return $filename;
     }
 
-    protected function generateNumber(Hiring $hiring): string
+    public function getPdfUrl(Agreement $agreement): ?string
     {
-        $prefix = 'AGR';
-        $date = now()->format('Ymd');
-        $random = strtoupper(Str::random(6));
+        if (!$agreement->pdf_path) {
+            return null;
+        }
 
-        return "{$prefix}/{$date}/{$random}";
+        return url('storage/' . $agreement->pdf_path);
     }
 
-    protected function generateTerms($campaign, float $budget, float $platformFeePercent = 5.00): string
+    protected function generateNumber(Hiring $hiring): string
+    {
+        $year = now()->format('Y');
+        $random = strtoupper(Str::random(5));
+
+        return "AGR-{$year}-{$random}";
+    }
+
+    protected function generateTerms($campaign, float $budget, float $platformFeePercent = 10.00): string
     {
         return collect([
-            "1. Scope of Work: KOL agrees to create and publish content for the campaign \"{$campaign->title}\" as per the campaign brief and specifications.",
-            "2. Platforms: Content to be published on the agreed platforms as specified in the campaign.",
-            "3. Compensation: The total compensation for this agreement is Rp " . number_format($budget, 0, ',', '.') . " (including platform fee).",
-            "4. Payment Terms: Payment will be held in escrow and released upon content approval by the Brand.",
-            "5. Content Deadline: KOL must submit content for review before the campaign end date.",
-            "6. Content Ownership: Upon full payment, Brand has the right to use the content for marketing purposes.",
-            "7. Confidentiality: Both parties agree to keep campaign details confidential until official launch.",
-            "8. Platform Fee: A {$platformFeePercent}% platform fee is applied to the total agreement amount.",
-            "9. Dispute Resolution: Any disputes will be resolved through the platform's dispute resolution process.",
-            "10. Governing Law: This agreement is governed by the laws of the Republic of Indonesia.",
+            "1. Ruang Lingkup Pekerjaan: KOL setuju untuk membuat dan mempublikasikan konten untuk kampanye \"{$campaign->title}\" sesuai dengan brief kampanye dan spesifikasi yang telah disepakati.",
+            "2. Platform: Konten akan dipublikasikan di platform yang telah disepakati sebagaimana tercantum dalam kampanye.",
+            "3. Kompensasi: Total kompensasi untuk perjanjian ini adalah Rp " . number_format($budget, 0, ',', '.') . " (termasuk biaya platform).",
+            "4. Ketentuan Pembayaran: Pembayaran akan ditahan dalam escrow dan dicairkan setelah konten disetujui oleh Brand.",
+            "5. Batas Waktu Konten: KOL harus menyerahkan konten untuk ditinjau sebelum tanggal berakhirnya kampanye.",
+            "6. Kepemilikan Konten: Setelah pembayaran penuh, Brand memiliki hak untuk menggunakan konten untuk tujuan pemasaran.",
+            "7. Kerahasiaan: Kedua belah pihak setuju untuk menjaga kerahasiaan detail kampanye hingga peluncuran resmi.",
+            "8. Biaya Platform: Biaya platform sebesar {$platformFeePercent}% diterapkan dari total jumlah perjanjian.",
+            "9. Penyelesaian Sengketa: Setiap sengketa akan diselesaikan melalui proses penyelesaian sengketa platform.",
+            "10. Hukum yang Berlaku: Perjanjian ini diatur oleh hukum Republik Indonesia.",
         ])->implode("\n\n");
     }
 }

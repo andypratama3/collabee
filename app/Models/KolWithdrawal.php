@@ -20,6 +20,7 @@ class KolWithdrawal extends Model
         'bank_account_name',
         'status',
         'admin_note',
+        'proof_path',
         'processed_at',
     ];
 

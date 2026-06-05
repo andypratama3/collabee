@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Content extends Model
+class Content extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
     protected $fillable = [
         'agreement_id',
@@ -58,5 +60,10 @@ class Content extends Model
     public function revisions(): HasMany
     {
         return $this->hasMany(ContentRevision::class);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('content_files');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services\Chat;
 use App\Enums\HiringStatus;
 use App\Events\MessageSent;
 use App\Events\ChatRoomUpdated;
+use App\Events\UserTyping;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\Hiring;
@@ -63,6 +64,16 @@ class ChatService
 
             return $message->fresh()->load('sender');
         });
+    }
+
+    public function broadcastTyping(ChatRoom $chatRoom, User $user, bool $isTyping): void
+    {
+        broadcast(new UserTyping(
+            userId: $user->id,
+            userName: $user->name,
+            chatRoomId: $chatRoom->id,
+            isTyping: $isTyping,
+        ))->toOthers();
     }
 
     public function markAsRead(ChatRoom $chatRoom, User $user): void

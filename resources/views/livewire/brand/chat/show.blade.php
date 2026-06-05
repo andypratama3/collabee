@@ -61,6 +61,19 @@
                     <p>No messages yet. Start the conversation!</p>
                 </div>
             @endforelse
+
+            @if($partnerTyping)
+                <div class="flex justify-start">
+                    <div class="bg-gray-100 text-gray-500 rounded-2xl px-4 py-2.5 text-sm italic flex items-center gap-2">
+                        <span class="flex gap-1">
+                            <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0s"></span>
+                            <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.15s"></span>
+                            <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+                        </span>
+                        typing...
+                    </div>
+                </div>
+            @endif
         </div>
 
         <div class="px-6 py-4 border-t border-gray-200 shrink-0">
@@ -80,7 +93,10 @@
             <div class="flex gap-2">
                 <input type="text" wire:model="newMessage" wire:keydown.enter="sendMessage"
                        placeholder="Type your message..."
-                       class="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                       class="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                       x-data
+                       x-on:keydown="$wire.broadcastTyping()"
+                       x-on:keyup.debounce.2000ms="$wire.stopTyping()">
                 <button wire:click="$set('showOfferForm', true)"
                         class="px-3 py-2.5 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 shrink-0">
                     Offer

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Agreement {{ $agreement->agreement_number }}</title>
+    <title>Perjanjian Kerjasama {{ $agreement->agreement_number }}</title>
     <style>
         body { font-family: 'DejaVu Sans', sans-serif; font-size: 12px; line-height: 1.6; color: #333; }
         .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #4f46e5; padding-bottom: 20px; }
@@ -26,64 +26,64 @@
 </head>
 <body>
     <div class="header">
-        <h1>Collaboration Agreement</h1>
-        <p>Agreement Number: {{ $agreement->agreement_number }}</p>
-        <p>Status: <span class="status-badge status-{{ $agreement->status }}">{{ ucfirst($agreement->status) }}</span></p>
-        <p>Date: {{ $agreement->created_at->format('d F Y') }}</p>
+        <h1>PERJANJIAN KERJASAMA</h1>
+        <p>Nomor Perjanjian: {{ $agreement->agreement_number }}</p>
+        <p>Status: <span class="status-badge status-{{ $agreement->status === 'signed' ? 'signed' : 'pending' }}">{{ $agreement->status === 'signed' ? 'Ditandatangani' : 'Menunggu' }}</span></p>
+        <p>Tanggal: {{ $agreement->created_at->format('d F Y') }}</p>
     </div>
 
     <div class="section">
-        <h2>Party Information</h2>
+        <h2>Informasi Para Pihak</h2>
         <table class="info-grid">
             <tr><td class="label">Brand:</td><td>{{ $agreement->hiring->brandProfile->brand_name }} ({{ $agreement->hiring->brandProfile->user->name }})</td></tr>
-            <tr><td class="label">KOL:</td><td>{{ $agreement->hiring->kolProfile->display_name }}</td></tr>
-            <tr><td class="label">Campaign:</td><td>{{ $agreement->hiring->campaign->title }}</td></tr>
-            <tr><td class="label">Platforms:</td><td>{{ implode(', ', $agreement->hiring->campaign->platforms ?? []) }}</td></tr>
+            <tr><td class="label">KOL/Influencer:</td><td>{{ $agreement->hiring->kolProfile->display_name }}</td></tr>
+            <tr><td class="label">Kampanye:</td><td>{{ $agreement->hiring->campaign->title }}</td></tr>
+            <tr><td class="label">Platform:</td><td>{{ implode(', ', $agreement->hiring->campaign->platforms ?? []) }}</td></tr>
         </table>
     </div>
 
     <div class="section">
-        <h2>Financial Terms</h2>
+        <h2>Ketentuan Keuangan</h2>
         <table class="info-grid">
-            <tr><td class="label">Total Amount:</td><td>Rp {{ number_format($agreement->total_amount, 0, ',', '.') }}</td></tr>
-            <tr><td class="label">Platform Fee:</td><td>{{ $agreement->platform_fee_percent }}%</td></tr>
+            <tr><td class="label">Jumlah Total:</td><td>Rp {{ number_format($agreement->total_amount, 0, ',', '.') }}</td></tr>
+            <tr><td class="label">Biaya Platform:</td><td>{{ $agreement->platform_fee_percent }}%</td></tr>
         </table>
     </div>
 
     <div class="section">
-        <h2>Terms & Conditions</h2>
+        <h2>Syarat & Ketentuan</h2>
         <div class="terms">{{ $agreement->terms }}</div>
     </div>
 
     <div class="signature-section">
-        <h2>Digital Signatures</h2>
+        <h2>Tanda Tangan Digital</h2>
         <div class="signature-box">
             <h3>Brand: {{ $agreement->hiring->brandProfile->brand_name }}</h3>
             @if($agreement->brand_signed_at)
                 <div class="signature-line">
-                    Signed: {{ $agreement->brand_signed_at->format('d F Y H:i') }}<br>
+                    Ditandatangani: {{ $agreement->brand_signed_at->format('d F Y H:i') }}<br>
                     IP: {{ $agreement->brand_signed_ip }}
                 </div>
             @else
-                <p style="color: #ca8a04; font-style: italic;">Awaiting brand signature</p>
+                <p style="color: #ca8a04; font-style: italic;">Menunggu tanda tangan Brand</p>
             @endif
         </div>
         <div class="signature-box" style="float: right;">
             <h3>KOL: {{ $agreement->hiring->kolProfile->display_name }}</h3>
             @if($agreement->kol_signed_at)
                 <div class="signature-line">
-                    Signed: {{ $agreement->kol_signed_at->format('d F Y H:i') }}<br>
+                    Ditandatangani: {{ $agreement->kol_signed_at->format('d F Y H:i') }}<br>
                     IP: {{ $agreement->kol_signed_ip }}
                 </div>
             @else
-                <p style="color: #ca8a04; font-style: italic;">Awaiting KOL signature</p>
+                <p style="color: #ca8a04; font-style: italic;">Menunggu tanda tangan KOL</p>
             @endif
         </div>
     </div>
 
     <div class="footer">
-        <p>This agreement was generated and signed electronically via Collabee Platform.</p>
-        <p>Agreement Number: {{ $agreement->agreement_number }} | Generated: {{ now()->format('d F Y H:i') }}</p>
+        <p>Perjanjian ini dibuat dan ditandatangani secara elektronik melalui Platform Collabee.</p>
+        <p>Nomor Perjanjian: {{ $agreement->agreement_number }} | Dibuat: {{ now()->format('d F Y H:i') }}</p>
     </div>
 </body>
 </html>

@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Brand\Chat;
 
-use App\Events\MessageSent;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Services\Chat\ChatService;
@@ -18,8 +17,7 @@ class Show extends Component
     public string $newMessage = '';
     public ?int $offerBudget = null;
     public bool $showOfferForm = false;
-
-    protected $listeners = ['echo:chat.room.{chatRoom.id},MessageSent' => 'refreshMessages'];
+    public bool $partnerTyping = false;
 
     public function mount(ChatRoom $chatRoom): void
     {
@@ -49,6 +47,7 @@ class Show extends Component
         ]);
 
         $this->newMessage = '';
+        $chatService->broadcastTyping($this->chatRoom, auth()->user(), false);
     }
 
     public function sendOffer(ChatService $chatService): void
@@ -87,9 +86,36 @@ class Show extends Component
         $chatService->handleOfferReject($message);
     }
 
+    public function broadcastTyping(ChatService $chatService): void
+    {
+        $chatService->broadcastTyping($this->chatRoom, auth()->user(), true);
+    }
+
+    public function stopTyping(ChatService $chatService): void
+    {
+        $chatService->broadcastTyping($this->chatRoom, auth()->user(), false);
+    }
+
+    public function updatedNewMessage(ChatService $chatService): void
+    {
+        if (!empty($this->newMessage)) {
+            $chatService->broadcastTyping($this->chatRoom, auth()->user(), true);
+        }
+    }
+
     #[On('echo:chat.room.{chatRoom.id},MessageSent')]
     public function refreshMessages(): void
     {
         $this->dispatch('$refresh');
+    }
+
+    #[On('echo:chat.room.{chatRoom.id},UserTyping')]
+    public function onUserTyping($payload): void
+    {
+        if ($payload['user_id'] === auth()->id()) {
+            return;
+        }
+
+        $this->partnerTyping = $payload['is_typing'];
     }
 }

@@ -27,6 +27,18 @@
                     Explore Campaigns
                 </a>
                 @auth
+                    @if(auth()->user()->isAdmin())
+                        <div class="pt-3 pb-1">
+                            <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Admin</p>
+                        </div>
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-gray-100">Dashboard</a>
+                        <a href="{{ route('admin.users') }}" class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-gray-100">Users</a>
+                        <a href="{{ route('admin.campaigns') }}" class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-gray-100">Campaigns</a>
+                        <a href="{{ route('admin.payments') }}" class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-gray-100">Payments</a>
+                        <a href="{{ route('admin.withdrawals') }}" class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-gray-100">Withdrawals</a>
+                        <a href="{{ route('admin.disputes') }}" class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-gray-100">Disputes</a>
+                        <a href="{{ route('admin.settings') }}" class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-gray-100">Settings</a>
+                    @endif
                     @if(auth()->user()->isBrand())
                         <div class="pt-3 pb-1">
                             <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Brand</p>
@@ -66,6 +78,7 @@
 
                 <div class="flex items-center gap-4 ml-auto">
                     @auth
+                        <livewire:shared.notification.bell :key="'notification-bell-' . auth()->id()" />
                         <span class="text-sm text-gray-600">{{ auth()->user()->name }}</span>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
