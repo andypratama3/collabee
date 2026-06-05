@@ -13,6 +13,30 @@ use App\Livewire\Kol\Campaign\Detail as CampaignDetail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('welcome'))->name('home');
+
+Route::get('/dashboard', function () {
+    if (!auth()->check()) return redirect()->route('login');
+    $user = auth()->user();
+    if ($user->isAdmin()) return redirect()->route('admin.dashboard');
+    if ($user->isBrand()) return redirect()->route('brand.dashboard');
+    if ($user->isKol()) return redirect()->route('kol.dashboard');
+    return redirect()->route('login');
+})->name('dashboard');
+
+Route::get('/discover', fn () => redirect()->route('campaigns.explore'))->name('discover');
+
+Route::get('/onboarding', fn () => redirect()->route('home'))->name('onboarding');
+
+Route::get('/about', fn () => view('about'))->name('about');
+
+Route::get('/my-profile', function () {
+    if (!auth()->check()) return redirect()->route('login');
+    $user = auth()->user();
+    if ($user->isBrand() && $user->brandProfile) return redirect()->route('brand.profile.edit', $user->brandProfile);
+    if ($user->isKol() && $user->kolProfile) return redirect()->route('kol.profile.edit', $user->kolProfile);
+    return redirect()->route('home');
+})->name('my-profile');
+
 Route::get('/campaigns', ExploreCampaigns::class)->name('campaigns.explore');
 Route::get('/campaigns/{campaign}', CampaignDetail::class)->name('campaigns.detail');
 
