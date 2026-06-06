@@ -4,13 +4,13 @@
     darkMode: document.documentElement.classList.contains('dark'),
     toggleDarkMode() {
         this.darkMode = !this.darkMode;
-        document.documentElement.classList.toggle('dark', this.darkMode);
         localStorage.setItem('darkMode', this.darkMode ? 'true' : 'false');
+        document.documentElement.classList.toggle('dark', this.darkMode);
         window.dispatchEvent(new CustomEvent('darkModeChanged', { detail: { isDark: this.darkMode } }));
     }
 }" x-init="
     darkMode = document.documentElement.classList.contains('dark');
-    document.addEventListener('livewire:navigated', () => { darkMode = document.documentElement.classList.contains('dark') });
+    document.addEventListener('livewire:navigated', () => { $nextTick(() => { darkMode = document.documentElement.classList.contains('dark') }) });
 ">
 <head>
     <meta charset="utf-8">
@@ -18,8 +18,31 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name')) — Collabee Dashboard</title>
     <script>
-        // Prevent FOUC — apply theme before any rendering
-        (function(){var d=localStorage.getItem('darkMode');if(d==='true'||(d===null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}else{document.documentElement.classList.remove('dark')}})();
+        // Dark mode: bulletproof persistence across wire:navigate
+        (function(){
+            function isDark(){
+                var d=localStorage.getItem('darkMode');
+                return d==='true'||(d===null&&window.matchMedia('(prefers-color-scheme:dark)').matches);
+            }
+            function enforce(){
+                if(isDark()){document.documentElement.classList.add('dark')}
+                else{document.documentElement.classList.remove('dark')}
+            }
+            enforce();
+            // Re-enforce after Livewire swaps the page
+            document.addEventListener('livewire:navigating',enforce);
+            document.addEventListener('livewire:navigated',enforce);
+            // MutationObserver: catch any external removal of 'dark' class (Livewire morph)
+            new MutationObserver(function(mutations){
+                mutations.forEach(function(m){
+                    if(m.attributeName==='class'){
+                        var hasDark=document.documentElement.classList.contains('dark');
+                        if(isDark()&&!hasDark){document.documentElement.classList.add('dark')}
+                        else if(!isDark()&&hasDark){document.documentElement.classList.remove('dark')}
+                    }
+                });
+            }).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+        })();
     </script>
     
     <!-- Fonts -->

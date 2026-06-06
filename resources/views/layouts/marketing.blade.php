@@ -5,14 +5,14 @@
     darkMode: document.documentElement.classList.contains('dark'),
     toggleDarkMode() {
         this.darkMode = !this.darkMode;
-        document.documentElement.classList.toggle('dark', this.darkMode);
         localStorage.setItem('darkMode', this.darkMode ? 'true' : 'false');
+        document.documentElement.classList.toggle('dark', this.darkMode);
         window.dispatchEvent(new CustomEvent('darkModeChanged', { detail: { isDark: this.darkMode } }));
     }
 }" x-init="
     darkMode = document.documentElement.classList.contains('dark');
     window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 });
-    document.addEventListener('livewire:navigated', () => { darkMode = document.documentElement.classList.contains('dark') });
+    document.addEventListener('livewire:navigated', () => { $nextTick(() => { darkMode = document.documentElement.classList.contains('dark') }) });
 ">
 <head>
     <meta charset="utf-8">
@@ -20,7 +20,28 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name') . ' — Platform Kolaborasi Brand & KOL Premium')</title>
     <script>
-        (function(){var d=localStorage.getItem('darkMode');if(d==='true'||(d===null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}else{document.documentElement.classList.remove('dark')}})();
+        (function(){
+            function isDark(){
+                var d=localStorage.getItem('darkMode');
+                return d==='true'||(d===null&&window.matchMedia('(prefers-color-scheme:dark)').matches);
+            }
+            function enforce(){
+                if(isDark()){document.documentElement.classList.add('dark')}
+                else{document.documentElement.classList.remove('dark')}
+            }
+            enforce();
+            document.addEventListener('livewire:navigating',enforce);
+            document.addEventListener('livewire:navigated',enforce);
+            new MutationObserver(function(mutations){
+                mutations.forEach(function(m){
+                    if(m.attributeName==='class'){
+                        var hasDark=document.documentElement.classList.contains('dark');
+                        if(isDark()&&!hasDark){document.documentElement.classList.add('dark')}
+                        else if(!isDark()&&hasDark){document.documentElement.classList.remove('dark')}
+                    }
+                });
+            }).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+        })();
     </script>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900&display=swap" rel="stylesheet" />
