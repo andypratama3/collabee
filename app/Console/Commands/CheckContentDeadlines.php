@@ -24,10 +24,11 @@ class CheckContentDeadlines extends Command
         $now = Carbon::now();
 
         $overdue = Content::query()
+            ->with(['brandProfile.user', 'kolProfile.user'])
             ->whereNull('approved_at')
             ->whereIn('status', [ContentStatus::SUBMITTED, ContentStatus::UNDER_REVIEW, ContentStatus::REVISION_REQUESTED])
+            ->whereNotNull('deadline_at')
             ->where('deadline_at', '<', $now)
-            ->whereHas('agreement', fn($q) => $q->where('content_approval_deadline', '<', $now))
             ->get();
 
         $count = 0;

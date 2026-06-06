@@ -18,20 +18,17 @@ class Settings extends Component
 
     public function mount(): void
     {
-        $this->platformFeePercent = $this->getSetting('platform_fee_percent', '10');
-        $this->minWithdrawal = $this->getSetting('min_withdrawal', '50000');
-        $this->maxWithdrawal = $this->getSetting('max_withdrawal', '50000000');
-        $this->contactEmail = $this->getSetting('contact_email', config('mail.from.address'));
-        $this->aboutText = $this->getSetting('about_text', '');
-        $this->termsText = $this->getSetting('terms_text', '');
-        $this->privacyText = $this->getSetting('privacy_text', '');
-        $this->maintenanceMode = (bool) $this->getSetting('maintenance_mode', 'false');
-    }
+        // Fetch all settings in a single query to avoid N+1
+        $settings = AppSetting::pluck('value', 'key');
 
-    private function getSetting(string $key, string $default = ''): string
-    {
-        $setting = AppSetting::where('key', $key)->first();
-        return $setting ? $setting->value : $default;
+        $this->platformFeePercent = (string) ($settings['platform_fee_percent'] ?? '10');
+        $this->minWithdrawal = (string) ($settings['min_withdrawal'] ?? '50000');
+        $this->maxWithdrawal = (string) ($settings['max_withdrawal'] ?? '50000000');
+        $this->contactEmail = (string) ($settings['contact_email'] ?? config('mail.from.address'));
+        $this->aboutText = (string) ($settings['about_text'] ?? '');
+        $this->termsText = (string) ($settings['terms_text'] ?? '');
+        $this->privacyText = (string) ($settings['privacy_text'] ?? '');
+        $this->maintenanceMode = ($settings['maintenance_mode'] ?? 'false') === 'true';
     }
 
     private function saveSetting(string $key, string|int $value, string $group = 'general', string $type = 'string'): void

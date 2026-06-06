@@ -147,10 +147,16 @@ class ChatService
             $agreementService = app(AgreementService::class);
             $agreementService->generate($hiring);
 
+            // System message sender = the party who accepted (opposite of the offer sender)
+            $chatRoom = $message->chatRoom;
+            $accepterId = $message->sender_id === $chatRoom->brand_user_id
+                ? $chatRoom->kol_user_id
+                : $chatRoom->brand_user_id;
+
             $systemMessage = ChatMessage::create([
                 'chat_room_id' => $message->chat_room_id,
-                'sender_id' => $message->sender_id,
-                'body' => 'Offer accepted',
+                'sender_id' => $accepterId,
+                'body' => 'Penawaran diterima',
                 'type' => 'system',
                 'is_read' => false,
             ]);
@@ -168,10 +174,16 @@ class ChatService
                 'offer_status' => 'rejected',
             ]);
 
+            // System message sender = the party who rejected (opposite of the offer sender)
+            $chatRoom = $message->chatRoom;
+            $rejecterId = $message->sender_id === $chatRoom->brand_user_id
+                ? $chatRoom->kol_user_id
+                : $chatRoom->brand_user_id;
+
             $systemMessage = ChatMessage::create([
                 'chat_room_id' => $message->chat_room_id,
-                'sender_id' => $message->sender_id,
-                'body' => 'Offer declined',
+                'sender_id' => $rejecterId,
+                'body' => 'Penawaran ditolak',
                 'type' => 'system',
                 'is_read' => false,
             ]);

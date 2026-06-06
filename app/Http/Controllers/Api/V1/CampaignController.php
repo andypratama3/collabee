@@ -28,14 +28,21 @@ class CampaignController extends Controller
         return ApiResponse::paginated($campaigns, 'Daftar campaign berhasil diambil.');
     }
 
-    public function show(Campaign $campaign): JsonResponse
+    public function show(Request $request, Campaign $campaign): JsonResponse
     {
-        $campaign->load([
-            'brandProfile.user',
-            'hirings.kolProfile.user',
-            'hiringApplications.kolProfile.user',
-        ]);
+        $user = $request->user();
+        $isOwner = $user && $user->isBrand() && $campaign->brandProfile?->user_id === $user->id;
 
+        // Public/non-owner viewers only get brand info + counts.
+        // The campaign owner (brand) additionally sees applicant details.
+        $relations = ['brandProfile.user'];
+
+        if ($isOwner) {
+            $relations[] = 'hirings.kolProfile.user';
+            $relations[] = 'hiringApplications.kolProfile.user';
+        }
+
+        $campaign->load($relations);
         $campaign->loadCount('hirings', 'hiringApplications');
 
         return ApiResponse::success($campaign, 'Detail campaign berhasil diambil.');

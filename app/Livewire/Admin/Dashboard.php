@@ -32,34 +32,47 @@ class Dashboard extends Component
         $this->registrationChart = $this->getRegistrationOverTime();
     }
 
+    private function monthExpression(string $column): string
+    {
+        $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+
+        return match ($driver) {
+            'mysql', 'mariadb' => "DATE_FORMAT($column, '%Y-%m')",
+            'pgsql' => "to_char($column, 'YYYY-MM')",
+            default => "strftime('%Y-%m', $column)", // sqlite
+        };
+    }
+
     private function getRevenueOverTime(): array
     {
         $months = collect(range(5, 0))->map(fn($i) => now()->subMonths($i)->format('Y-m'));
+        $expr = $this->monthExpression('paid_at');
 
-        $payments = Payment::where('status', PaymentStatus::PAID)
+        $grouped = Payment::where('status', PaymentStatus::PAID)
             ->where('paid_at', '>=', now()->subMonths(6)->startOfMonth())
-            ->get(['paid_at', 'total_amount']);
-
-        $grouped = $payments->groupBy(fn($p) => $p->paid_at->format('Y-m'));
+            ->selectRaw("$expr as ym, SUM(total_amount) as total")
+            ->groupBy('ym')
+            ->pluck('total', 'ym');
 
         return [
             'categories' => $months->map(fn($m) => $this->monthLabel($m))->toArray(),
-            'data' => $months->map(fn($m) => (float) (($grouped->get($m))?->sum('total_amount') ?? 0))->toArray(),
+            'data' => $months->map(fn($m) => (float) ($grouped[$m] ?? 0))->toArray(),
         ];
     }
 
     private function getRegistrationOverTime(): array
     {
         $months = collect(range(5, 0))->map(fn($i) => now()->subMonths($i)->format('Y-m'));
+        $expr = $this->monthExpression('created_at');
 
-        $users = User::where('created_at', '>=', now()->subMonths(6)->startOfMonth())
-            ->get(['created_at']);
-
-        $grouped = $users->groupBy(fn($u) => $u->created_at->format('Y-m'));
+        $grouped = User::where('created_at', '>=', now()->subMonths(6)->startOfMonth())
+            ->selectRaw("$expr as ym, COUNT(*) as total")
+            ->groupBy('ym')
+            ->pluck('total', 'ym');
 
         return [
             'categories' => $months->map(fn($m) => $this->monthLabel($m))->toArray(),
-            'data' => $months->map(fn($m) => (int) (($grouped->get($m))?->count() ?? 0))->toArray(),
+            'data' => $months->map(fn($m) => (int) ($grouped[$m] ?? 0))->toArray(),
         ];
     }
 

@@ -52,17 +52,25 @@ class WithdrawalManagement extends Component
     {
         $this->validate();
 
-        $withdrawal = KolWithdrawal::findOrFail($this->selectedWithdrawalId);
-        $withdrawal->update([
-            'status' => 'rejected',
-            'admin_note' => $this->rejectReason,
-            'processed_at' => now(),
-        ]);
+        \Illuminate\Support\Facades\DB::transaction(function () {
+            $withdrawal = KolWithdrawal::lockForUpdate()->findOrFail($this->selectedWithdrawalId);
 
-        $profile = $withdrawal->kolProfile;
-        if ($profile) {
-            $profile->increment('wallet_balance', $withdrawal->amount);
-        }
+            // Prevent double refund
+            if ($withdrawal->status === 'rejected') {
+                return;
+            }
+
+            $withdrawal->update([
+                'status' => 'rejected',
+                'admin_note' => $this->rejectReason,
+                'processed_at' => now(),
+            ]);
+
+            $profile = $withdrawal->kolProfile;
+            if ($profile) {
+                $profile->increment('wallet_balance', $withdrawal->amount);
+            }
+        });
 
         $this->showRejectModal = false;
         $this->selectedWithdrawalId = null;

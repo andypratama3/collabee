@@ -36,15 +36,21 @@ class DisbursementService
 
         try {
             $response = Http::withBasicAuth($this->apiKey, '')
+                ->withHeaders([
+                    // Idempotency key prevents double payout on retry
+                    'X-IDEMPOTENCY-KEY' => $externalId,
+                ])
                 ->post($this->baseUrl . '/disbursements', $payload);
 
             if ($response->successful()) {
                 $data = $response->json();
 
+                // Xendit disbursements are async — final status arrives via webhook.
+                // Mark as 'processing' until the disbursement webhook confirms completion.
                 $withdrawal->update([
-                    'status' => 'completed',
+                    'status' => 'processing',
                     'processed_at' => now(),
-                    'admin_note' => 'Disbursement via Xendit: ' . ($data['id'] ?? $externalId),
+                    'admin_note' => 'Disbursement via Xendit: ' . ($data['id'] ?? $externalId) . ' (status: ' . ($data['status'] ?? 'PENDING') . ')',
                 ]);
 
                 Log::info('Xendit disbursement created', [
@@ -56,7 +62,7 @@ class DisbursementService
                 return [
                     'success' => true,
                     'data' => $data,
-                    'message' => 'Disbursement berhasil dikirim ke Xendit.',
+                    'message' => 'Disbursement berhasil dikirim ke Xendit dan sedang diproses.',
                 ];
             }
 

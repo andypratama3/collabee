@@ -23,7 +23,7 @@ class Detail extends Component
         $this->authorize('view', $campaign);
         $this->campaign = $campaign->loadCount('hirings', 'hiringApplications');
 
-        if (auth()->check() && auth()->user()->isKol()) {
+        if (auth()->check() && auth()->user()->isKol() && auth()->user()->kolProfile) {
             $this->hasApplied = HiringApplication::where('campaign_id', $campaign->id)
                 ->where('kol_profile_id', auth()->user()->kolProfile->id)
                 ->exists();

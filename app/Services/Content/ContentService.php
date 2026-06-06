@@ -76,6 +76,12 @@ class ContentService
                 'approved_at' => now(),
             ]);
 
+            // Immediately release escrow to KOL wallet on approval
+            $payment = $content->agreement->payment;
+            if ($payment && $payment->escrowTransaction) {
+                $this->escrowService->releaseEscrow($payment->escrowTransaction, 'content_approved');
+            }
+
             return $content->fresh();
         });
 
@@ -83,7 +89,7 @@ class ContentService
             $result->kolProfile->user,
             'content_reminder',
             'Konten disetujui',
-            "Konten Anda telah disetujui oleh brand {$result->brandProfile->brand_name}. Escrow akan segera dirilis.",
+            "Konten Anda telah disetujui oleh brand {$result->brandProfile->brand_name}. Dana escrow telah dirilis ke wallet Anda.",
             ['content' => $result]
         );
 

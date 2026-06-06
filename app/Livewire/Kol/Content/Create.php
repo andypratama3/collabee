@@ -43,7 +43,11 @@ class Create extends Component
 
         $user = auth()->user();
         $profile = $user->kolProfile;
-        $agreement = Agreement::findOrFail($this->agreement_id);
+
+        // Verify the agreement belongs to this KOL (prevent uploading to others' agreements)
+        $agreement = Agreement::whereHas('hiring', function ($q) use ($profile) {
+            $q->where('kol_profile_id', $profile->id);
+        })->where('status', 'signed')->findOrFail($this->agreement_id);
 
         $contentService->upload(
             $profile,
