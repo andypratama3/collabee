@@ -1,36 +1,27 @@
-const STORAGE_KEY = 'darkMode';
+/**
+ * Dark mode — single source of truth is the 'dark' class on <html>.
+ * 
+ * Flow:
+ * 1. FOUC script in <head> reads localStorage and sets class BEFORE render.
+ * 2. Alpine reads the class on init and tracks it as reactive `darkMode` for UI icons.
+ * 3. toggleDarkMode() updates class + localStorage + dispatches event.
+ * 4. On wire:navigate (SPA navigation), the <html> persists so class stays.
+ *    Alpine re-syncs via livewire:navigated listener.
+ * 5. This module provides a global fallback toggle and handles system preference changes.
+ */
 
-function getPreferredTheme() {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored !== null) return stored === 'true';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-}
-
-function applyTheme(isDark) {
-    if (isDark) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-    }
-    
-    // Dispatch event for chart components to react
-    window.dispatchEvent(new CustomEvent('darkModeChanged', { detail: { isDark } }));
-}
-
-function toggleTheme() {
+// Global toggle for non-Alpine contexts
+window.toggleDarkMode = function() {
     const isDark = !document.documentElement.classList.contains('dark');
-    applyTheme(isDark);
-    localStorage.setItem(STORAGE_KEY, isDark ? 'true' : 'false');
-}
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('darkMode', isDark ? 'true' : 'false');
+    window.dispatchEvent(new CustomEvent('darkModeChanged', { detail: { isDark } }));
+};
 
-// Apply on initial load (don't write to storage if no preference exists yet)
-applyTheme(getPreferredTheme());
-
-// Listen for system preference changes (only if no manual override stored)
+// System preference changes (only when no manual preference stored)
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (localStorage.getItem(STORAGE_KEY) === null) {
-        applyTheme(e.matches);
+    if (localStorage.getItem('darkMode') === null) {
+        document.documentElement.classList.toggle('dark', e.matches);
+        window.dispatchEvent(new CustomEvent('darkModeChanged', { detail: { isDark: e.matches } }));
     }
 });
-
-window.toggleDarkMode = toggleTheme;

@@ -1,21 +1,24 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{ 
-    darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+<html lang="id" x-data="{
     sidebarOpen: false,
+    darkMode: document.documentElement.classList.contains('dark'),
     toggleDarkMode() {
         this.darkMode = !this.darkMode;
+        document.documentElement.classList.toggle('dark', this.darkMode);
         localStorage.setItem('darkMode', this.darkMode ? 'true' : 'false');
-        if (this.darkMode) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }
         window.dispatchEvent(new CustomEvent('darkModeChanged', { detail: { isDark: this.darkMode } }));
     }
-}" :class="{ 'dark': darkMode }">
+}" x-init="
+    darkMode = document.documentElement.classList.contains('dark');
+    document.addEventListener('livewire:navigated', () => { darkMode = document.documentElement.classList.contains('dark') });
+">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name')) — Collabee Dashboard</title>
     <script>
-        // Prevent flash of wrong theme
+        // Prevent FOUC — apply theme before any rendering
         (function(){var d=localStorage.getItem('darkMode');if(d==='true'||(d===null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}else{document.documentElement.classList.remove('dark')}})();
     </script>
     

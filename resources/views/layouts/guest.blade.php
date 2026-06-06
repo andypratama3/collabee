@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{ 
-    darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-}" :class="{ 'dark': darkMode }">
+<html lang="id" x-data="{
+    darkMode: document.documentElement.classList.contains('dark')
+}" x-init="darkMode = document.documentElement.classList.contains('dark')">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

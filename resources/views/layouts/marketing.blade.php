@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{ 
-    darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+<html lang="id" x-data="{
     mobileMenuOpen: false,
     scrolled: false,
-    init() {
-        window.addEventListener('scroll', () => {
-            this.scrolled = window.scrollY > 20;
-        });
-    },
+    darkMode: document.documentElement.classList.contains('dark'),
     toggleDarkMode() {
         this.darkMode = !this.darkMode;
+        document.documentElement.classList.toggle('dark', this.darkMode);
         localStorage.setItem('darkMode', this.darkMode ? 'true' : 'false');
-        if (this.darkMode) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }
         window.dispatchEvent(new CustomEvent('darkModeChanged', { detail: { isDark: this.darkMode } }));
     }
-}" :class="{ 'dark': darkMode }">
+}" x-init="
+    darkMode = document.documentElement.classList.contains('dark');
+    window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 });
+    document.addEventListener('livewire:navigated', () => { darkMode = document.documentElement.classList.contains('dark') });
+">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
