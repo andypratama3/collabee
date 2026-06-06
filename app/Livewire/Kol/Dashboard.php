@@ -6,6 +6,19 @@ use Livewire\Component;
 
 class Dashboard extends Component
 {
+    private function monthExpr(): string
+    {
+        $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+
+        if (in_array($driver, ['mysql', 'mariadb'])) {
+            return "DATE_FORMAT(created_at, '%Y-%m')";
+        }
+        if ($driver === 'pgsql') {
+            return "to_char(created_at, 'YYYY-MM')";
+        }
+        return "strftime('%Y-%m', created_at)";
+    }
+
     public function render()
     {
         $user = auth()->user();
@@ -47,7 +60,7 @@ class Dashboard extends Component
                 ->take(5)
                 ->get(),
             'earnings' => $profile?->withdrawals()
-                ->selectRaw('SUM(amount) as total, strftime(\'%Y-%m\', created_at) as month')
+                ->selectRaw($this->monthExpr() . ' as month, SUM(amount) as total')
                 ->groupBy('month')
                 ->orderBy('month')
                 ->pluck('total', 'month')

@@ -36,11 +36,16 @@ class Dashboard extends Component
     {
         $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
 
-        return match ($driver) {
-            'mysql', 'mariadb' => "DATE_FORMAT($column, '%Y-%m')",
-            'pgsql' => "to_char($column, 'YYYY-MM')",
-            default => "strftime('%Y-%m', $column)", // sqlite
-        };
+        if (in_array($driver, ['mysql', 'mariadb', 'percona'])) {
+            return "DATE_FORMAT($column, '%Y-%m')";
+        }
+
+        if ($driver === 'pgsql') {
+            return "to_char($column, 'YYYY-MM')";
+        }
+
+        // SQLite fallback
+        return "strftime('%Y-%m', $column)";
     }
 
     private function getRevenueOverTime(): array
