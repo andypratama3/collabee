@@ -11,12 +11,11 @@
     <div class="bg-white dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 dark:shadow-gray-900/30 border border-gray-200 dark:border-gray-700 overflow-hidden">
         @forelse($rooms as $room)
             @php
-                $isBrand = auth()->user()->isBrand();
-                $otherUser = $isBrand ? $room->hiring?->kolProfile?->user : $room->hiring?->brandProfile?->user;
-                $unread = $isBrand ? $room->brand_unread : $room->kol_unread;
+                $otherUser = $room->hiring?->kolProfile?->user;
+                $unread = $room->brand_unread;
                 $lastMessage = $room->messages->first();
             @endphp
-            <a href="{{ route($isBrand ? 'brand.chat.show' : 'kol.chat.show', $room) }}"
+            <a href="{{ route('brand.chat.show', $room) }}"
                class="group flex items-center px-5 sm:px-6 py-4 border-b border-gray-100/80 dark:border-gray-700 last:border-b-0 transition-all duration-300
                {{ $unread > 0 ? 'bg-primary/[0.03] dark:bg-primary/[0.08] hover:bg-primary/[0.06] dark:hover:bg-primary/[0.12]' : 'hover:bg-gray-50/80 dark:hover:bg-gray-700/30' }}">
                 {{-- Avatar --}}
