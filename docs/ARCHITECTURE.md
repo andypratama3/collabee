@@ -135,9 +135,9 @@ KOL browse / Brand outbound Hire
 ```
 Agreement signed by both parties
   → Brand notified: "Pay now"
-  → Brand clicks pay → Xendit invoice created
-  → Brand redirected to payment gateway
-  → Xendit webhook: "PAID"
+  → Brand clicks pay → Xendit invoice created (POST /invoices)
+  → Brand redirected to Xendit payment page
+  → Xendit webhook: "PAID" (POST /api/v1/webhooks/xendit)
   → Payment marked as paid
   → Escrow held (funds locked)
   → KOL notified: "Start working!"
@@ -147,7 +147,12 @@ KOL uploads content → Brand approves
   → Rating prompt for both parties
   
 If Brand does not review in 7 days:
-  → Auto-release escrow
+  → Auto-release escrow (scheduler command)
+
+KOL requests withdrawal:
+  → Admin approves → Option A: Xendit Disbursement (POST /disbursements)
+                   → Option B: Manual transfer + upload proof
+  → KOL notified: "Dana dicairkan"
 ```
 
 ### 2.4 Real-time Events Flow
@@ -223,7 +228,7 @@ collabee/
 │       ├── Chat/                  # ChatService
 │       ├── Content/               # ContentService, ContentUploadService
 │       ├── Notification/          # NotificationService
-│       ├── Payment/               # EscrowService, XenditService, InvoiceService
+│       ├── Payment/               # EscrowService, XenditService, InvoiceService, DisbursementService
 │       └── Rating/                # RatingService
 │
 ├── config/                        # Laravel config files
@@ -289,16 +294,16 @@ collabee/
 
 | Component | Technology | Version | Purpose |
 |-----------|-----------|---------|---------|
-| CSS | Tailwind CSS | ^3.4 | Utility-first CSS |
+| CSS | Tailwind CSS | ^4.x | Utility-first CSS (v4 CSS-based config) |
 | JS Framework | Alpine.js | ^3.x | Reactive UI |
-| UI Components | Flowbite | ^2.x | Pre-built components |
-| Charts | ApexCharts | ^3.x | Dashboard charts |
-| Rich Text | TipTap | ^2.x | Brief editor |
+| UI Components | Flowbite | ^4.x | Pre-built components |
+| Charts | ApexCharts | ^5.x | Dashboard charts |
+| Rich Text | TipTap | ^3.x | Brief editor |
 | Calendar | Flatpickr | ^4.x | Date picker |
 | Upload | Dropzone | ^6.x | File upload |
 | Alerts | SweetAlert2 | ^11.x | Confirmations/toasts |
-| WebSocket Client | Laravel Echo | ^1.x | Real-time client |
-| Asset Bundler | Vite | ^5.x | Build tool |
+| WebSocket Client | Laravel Echo | ^2.x | Real-time client |
+| Asset Bundler | Vite | ^7.x | Build tool |
 
 ### 4.3 Third-Party Services
 

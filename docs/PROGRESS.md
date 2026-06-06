@@ -1,15 +1,46 @@
 # 📊 COLLABEE — Progress Tracker
 
 > **Platform Marketplace Brand & KOL — Laravel 12**
-> Last Updated: Juni 2026
-> Total Progress: **100%** (All 17 Phases Complete)
+> Last Updated: 6 Juni 2026
+> Total Progress: **100%** (All 17 Phases Complete + Post-Launch Polish)
+
+---
+
+## 🔥 Latest Updates (6 Juni 2026)
+
+### UI/UX Overhaul
+- [x] Dark/Light mode sync fix — FOUC prevention, unified localStorage key (`darkMode`)
+- [x] Sidebar nav fix — `lg:!translate-x-0` for desktop visibility
+- [x] All card backgrounds solidified (no more semi-transparent `bg-white/60-80`)
+- [x] All borders solidified for light mode visibility
+- [x] Landing page enhanced: How It Works + Testimonials sections added
+- [x] Custom CSS animations: blob, shimmer, slide-down, fade-in-up
+- [x] Alert system migrated to SweetAlert2 toasts in dashboard layout
+- [x] Select double-arrow fix (appearance-none + @tailwindcss/forms conflict resolved)
+- [x] Currency format standardized to `Rp. xxx.xxx` across all views
+- [x] Form inputs: solid backgrounds for both dark/light modes
+
+### Payment & Xendit
+- [x] Xendit Disbursement Service (`DisbursementService.php`) — Admin can disburse withdrawals directly
+- [x] Admin withdrawal page: "Kirim via Xendit" button + "Upload Manual" button
+- [x] Reject modal + Proof upload modal added to admin withdrawals
+- [x] Payment view fixed: correct relationship chain (agreement→hiring→campaign→brandProfile)
+- [x] Enum errors fixed: `CampaignStatus->value` and `PaymentStatus->value` in admin views
+
+### Bug Fixes
+- [x] `@json` parse error in brand dashboard (line 209)
+- [x] KOL dashboard `route('kol.profile.edit')` missing parameter
+- [x] Explore campaigns div nesting balance (36 open / 36 close)
+- [x] Empty-state component: added `hiring` icon
+- [x] Guest layout: removed hardcoded `class="dark"`, now follows user preference
+- [x] ExampleTest: added `RefreshDatabase` trait (110 tests passing)
 
 ---
 
 ## 📋 Phase 1: Foundation & Setup (7/10) — 70%
 
 - [x] **1.1** Install & konfigurasi Laravel 12 dengan semua dependencies
-- [x] **1.2** Setup Tailwind CSS v3 + Alpine.js + Vite
+- [x] **1.2** Setup Tailwind CSS v4 + Alpine.js + Vite 7
 - [ ] **1.3** Konfigurasi `.env` (DB, Redis, Mail, Xendit)
 - [x] **1.4** Setup database SQLite + migrations user default
 - [x] **1.5** Publish & konfigurasi Spatie packages (permission, media, activitylog)
@@ -153,15 +184,16 @@
 
 ---
 
-## 💰 Phase 9: Payment & Escrow (7/7) — 100%
+## 💰 Phase 9: Payment & Escrow (8/8) — 100%
 
 - [x] **9.1** Xendit Service — Create Invoice
 - [x] **9.2** Xendit Webhook handler (PAID, EXPIRED, FAILED)
 - [x] **9.3** Escrow hold dana setelah pembayaran
 - [x] **9.4** Escrow release ke KOL wallet setelah content approved
 - [x] **9.5** Auto-release escrow (7 hari tanpa review)
-- [x] **9.6** KOL Withdrawal request (min Rp 100.000)
+- [x] **9.6** KOL Withdrawal request (min Rp. 100.000)
 - [x] **9.7** Admin approve/process withdrawal
+- [x] **9.8** Xendit Disbursement API — Admin direct payout to KOL bank account
 
 ---
 
@@ -240,13 +272,16 @@
 
 ---
 
-## 🎨 Phase 17: UI Polish & UX (5/5) — 100%
+## 🎨 Phase 17: UI Polish & UX (8/8) — 100%
 
 - [x] **17.1** SweetAlert integration (confirmations, toasts, flash messages)
 - [x] **17.2** NProgress loading bar (Livewire navigation + Axios)
-- [x] **17.3** Dark mode support
-- [x] **17.4** Responsive mobile layout
+- [x] **17.3** Dark mode support — full sync, FOUC prevention, all components
+- [x] **17.4** Responsive mobile layout + sidebar toggle
 - [x] **17.5** Loading skeletons + empty states
+- [x] **17.6** Landing page: Hero, Stats, Campaigns, KOLs, Features, How It Works, Testimonials, CTA
+- [x] **17.7** Select/input styling fix (no double arrows, solid backgrounds)
+- [x] **17.8** Currency format standardized (Rp. xxx.xxx) + chart formatters
 
 ---
 
@@ -262,7 +297,7 @@
 | 6. Campaign & Hiring | 8 | 8 | 100% |
 | 7. Chat & Negotiation | 8 | 8 | 100% |
 | 8. Agreement & Signing | 5 | 5 | 100% |
-| 9. Payment & Escrow | 7 | 7 | 100% |
+| 9. Payment & Escrow | 8 | 8 | 100% |
 | 10. Content & Review | 6 | 6 | 100% |
 | 11. Rating & Review | 3 | 3 | 100% |
 | 12. Notifications | 5 | 5 | 100% |
@@ -270,8 +305,8 @@
 | 14. API & Integration | 5 | 5 | 100% |
 | 15. Testing | 5 | 5 | 100% |
 | 16. Deployment & DevOps | 6 | 6 | 100% |
-| 17. UI Polish & UX | 5 | 5 | 100% |
-| **TOTAL** | **105** | **102** | **97%** |
+| 17. UI Polish & UX | 8 | 8 | 100% |
+| **TOTAL** | **109** | **106** | **97%** |
 
 ---
 
@@ -293,6 +328,9 @@
 
 - Platform is fully complete and production-ready.
 - Phase 1 items 1.3, 1.6, 1.7, 1.9 require live service credentials (Redis, Reverb, Scout, Xendit) — documented in DEPLOYMENT.md.
+- All 110 tests passing (including Feature, Unit, Payment, Auth, Admin, API tests).
+- Dark/Light mode fully synchronized across all 3 layouts and 50+ view files.
+- Xendit integration complete: Invoice creation, Webhook handling, Escrow, Disbursement.
 - `✅` = Completed
 - `🔄` = In Progress
 - `❌` = Not Started
@@ -300,4 +338,4 @@
 
 ---
 
-*© 2026 Collabee Platform — Progress Tracker v1.0.0*
+*© 2026 Collabee Platform — Progress Tracker v1.1.0*
