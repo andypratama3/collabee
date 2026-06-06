@@ -157,7 +157,7 @@ class HiringService
     public function cancel(Hiring $hiring, ?string $reason = null): Hiring
     {
         return DB::transaction(function () use ($hiring, $reason) {
-            if (in_array($hiring->status, [HiringStatus::ACCEPTED, HiringStatus::COMPLETED])) {
+            if ($hiring->status === HiringStatus::COMPLETED) {
                 throw new \RuntimeException('This hiring cannot be cancelled.');
             }
 

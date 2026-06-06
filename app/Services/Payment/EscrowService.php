@@ -49,6 +49,11 @@ class EscrowService
 
     public function releaseEscrow(EscrowTransaction $escrow, string $trigger = 'content_approved'): void
     {
+        // Idempotency guard — prevent double release
+        if ($escrow->status === EscrowStatus::RELEASED) {
+            return;
+        }
+
         DB::transaction(function () use ($escrow, $trigger) {
             $escrow->update([
                 'status' => EscrowStatus::RELEASED,

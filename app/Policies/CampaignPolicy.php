@@ -15,7 +15,7 @@ class CampaignPolicy
     public function view(?User $user, Campaign $campaign): bool
     {
         if (!$user) {
-            return $campaign->status === 'open';
+            return $campaign->status === \App\Enums\CampaignStatus::OPEN;
         }
 
         return $user->isAdmin()

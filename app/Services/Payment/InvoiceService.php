@@ -10,7 +10,11 @@ class InvoiceService
 {
     public function generateInvoiceNumber(): string
     {
-        $lastPayment = Payment::where('invoice_number', 'like', 'INV-2026-%')
+        $year = date('Y');
+        $prefix = 'INV-' . $year . '-';
+
+        $lastPayment = Payment::where('invoice_number', 'like', $prefix . '%')
+            ->lockForUpdate()
             ->orderBy('id', 'desc')
             ->first();
 
@@ -22,7 +26,7 @@ class InvoiceService
 
         $newNumber = str_pad($lastNumber + 1, 5, '0', STR_PAD_LEFT);
 
-        return 'INV-2026-' . $newNumber;
+        return $prefix . $newNumber;
     }
 
     public function createPayment(Agreement $agreement): Payment

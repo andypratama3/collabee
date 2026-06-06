@@ -122,7 +122,7 @@
                     <div class="mb-5">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Reason (optional)</label>
                         <textarea wire:model="rejectReason" rows="2"
-                                  class="w-full px-4 py-3 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 placeholder:text-gray-400"
+                                  class="w-full px-4 py-3 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 placeholder:text-gray-400"
                                   placeholder="Let the brand know why..."></textarea>
                     </div>
                 @endif

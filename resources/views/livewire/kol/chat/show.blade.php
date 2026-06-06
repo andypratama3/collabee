@@ -114,7 +114,7 @@
             <div class="flex gap-2">
                 <input type="text" wire:model="newMessage" wire:keydown.enter="sendMessage"
                        placeholder="Type your message..."
-                       class="flex-1 px-4 py-3 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 placeholder:text-gray-400"
+                       class="flex-1 px-4 py-3 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 placeholder:text-gray-400"
                        x-data
                        x-on:keydown="$wire.broadcastTyping()"
                        x-on:keyup.debounce.2000ms="$wire.stopTyping()">

@@ -167,13 +167,13 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Proposed Budget (Rp)</label>
                         <input type="number" wire:model="proposedBudget" placeholder="Your proposed fee"
-                               class="w-full px-4 py-2.5 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200">
+                               class="w-full px-4 py-2.5 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200">
                         @error('proposedBudget') <p class="mt-1.5 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Message to Brand</label>
                         <textarea wire:model="applyMessage" rows="4"
-                                  class="w-full px-4 py-2.5 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+                                  class="w-full px-4 py-2.5 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
                                   placeholder="Tell the brand why you're the perfect fit..."></textarea>
                         @error('applyMessage') <p class="mt-1.5 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>

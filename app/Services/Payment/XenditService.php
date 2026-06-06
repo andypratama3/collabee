@@ -91,8 +91,7 @@ class XenditService
             return false;
         }
 
-        $computedSignature = hash_hmac('sha256', $payloadBody, $webhookToken);
-
-        return hash_equals($computedSignature, $signature);
+        // Xendit uses x-callback-token header with a plain token comparison
+        return hash_equals($webhookToken, $signature);
     }
 }

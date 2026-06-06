@@ -132,13 +132,11 @@ test('xendit webhook handling', function () {
         'external_id' => $payment->invoice_number,
         'id' => 'xendit-payment-id-123',
     ];
-    $payloadBody = json_encode($payload);
-    $signature = hash_hmac('sha256', $payloadBody, $webhookToken);
 
     $response = $this->postJson(
         '/api/v1/webhooks/xendit',
         $payload,
-        ['x-callback-token' => $signature]
+        ['x-callback-token' => $webhookToken]
     );
 
     $response->assertOk();

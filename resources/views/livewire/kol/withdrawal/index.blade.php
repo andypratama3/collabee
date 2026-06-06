@@ -66,7 +66,7 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Jumlah (Rp)</label>
                         <input type="number" wire:model="amount" min="100000" step="1000"
-                               class="w-full px-4 py-2.5 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+                               class="w-full px-4 py-2.5 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
                                placeholder="Minimum Rp 100.000">
                         @error('amount') <p class="mt-1.5 text-xs text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
@@ -75,7 +75,7 @@
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Rekening Tujuan</label>
                         @if($bankAccounts->isNotEmpty())
                             <select wire:model="bankAccountId"
-                                    class="w-full px-4 py-2.5 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200">
+                                    class="w-full px-4 py-2.5 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200">
                                 <option value="">Pilih Rekening</option>
                                 @foreach($bankAccounts as $account)
                                     <option value="{{ $account->id }}">
@@ -94,7 +94,7 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Catatan (opsional)</label>
                         <textarea wire:model="notes" rows="2"
-                                  class="w-full px-4 py-2.5 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+                                  class="w-full px-4 py-2.5 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
                                   placeholder="Catatan untuk admin"></textarea>
                         @error('notes') <p class="mt-1.5 text-xs text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
