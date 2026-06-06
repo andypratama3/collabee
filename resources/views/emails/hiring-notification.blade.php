@@ -33,7 +33,7 @@
                 </div>
                 <div style="margin-bottom: 12px;">
                     <div class="info-label">Budget yang Ditawarkan</div>
-                    <div class="info-value">Rp {{ number_format($hiring->proposed_budget, 0, ',', '.') }}</div>
+                    <div class="info-value">Rp. {{ number_format($hiring->proposed_budget, 0, ',', '.') }}</div>
                 </div>
                 @if($hiring->message)
                 <div>

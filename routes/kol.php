@@ -22,6 +22,9 @@ Route::middleware(['kol', 'profile.complete'])->prefix('kol')->name('kol.')->gro
     Route::get('/contents', ContentIndex::class)->name('content.index');
     Route::get('/contents/create', ContentCreate::class)->name('content.create');
     Route::get('/contents/{content}', ContentShow::class)->name('content.show');
+    Route::get('/agreements', AgreementIndex::class)->name('agreement.index');
+    Route::get('/agreements/{agreement}', AgreementShow::class)->name('agreement.show');
+    Route::get('/withdrawals', \App\Livewire\Kol\Withdrawal\Index::class)->name('withdrawal.index');
 });
 
 Route::middleware(['kol'])->prefix('kol')->name('kol.')->group(function () {

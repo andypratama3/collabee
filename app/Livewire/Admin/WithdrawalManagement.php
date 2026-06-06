@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\KolWithdrawal;
 use App\Models\KolProfile;
+use App\Services\Payment\DisbursementService;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -37,7 +38,7 @@ class WithdrawalManagement extends Component
             'processed_at' => now(),
         ]);
 
-        session()->flash('success', 'Withdrawal berhasil disetujui.');
+        $this->dispatch('swal:success', title: 'Withdrawal berhasil disetujui.');
     }
 
     public function confirmReject(KolWithdrawal $withdrawal): void
@@ -67,7 +68,7 @@ class WithdrawalManagement extends Component
         $this->selectedWithdrawalId = null;
         $this->rejectReason = '';
 
-        session()->flash('success', 'Withdrawal berhasil ditolak.');
+        $this->dispatch('swal:success', title: 'Withdrawal berhasil ditolak dan saldo dikembalikan.');
     }
 
     public function showProofUpload(KolWithdrawal $withdrawal): void
@@ -96,7 +97,27 @@ class WithdrawalManagement extends Component
         $this->selectedWithdrawalId = null;
         $this->proofFile = null;
 
-        session()->flash('success', 'Bukti transfer berhasil diupload.');
+        $this->dispatch('swal:success', title: 'Bukti transfer berhasil diupload.');
+    }
+
+    /**
+     * Disburse withdrawal directly via Xendit
+     */
+    public function disburseViaXendit(KolWithdrawal $withdrawal): void
+    {
+        if (!in_array($withdrawal->status, ['approved', 'pending'])) {
+            $this->dispatch('swal:error', title: 'Withdrawal tidak dalam status yang bisa diproses.');
+            return;
+        }
+
+        $disbursementService = app(DisbursementService::class);
+        $result = $disbursementService->createDisbursement($withdrawal);
+
+        if ($result['success']) {
+            $this->dispatch('swal:success', title: $result['message']);
+        } else {
+            $this->dispatch('swal:error', title: $result['message']);
+        }
     }
 
     public function render()

@@ -39,7 +39,9 @@ Route::middleware(['auth', 'role:super_admin|admin'])->prefix('admin')->name('ad
 
         return redirect()->to('/')->with('success', 'Anda sekarang login sebagai ' . $user->name);
     })->name('users.impersonate');
+});
 
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::post('/users/stop-impersonate', function () {
         $originalAdminId = session('original_admin_id');
 

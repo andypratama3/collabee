@@ -44,7 +44,7 @@ class Dashboard extends Component
 
         return [
             'categories' => $months->map(fn($m) => $this->monthLabel($m))->toArray(),
-            'data' => $months->map(fn($m) => (float) ($grouped[$m]?->sum('total_amount') ?? 0))->toArray(),
+            'data' => $months->map(fn($m) => (float) (($grouped->get($m))?->sum('total_amount') ?? 0))->toArray(),
         ];
     }
 
@@ -59,7 +59,7 @@ class Dashboard extends Component
 
         return [
             'categories' => $months->map(fn($m) => $this->monthLabel($m))->toArray(),
-            'data' => $months->map(fn($m) => (int) ($grouped[$m]?->count() ?? 0))->toArray(),
+            'data' => $months->map(fn($m) => (int) (($grouped->get($m))?->count() ?? 0))->toArray(),
         ];
     }
 

@@ -45,7 +45,7 @@
     <div class="section">
         <h2>Ketentuan Keuangan</h2>
         <table class="info-grid">
-            <tr><td class="label">Jumlah Total:</td><td>Rp {{ number_format($agreement->total_amount, 0, ',', '.') }}</td></tr>
+            <tr><td class="label">Jumlah Total:</td><td>Rp. {{ number_format($agreement->total_amount, 0, ',', '.') }}</td></tr>
             <tr><td class="label">Biaya Platform:</td><td>{{ $agreement->platform_fee_percent }}%</td></tr>
         </table>
     </div>

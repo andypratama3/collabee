@@ -1,78 +1,142 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tentang Collabee - {{ config('app.name') }}</title>
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="font-sans antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
-    <header class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <a href="{{ route('home') }}" class="text-xl font-bold text-indigo-600 dark:text-indigo-400">{{ config('app.name') }}</a>
-                <nav class="flex items-center gap-4">
-                    <a href="{{ route('campaigns.explore') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">Jelajahi</a>
-                    <a href="{{ route('about') }}" class="text-sm text-indigo-600 dark:text-indigo-400 font-medium">Tentang</a>
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">Masuk</a>
-                        <a href="{{ route('register.brand') }}" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">Daftar</a>
-                    @endauth
-                </nav>
+@extends('layouts.marketing')
+
+@section('title', 'Tentang Collabee — Memberdayakan Kolaborasi Brand & KOL')
+
+@section('content')
+{{-- Hero Section --}}
+<section class="relative pt-36 pb-24 lg:pt-52 lg:pb-36 overflow-hidden">
+    {{-- Background Elements --}}
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-primary-50/30 dark:from-[#09090b] dark:via-[#09090b] dark:to-primary-950/20"></div>
+    <div class="absolute top-20 right-1/4 w-[600px] h-[600px] bg-primary-500/5 dark:bg-primary-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-indigo-500/5 dark:bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 dark:bg-primary-900/30 border border-primary-200/50 dark:border-primary-700/30 mb-8">
+                <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
+                <span class="text-sm font-bold text-primary-700 dark:text-primary-300">Tentang Collabee</span>
             </div>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-gray-900 dark:text-white leading-[1.1] mb-8">
+                Misi Kami:
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-indigo-600 to-purple-600 dark:from-primary-400 dark:via-indigo-400 dark:to-purple-400">Demokratisasi</span>
+                Pemasaran Influencer
+            </h1>
+            <p class="text-lg md:text-xl text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto">
+                Collabee hadir untuk memutus rantai birokrasi dan ketidakterbukaan dalam industri KOL. Kami percaya kolaborasi terbaik terjadi saat ada kepercayaan dan kemudahan komunikasi.
+            </p>
         </div>
-    </header>
+    </div>
+</section>
 
-    <main>
-        <div class="max-w-3xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-            <h1 class="text-4xl font-bold text-center mb-8">Tentang Collabee</h1>
+{{-- Values Grid Section --}}
+<section class="relative py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+            {{-- Visual Grid --}}
+            <div class="order-2 lg:order-1">
+                <div class="grid grid-cols-2 gap-5">
+                    @foreach([
+                        ['emoji' => '🚀', 'label' => 'Cepat', 'color' => 'primary', 'from' => 'from-primary-100', 'to' => 'to-primary-50', 'darkFrom' => 'dark:from-primary-900/30', 'darkTo' => 'dark:to-primary-800/10', 'text' => 'text-primary-700 dark:text-primary-300', 'border' => 'border-primary-200/50 dark:border-primary-700/30', 'mt' => ''],
+                        ['emoji' => '🛡️', 'label' => 'Aman', 'color' => 'indigo', 'from' => 'from-indigo-100', 'to' => 'to-indigo-50', 'darkFrom' => 'dark:from-indigo-900/30', 'darkTo' => 'dark:to-indigo-800/10', 'text' => 'text-indigo-700 dark:text-indigo-300', 'border' => 'border-indigo-200/50 dark:border-indigo-700/30', 'mt' => 'mt-10'],
+                        ['emoji' => '💎', 'label' => 'Premium', 'color' => 'emerald', 'from' => 'from-emerald-100', 'to' => 'to-emerald-50', 'darkFrom' => 'dark:from-emerald-900/30', 'darkTo' => 'dark:to-emerald-800/10', 'text' => 'text-emerald-700 dark:text-emerald-300', 'border' => 'border-emerald-200/50 dark:border-emerald-700/30', 'mt' => '-mt-10'],
+                        ['emoji' => '🌈', 'label' => 'Inklusif', 'color' => 'amber', 'from' => 'from-amber-100', 'to' => 'to-amber-50', 'darkFrom' => 'dark:from-amber-900/30', 'darkTo' => 'dark:to-amber-800/10', 'text' => 'text-amber-700 dark:text-amber-300', 'border' => 'border-amber-200/50 dark:border-amber-700/30', 'mt' => ''],
+                    ] as $item)
+                        <div class="aspect-square rounded-3xl bg-gradient-to-br {{ $item['from'] }} {{ $item['to'] }} {{ $item['darkFrom'] }} {{ $item['darkTo'] }} border {{ $item['border'] }} flex items-center justify-center p-8 {{ $item['mt'] }} group hover:scale-105 hover:shadow-xl transition-all duration-500 cursor-default">
+                            <div class="text-center">
+                                <div class="text-5xl mb-3 group-hover:scale-110 transition-transform duration-300">{{ $item['emoji'] }}</div>
+                                <div class="font-black text-lg {{ $item['text'] }}">{{ $item['label'] }}</div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
 
-            <div class="prose dark:prose-invert max-w-none space-y-6">
-                <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-                    Collabee adalah platform <strong>peer-to-peer</strong> yang menghubungkan brand secara langsung dengan KOL (Key Opinion Leader) untuk kampanye pemasaran yang efektif, transparan, dan terpercaya.
-                </p>
-
-                <h2 class="text-2xl font-semibold mt-10">Misi Kami</h2>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    Memberdayakan brand dan kreator untuk berkolaborasi tanpa perantara — menciptakan kemitraan yang saling menguntungkan dengan sistem escrow yang aman, pembayaran otomatis, dan komunikasi real-time.
-                </p>
-
-                <h2 class="text-2xl font-semibold mt-10">Fitur Utama</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                    <div class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <h3 class="font-semibold">Eksplorasi Campaign</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Temukan campaign yang sesuai dengan niche dan keahlian Anda.</p>
-                    </div>
-                    <div class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <h3 class="font-semibold">Sistem Escrow</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Pembayaran aman dengan sistem escrow otomatis.</p>
-                    </div>
-                    <div class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <h3 class="font-semibold">Chat Real-time</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Komunikasi langsung antara brand dan KOL.</p>
-                    </div>
-                    <div class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <h3 class="font-semibold">Manajemen Konten</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Upload, review, dan approve konten dalam satu platform.</p>
+            {{-- Story Content --}}
+            <div class="order-1 lg:order-2 space-y-8">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-6 leading-tight">Cerita Di Balik Collabee</h2>
+                    <div class="space-y-4 text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+                        <p>
+                            Dimulai dari keresahan terhadap sulitnya brand kecil untuk menjangkau KOL dan sulitnya KOL mendapatkan pembayaran tepat waktu, Collabee lahir sebagai solusi digital yang inklusif.
+                        </p>
+                        <p>
+                            Kami bukan agensi. Kami adalah <strong class="text-gray-900 dark:text-white font-bold">platform teknologi</strong>. Fokus kami adalah membangun infrastruktur yang kuat agar Anda dapat fokus pada apa yang terpenting: <strong class="text-gray-900 dark:text-white font-bold">Kreativitas dan Hasil Kampanye.</strong>
+                        </p>
                     </div>
                 </div>
 
-                <h2 class="text-2xl font-semibold mt-10">Hubungi Kami</h2>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    Punya pertanyaan atau saran? Jangan ragu untuk menghubungi tim kami melalui email di <a href="mailto:hello@collabee.app" class="text-indigo-600 dark:text-indigo-400 hover:underline">hello@collabee.app</a>.
-                </p>
+                {{-- Values List --}}
+                <div class="space-y-5 pt-4">
+                    <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest">Nilai-Nilai Kami</h4>
+                    @foreach([
+                        ['num' => '01', 'title' => 'Transparansi Tanpa Batas', 'desc' => 'Semua biaya dan syarat jelas sejak awal.'],
+                        ['num' => '02', 'title' => 'Keamanan Finansial', 'desc' => 'Melindungi hak pembayaran KOL dan investasi Brand.'],
+                        ['num' => '03', 'title' => 'Inovasi Berkelanjutan', 'desc' => 'Terus berkembang mengikuti tren media sosial terbaru.'],
+                    ] as $value)
+                        <div class="flex items-start gap-5 p-5 rounded-2xl bg-white/80 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-800/50 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-lg transition-all duration-300 group">
+                            <div class="shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-primary-500/25 group-hover:scale-110 transition-transform duration-300">
+                                {{ $value['num'] }}
+                            </div>
+                            <div>
+                                <span class="font-bold text-gray-900 dark:text-white">{{ $value['title'] }}</span>
+                                <span class="text-gray-500 dark:text-gray-400"> — {{ $value['desc'] }}</span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
-    </main>
+    </div>
+</section>
 
-    <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-16">
-        <div class="max-w-7xl mx-auto px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+{{-- CTA Section --}}
+<section class="relative py-24 lg:py-32 overflow-hidden">
+    {{-- Background --}}
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-primary-50/20 to-indigo-50/20 dark:from-gray-900/50 dark:via-primary-950/20 dark:to-indigo-950/20"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-4">Siap Bergabung dengan Masa Depan Kolaborasi?</h2>
+        <p class="text-lg text-gray-500 dark:text-gray-400 mb-12 max-w-xl mx-auto">Pilih peran Anda dan mulai perjalanan bersama ribuan brand dan kreator di seluruh Indonesia.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            {{-- Brand Card --}}
+            <div class="group relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-8 lg:p-10 rounded-[2rem] border border-gray-200/50 dark:border-gray-800/50 shadow-xl shadow-gray-200/20 dark:shadow-gray-900/30 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-100 to-indigo-100 dark:from-primary-900/40 dark:to-indigo-900/40 flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                </div>
+                <h3 class="text-xl font-black text-gray-900 dark:text-white mb-3">Untuk Brand</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">Temukan KOL yang benar-benar cocok dengan audiens Anda dan kelola kampanye dengan mudah.</p>
+                <a href="{{ route('register.brand') }}" class="block w-full py-3.5 text-center bg-gradient-to-r from-primary-600 to-indigo-600 text-white font-bold rounded-xl hover:from-primary-700 hover:to-indigo-700 transition-all duration-300 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">Daftar Brand</a>
+            </div>
+
+            {{-- KOL Card --}}
+            <div class="group relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-8 lg:p-10 rounded-[2rem] border border-gray-200/50 dark:border-gray-800/50 shadow-xl shadow-gray-200/20 dark:shadow-gray-900/30 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/40 dark:to-purple-900/40 flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-pink-600 dark:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </div>
+                <h3 class="text-xl font-black text-gray-900 dark:text-white mb-3">Untuk KOL</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">Dapatkan akses ke brand-brand ternama dan pastikan pembayaran Anda aman melalui escrow.</p>
+                <a href="{{ route('register.kol') }}" class="block w-full py-3.5 text-center bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold rounded-xl hover:from-pink-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-pink-500/25 hover:shadow-xl hover:shadow-pink-500/30">Daftar KOL</a>
+            </div>
         </div>
-    </footer>
-</body>
-</html>
+    </div>
+</section>
+
+{{-- Contact Section --}}
+<section class="py-24 lg:py-32">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-100 to-indigo-100 dark:from-primary-900/30 dark:to-indigo-900/30 mb-6">
+            <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white mb-4">Butuh Bantuan Lebih Lanjut?</h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-8 text-lg">Tim kami siap membantu Anda 24/7. Hubungi kami melalui email atau media sosial.</p>
+        <a href="mailto:hello@collabee.app" class="inline-flex items-center gap-2 px-6 py-3 text-primary-600 dark:text-primary-400 font-bold bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-200/50 dark:border-primary-700/30 hover:bg-primary-100 dark:hover:bg-primary-900/40 hover:shadow-lg transition-all duration-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            hello@collabee.app
+        </a>
+    </div>
+</section>
+@endsection

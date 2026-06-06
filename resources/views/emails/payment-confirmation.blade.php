@@ -24,7 +24,7 @@
         </div>
         <div class="body-card">
             <div class="greeting">Halo!</div>
-            <p class="text">Pembayaran Anda sebesar <strong>Rp {{ number_format($payment->total_amount, 0, ',', '.') }}</strong> telah berhasil dikonfirmasi.</p>
+            <p class="text">Pembayaran Anda sebesar <strong>Rp. {{ number_format($payment->total_amount, 0, ',', '.') }}</strong> telah berhasil dikonfirmasi.</p>
             <div class="info-box">
                 <div style="margin-bottom: 12px;">
                     <div class="info-label">Invoice</div>
@@ -32,15 +32,15 @@
                 </div>
                 <div style="margin-bottom: 12px;">
                     <div class="info-label">Jumlah</div>
-                    <div class="info-value">Rp {{ number_format($payment->amount, 0, ',', '.') }}</div>
+                    <div class="info-value">Rp. {{ number_format($payment->amount, 0, ',', '.') }}</div>
                 </div>
                 <div style="margin-bottom: 12px;">
                     <div class="info-label">Biaya Platform</div>
-                    <div class="info-value">Rp {{ number_format($payment->platform_fee, 0, ',', '.') }}</div>
+                    <div class="info-value">Rp. {{ number_format($payment->platform_fee, 0, ',', '.') }}</div>
                 </div>
                 <div>
                     <div class="info-label">Total Dibayar</div>
-                    <div class="info-value">Rp {{ number_format($payment->total_amount, 0, ',', '.') }}</div>
+                    <div class="info-value">Rp. {{ number_format($payment->total_amount, 0, ',', '.') }}</div>
                 </div>
             </div>
             <p class="text">Terima kasih telah menggunakan Collabee. Kemitraan Anda sekarang dapat berjalan.</p>

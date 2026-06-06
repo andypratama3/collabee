@@ -12,7 +12,18 @@ use App\Livewire\ExploreCampaigns;
 use App\Livewire\Kol\Campaign\Detail as CampaignDetail;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => view('welcome'))->name('home');
+Route::get('/', function () {
+    $stats = [
+        'brands' => \App\Models\User::where('user_type', \App\Enums\UserRole::BRAND)->count(),
+        'kols' => \App\Models\User::where('user_type', \App\Enums\UserRole::KOL)->count(),
+        'campaigns' => \App\Models\Campaign::count(),
+        'transactions' => \App\Models\Payment::where('status', \App\Enums\PaymentStatus::PAID)->sum('total_amount'),
+    ];
+    $campaigns = \App\Models\Campaign::with('brandProfile.user')->where('status', \App\Enums\CampaignStatus::OPEN)->latest()->take(6)->get();
+    $kols = \App\Models\KolProfile::with('user')->orderByDesc('rating_avg')->orderByDesc('total_followers')->take(8)->get();
+    $brands = \App\Models\BrandProfile::with('user')->inRandomOrder()->take(6)->get();
+    return view('welcome', compact('stats', 'campaigns', 'kols', 'brands'));
+})->name('home');
 
 Route::get('/dashboard', function () {
     if (!auth()->check()) return redirect()->route('login');

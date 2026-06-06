@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['brand', 'profile.complete'])->prefix('brand')->name('brand.')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::get('/profile/create', CreateProfile::class)->name('profile.create');
     Route::get('/profile/{profile}', EditProfile::class)->name('profile.edit');
     Route::get('/campaigns', CampaignIndex::class)->name('campaign.index');
     Route::get('/campaign/create', CreateCampaign::class)->name('campaign.create');
@@ -28,8 +29,8 @@ Route::middleware(['brand', 'profile.complete'])->prefix('brand')->name('brand.'
     Route::get('/chat/{chatRoom}', ChatShow::class)->name('chat.show');
     Route::get('/contents', ContentIndex::class)->name('content.index');
     Route::get('/contents/{content}', ContentShow::class)->name('content.show');
+    Route::get('/agreements', AgreementIndex::class)->name('agreement.index');
+    Route::get('/agreements/{agreement}', AgreementShow::class)->name('agreement.show');
+    Route::get('/payments', \App\Livewire\Brand\Payment\Index::class)->name('payment.index');
 });
 
-Route::middleware(['brand'])->prefix('brand')->name('brand.')->group(function () {
-    Route::get('/profile/create', CreateProfile::class)->name('profile.create');
-});

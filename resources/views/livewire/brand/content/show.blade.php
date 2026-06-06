@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4">
-        <a href="{{ route('brand.content.index') }}" wire:navigate class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800">&larr; Kembali</a>
+        <a href="{{ route('brand.content.index') }}" wire:navigate class="text-sm text-primary dark:text-primary-400 hover:text-primary-800">&larr; Kembali</a>
     </div>
 
     <div class="space-y-6">
@@ -53,7 +53,7 @@
                                 @else
                                     <div class="w-full h-full flex items-center justify-center">
                                         <a href="{{ $media->getUrl() }}" target="_blank"
-                                           class="text-indigo-600 dark:text-indigo-400 text-sm hover:underline">
+                                           class="text-primary dark:text-primary-400 text-sm hover:underline">
                                             {{ $media->file_name }}
                                         </a>
                                     </div>
@@ -100,7 +100,7 @@
                     <div class="border-t dark:border-gray-700 pt-6">
                         <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Minta Revisi</h4>
                         <textarea wire:model="revisionNotes" rows="3"
-                                  class="w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm dark:bg-gray-700 dark:text-gray-200"
+                                  class="w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary text-sm dark:bg-gray-700 dark:text-gray-200"
                                   placeholder="Jelaskan revisi yang diperlukan..."></textarea>
                         @error('revisionNotes') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                         <button wire:click="requestRevision"

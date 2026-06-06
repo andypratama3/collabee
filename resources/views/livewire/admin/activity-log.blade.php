@@ -6,19 +6,19 @@
     <div class="flex flex-wrap gap-4">
         <div class="flex-1 min-w-[200px]">
             <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari aktivitas atau user..."
-                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200">
+                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-gray-200">
         </div>
-        <select wire:model.live="eventFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200">
+        <select wire:model.live="eventFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-gray-200">
             <option value="">Semua Event</option>
             @foreach ($events as $event)
                 <option value="{{ $event }}">{{ ucfirst($event) }}</option>
             @endforeach
         </select>
         <div>
-            <input type="date" wire:model.live="dateFrom" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200">
+            <input type="date" wire:model.live="dateFrom" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-gray-200">
         </div>
         <div>
-            <input type="date" wire:model.live="dateTo" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200">
+            <input type="date" wire:model.live="dateTo" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-gray-200">
         </div>
     </div>
 

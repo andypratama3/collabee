@@ -1,58 +1,75 @@
 <div>
-    <div class="mb-4">
-        <a href="{{ route('kol.content.index') }}" wire:navigate class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800">&larr; Kembali</a>
+    <!-- Back Navigation -->
+    <div class="mb-5">
+        <a href="{{ route('kol.content.index') }}" wire:navigate class="inline-flex items-center gap-1.5 text-sm text-primary dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium transition-colors duration-200 group">
+            <svg class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Kembali
+        </a>
     </div>
 
     <div class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <!-- Main Content Card -->
+        <div class="bg-white dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 dark:shadow-gray-900/30 border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <!-- Header -->
+            <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gradient-to-r from-white/80 to-gray-50/80 dark:from-gray-800/80 dark:to-gray-750/80">
                 <div>
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $content->title }}</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $content->title }}</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                         Campaign: {{ $content->agreement?->hiring?->campaign?->title ?? 'N/A' }}
                     </p>
                 </div>
-                <span class="px-3 py-1 text-sm font-medium rounded-full self-start
-                    @if($content->status->value === 'approved') bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400
-                    @elseif($content->status->value === 'revision_requested') bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400
-                    @elseif($content->status->value === 'rejected') bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400
-                    @elseif($content->status->value === 'submitted') bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400
-                    @elseif($content->status->value === 'posted') bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400
-                    @else bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400
+                <span class="px-3 py-1.5 text-sm font-semibold rounded-xl self-start
+                    @if($content->status->value === 'approved') bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 ring-1 ring-emerald-200/50 dark:ring-emerald-700/30
+                    @elseif($content->status->value === 'revision_requested') bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 ring-1 ring-amber-200/50 dark:ring-amber-700/30
+                    @elseif($content->status->value === 'rejected') bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-400 ring-1 ring-rose-200/50 dark:ring-rose-700/30
+                    @elseif($content->status->value === 'submitted') bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 ring-1 ring-blue-200/50 dark:ring-blue-700/30
+                    @elseif($content->status->value === 'posted') bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 ring-1 ring-emerald-200/50 dark:ring-emerald-700/30
+                    @else bg-gray-50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-400 ring-1 ring-gray-200/50 dark:ring-gray-600/30
                     @endif">
                     {{ ucfirst(str_replace('_', ' ', $content->status->value)) }}
                 </span>
             </div>
 
+            <!-- Caption Section -->
             @if($content->caption)
-                <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Caption</p>
-                    <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line">{{ $content->caption }}</p>
+                <div class="px-6 py-5 border-b border-gray-100/80 dark:border-gray-700">
+                    <div class="flex items-center gap-2 mb-2">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Caption</p>
+                    </div>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line leading-relaxed">{{ $content->caption }}</p>
                 </div>
             @endif
 
+            <!-- Media Section -->
             @php
                 $mediaItems = $content->getMedia('content_files');
             @endphp
 
             @if($mediaItems->isNotEmpty())
-                <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Media</p>
+                <div class="px-6 py-5 border-b border-gray-100/80 dark:border-gray-700">
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Media</p>
+                        <span class="text-xs text-gray-400 dark:text-gray-500 ml-1">({{ $mediaItems->count() }} {{ $mediaItems->count() === 1 ? 'file' : 'files' }})</span>
+                    </div>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                         @foreach($mediaItems as $media)
-                            <div class="aspect-square rounded-lg bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                            <div class="group aspect-square rounded-xl bg-gray-100 dark:bg-gray-700/50 overflow-hidden ring-1 ring-gray-200/50 dark:ring-gray-600/30 hover:ring-primary/30 transition-all duration-300 hover:shadow-lg">
                                 @if(str_starts_with($media->mime_type, 'image/'))
                                     <img src="{{ $media->getUrl() }}"
                                          alt="{{ $media->name }}"
-                                         class="w-full h-full object-cover">
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 @elseif(str_starts_with($media->mime_type, 'video/'))
                                     <video src="{{ $media->getUrl() }}"
                                            class="w-full h-full object-cover"
                                            controls></video>
                                 @else
-                                    <div class="w-full h-full flex items-center justify-center">
+                                    <div class="w-full h-full flex flex-col items-center justify-center gap-2 p-4">
+                                        <svg class="w-10 h-10 text-gray-300 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                                         <a href="{{ $media->getUrl() }}" target="_blank"
-                                           class="text-indigo-600 dark:text-indigo-400 text-sm hover:underline">
+                                           class="text-primary dark:text-primary-400 text-sm hover:underline font-medium truncate max-w-full">
                                             {{ $media->file_name }}
                                         </a>
                                     </div>
@@ -63,44 +80,54 @@
                 </div>
             @endif
 
+            <!-- Revision History -->
             @if($content->revisions->isNotEmpty())
-                <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Riwayat Revisi</p>
+                <div class="px-6 py-5 border-b border-gray-100/80 dark:border-gray-700">
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Riwayat Revisi</p>
+                    </div>
                     <div class="space-y-3">
                         @foreach($content->revisions as $revision)
-                            <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3">
-                                <div class="flex items-start justify-between">
-                                    <p class="text-sm text-gray-700 dark:text-gray-300">{{ $revision->note }}</p>
-                                    <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0 ml-2">{{ $revision->created_at->format('d M Y H:i') }}</span>
+                            <div class="bg-amber-50/50 dark:bg-amber-900/10 rounded-xl p-4 border border-amber-100/50 dark:border-amber-800/20">
+                                <div class="flex items-start justify-between gap-3">
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{{ $revision->note }}</p>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0 ml-2 whitespace-nowrap">{{ $revision->created_at->format('d M Y H:i') }}</span>
                                 </div>
-                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                                    Oleh: {{ $revision->requester?->name ?? 'N/A' }}
+                                <div class="flex items-center gap-2 mt-2">
+                                    <p class="text-xs text-gray-400 dark:text-gray-500">
+                                        Oleh: <span class="font-medium">{{ $revision->requester?->name ?? 'N/A' }}</span>
+                                    </p>
                                     @if($revision->status === 'pending')
-                                        <span class="text-yellow-600 dark:text-yellow-400 ml-2">(Menunggu revisi)</span>
+                                        <span class="px-2 py-0.5 text-xs font-semibold rounded-md bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 ring-1 ring-amber-200/50 dark:ring-amber-700/30">Menunggu revisi</span>
                                     @endif
-                                </p>
+                                </div>
                             </div>
                         @endforeach
                     </div>
                 </div>
             @endif
 
-            <div class="px-6 py-4 flex flex-wrap items-center gap-3">
+            <!-- Actions -->
+            <div class="px-6 py-5 flex flex-wrap items-center gap-3 bg-gray-50/50 dark:bg-gray-900/20">
                 @if($content->status->value === 'draft' || $content->status->value === 'revision_requested')
                     <button wire:click="submit" wire:confirm="Kirim konten untuk review?"
-                            class="px-6 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                            class="px-6 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-primary to-primary-dark rounded-xl hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all duration-300 inline-flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                         Kirim untuk Review
                     </button>
                 @endif
 
                 @if($content->submitted_at)
-                    <span class="text-xs text-gray-400 dark:text-gray-500">
+                    <span class="inline-flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Dikirim: {{ $content->submitted_at->format('d M Y H:i') }}
                     </span>
                 @endif
 
                 @if($content->approved_at)
-                    <span class="text-xs text-green-600 dark:text-green-400">
+                    <span class="inline-flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         Disetujui: {{ $content->approved_at->format('d M Y H:i') }}
                     </span>
                 @endif
