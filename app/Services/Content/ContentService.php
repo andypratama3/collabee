@@ -10,6 +10,7 @@ use App\Models\Content;
 use App\Models\ContentRevision;
 use App\Models\KolProfile;
 use App\Services\Notification\NotificationService;
+use App\Services\Payment\EscrowService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,8 @@ use Illuminate\Support\Collection as BaseCollection;
 class ContentService
 {
     public function __construct(
-        private readonly NotificationService $notificationService
+        private readonly NotificationService $notificationService,
+        private readonly EscrowService $escrowService,
     ) {}
     public function upload(KolProfile $kolProfile, Agreement $agreement, array $data, BaseCollection $files): Content
     {
