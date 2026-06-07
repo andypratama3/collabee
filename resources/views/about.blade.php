@@ -1,6 +1,6 @@
 @extends('layouts.marketing')
 
-@section('title', 'Tentang Collabee — Memberdayakan Kolaborasi Brand & KOL')
+@section('title', 'Tentang Collabee — Hubungkan Brand dengan Nano Influencer')
 
 @section('content')
 {{-- Hero Section --}}
@@ -21,8 +21,8 @@
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-indigo-600 to-purple-600 dark:from-primary-400 dark:via-indigo-400 dark:to-purple-400">Demokratisasi</span>
                 Pemasaran Influencer
             </h1>
-            <p class="text-lg md:text-xl text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto">
-                Collabee hadir untuk memutus rantai birokrasi dan ketidakterbukaan dalam industri KOL. Kami percaya kolaborasi terbaik terjadi saat ada kepercayaan dan kemudahan komunikasi.
+            <p class="text-lg md:text-xl text-gray-500 dark:text-gray-400 leading-relaxed mx-auto">
+                Platform ini membantu mempertemukan brand dengan nano influencer yang punya sekitar 1.000–10.000 followers. Biasanya mereka punya audiens yang lebih dekat dan engagement yang cukup bagus. Jadi brand bisa lebih mudah cari KOL yang cocok untuk promosi, dan content creator (KOL) juga bisa dapat kesempatan kerja sama untuk menambah pengalaman dan portofolio. Semua dilakukan secara peer to peer, jadi brand dan KOL bisa langsung terhubung dengan lebih praktis.
             </p>
         </div>
     </div>
@@ -57,21 +57,21 @@
                     <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-6 leading-tight">Cerita Di Balik Collabee</h2>
                     <div class="space-y-4 text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
                         <p>
-                            Dimulai dari keresahan terhadap sulitnya brand kecil untuk menjangkau KOL dan sulitnya KOL mendapatkan pembayaran tepat waktu, Collabee lahir sebagai solusi digital yang inklusif.
+                            Collabee hadir untuk membantu brand, terutama UMKM, menemukan nano influencer (1.000–10.000 followers) yang cocok untuk mempromosikan produk mereka. Di sisi lain, content creator juga bisa mendapatkan kesempatan kerja sama untuk menambah pengalaman dan portofolio.
                         </p>
                         <p>
-                            Kami bukan agensi. Kami adalah <strong class="text-gray-900 dark:text-white font-bold">platform teknologi</strong>. Fokus kami adalah membangun infrastruktur yang kuat agar Anda dapat fokus pada apa yang terpenting: <strong class="text-gray-900 dark:text-white font-bold">Kreativitas dan Hasil Kampanye.</strong>
+                            Kami bukan agensi. Kami adalah <strong class="text-gray-900 dark:text-white font-bold">platform peer-to-peer</strong>. Semua dilakukan secara langsung tanpa perantara, jadi brand dan KOL bisa terhubung dengan lebih praktis, dekat, dan autentik.
                         </p>
                     </div>
                 </div>
 
                 {{-- Values List --}}
                 <div class="space-y-5 pt-4">
-                    <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest">Nilai-Nilai Kami</h4>
+                    <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest">Mengapa Collabee?</h4>
                     @foreach([
-                        ['num' => '01', 'title' => 'Transparansi Tanpa Batas', 'desc' => 'Semua biaya dan syarat jelas sejak awal.'],
-                        ['num' => '02', 'title' => 'Keamanan Finansial', 'desc' => 'Melindungi hak pembayaran KOL dan investasi Brand.'],
-                        ['num' => '03', 'title' => 'Inovasi Berkelanjutan', 'desc' => 'Terus berkembang mengikuti tren media sosial terbaru.'],
+                        ['num' => '01', 'title' => 'Peer to Peer', 'desc' => 'Brand dan KOL terhubung langsung tanpa perantara.'],
+                        ['num' => '02', 'title' => 'Nano Influencer Focus', 'desc' => 'Fokus pada kreator 1.000–10.000 followers dengan engagement tinggi.'],
+                        ['num' => '03', 'title' => 'Praktis & Autentik', 'desc' => 'Kolaborasi yang lebih dekat, alami, dan terjangkau untuk semua.'],
                     ] as $value)
                         <div class="flex items-start gap-5 p-5 rounded-2xl bg-white/80 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-800/50 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-lg transition-all duration-300 group">
                             <div class="shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-primary-500/25 group-hover:scale-110 transition-transform duration-300">
@@ -96,8 +96,8 @@
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-500/5 rounded-full blur-[120px] pointer-events-none"></div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-4">Siap Bergabung dengan Masa Depan Kolaborasi?</h2>
-        <p class="text-lg text-gray-500 dark:text-gray-400 mb-12 max-w-xl mx-auto">Pilih peran Anda dan mulai perjalanan bersama ribuan brand dan kreator di seluruh Indonesia.</p>
+        <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-4">Siap Mulai Kolaborasi?</h2>
+        <p class="text-lg text-gray-500 dark:text-gray-400 mb-12 max-w-xl mx-auto">Pilih peran Anda dan mulai terhubung dengan nano influencer atau brand di seluruh Indonesia.</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
             {{-- Brand Card --}}
@@ -107,7 +107,7 @@
                     <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                 </div>
                 <h3 class="text-xl font-black text-gray-900 dark:text-white mb-3">Untuk Brand</h3>
-                <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">Temukan KOL yang benar-benar cocok dengan audiens Anda dan kelola kampanye dengan mudah.</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">Temukan nano influencer yang cocok dengan audiens Anda dan ajak kerja sama langsung tanpa perantara.</p>
                 <a href="{{ route('register.brand') }}" class="block w-full py-3.5 text-center bg-gradient-to-r from-primary-600 to-indigo-600 text-white font-bold rounded-xl hover:from-primary-700 hover:to-indigo-700 transition-all duration-300 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">Daftar Brand</a>
             </div>
 
@@ -118,7 +118,7 @@
                     <svg class="w-8 h-8 text-pink-600 dark:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 </div>
                 <h3 class="text-xl font-black text-gray-900 dark:text-white mb-3">Untuk KOL</h3>
-                <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">Dapatkan akses ke brand-brand ternama dan pastikan pembayaran Anda aman melalui escrow.</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">Dapatkan tawaran kerja sama dari berbagai brand dan bangun portofolio sebagai content creator.</p>
                 <a href="{{ route('register.kol') }}" class="block w-full py-3.5 text-center bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold rounded-xl hover:from-pink-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-pink-500/25 hover:shadow-xl hover:shadow-pink-500/30">Daftar KOL</a>
             </div>
         </div>

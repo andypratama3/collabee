@@ -45,7 +45,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900&display=swap" rel="stylesheet" />
-    <meta name="description" content="@yield('description', 'Collabee adalah platform peer-to-peer yang menghubungkan brand secara langsung dengan KOL untuk kampanye pemasaran yang efektif, transparan, dan terpercaya.')">
+    <meta name="description" content="@yield('description', 'Collabee adalah platform peer-to-peer yang membantu brand terhubung langsung dengan nano influencer (1.000–10.000 followers) untuk kolaborasi yang lebih praktis, dekat, dan autentik.')">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
@@ -152,7 +152,7 @@
                         <span class="text-2xl font-black tracking-tight text-gray-900 dark:text-white">{{ config('app.name') }}</span>
                     </a>
                     <p class="text-gray-500 dark:text-gray-400 max-w-sm text-lg leading-relaxed">
-                        Platform peer-to-peer revolusioner yang mendemokrasikan kolaborasi antara Brand dan Kreator Konten di seluruh Indonesia.
+                        Platform peer-to-peer yang membantu brand terhubung langsung dengan nano influencer untuk kolaborasi yang lebih praktis, dekat, dan autentik.
                     </p>
                     <div class="flex gap-4">
                         <a href="#" class="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center justify-center text-gray-400 hover:text-primary-600 hover:border-primary-500 hover:shadow-lg hover:shadow-primary-500/20 transition-all">

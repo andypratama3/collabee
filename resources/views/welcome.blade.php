@@ -37,7 +37,7 @@
         
         <!-- Subheadline -->
         <p class="max-w-3xl mx-auto text-xl md:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed mb-16 font-medium">
-            Platform peer-to-peer revolusioner yang mendemokrasikan kolaborasi. Tanpa perantara, transparan, dan aman untuk kampanye yang lebih sukses.
+            Platform peer-to-peer yang membantu brand terhubung langsung dengan nano influencer (1.000–10.000 followers) untuk kolaborasi yang lebih praktis, dekat, dan autentik.
         </p>
 
         <!-- CTA Buttons -->
