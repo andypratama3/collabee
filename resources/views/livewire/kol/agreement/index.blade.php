@@ -41,9 +41,9 @@
                         <tr class="hover:bg-gray-50/80 dark:hover:bg-gray-700/30 transition-colors duration-200">
                             <td class="px-6 py-4 text-sm font-mono font-semibold text-gray-900 dark:text-white">{{ $agreement->agreement_number }}</td>
                             <td class="px-6 py-4">
-                                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $agreement->hiring->brandProfile->user->name ?? 'N/A' }}</span>
+                                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $agreement->hiring?->brandProfile?->user?->name ?? 'N/A' }}</span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $agreement->hiring->campaign->title }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $agreement->hiring?->campaign?->title ?? 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm font-semibold text-gray-900 dark:text-white">Rp. {{ number_format($agreement->total_amount, 0, ',', '.') }}</td>
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg

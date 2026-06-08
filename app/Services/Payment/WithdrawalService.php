@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class WithdrawalService
 {
-    public function requestWithdrawal(KolProfile $kolProfile, float $amount, string $bankAccountId): KolWithdrawal
+    public function requestWithdrawal(KolProfile $kolProfile, float $amount, string $bankAccountId, ?string $notes = null): KolWithdrawal
     {
         if ($amount < 100000) {
             throw new \InvalidArgumentException('Minimum penarikan adalah Rp 100.000');
@@ -21,7 +21,7 @@ class WithdrawalService
             throw new \InvalidArgumentException('Rekening bank tidak valid');
         }
 
-        return DB::transaction(function () use ($kolProfile, $amount, $bankAccount) {
+        return DB::transaction(function () use ($kolProfile, $amount, $bankAccount, $notes) {
             if ($kolProfile->wallet_balance < $amount) {
                 throw new \InvalidArgumentException('Saldo tidak mencukupi');
             }
@@ -37,6 +37,7 @@ class WithdrawalService
                 'bank_name' => $bankAccount->bank_name,
                 'bank_account_number' => $bankAccount->account_number,
                 'bank_account_name' => $bankAccount->account_name,
+                'notes' => $notes,
                 'status' => 'pending',
             ]);
 

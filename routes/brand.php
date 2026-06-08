@@ -16,9 +16,12 @@ use App\Livewire\Brand\Profile\CreateProfile;
 use App\Livewire\Brand\Profile\EditProfile;
 use Illuminate\Support\Facades\Route;
 
+Route::middleware(['brand'])->prefix('brand')->name('brand.')->group(function () {
+    Route::get('/profile/create', CreateProfile::class)->name('profile.create');
+});
+
 Route::middleware(['brand', 'profile.complete'])->prefix('brand')->name('brand.')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    Route::get('/profile/create', CreateProfile::class)->name('profile.create');
     Route::get('/profile/{profile}', EditProfile::class)->name('profile.edit');
     Route::get('/campaigns', CampaignIndex::class)->name('campaign.index');
     Route::get('/campaign/create', CreateCampaign::class)->name('campaign.create');

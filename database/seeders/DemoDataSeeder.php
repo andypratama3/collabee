@@ -426,4 +426,7 @@ class DemoDataSeeder extends Seeder
             'expires_at' => now()->addDays(7),
         ]);
     }
+
+
+    // sisi brand kalau dia hire kol -> 
 }

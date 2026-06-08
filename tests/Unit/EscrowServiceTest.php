@@ -34,8 +34,9 @@ beforeEach(function () {
     ]);
     $this->payment = Payment::factory()->create([
         'agreement_id' => $agreement->id,
-        'amount' => 1000000,
-        'total_amount' => 1100000,
+        'amount' => 900000,
+        'platform_fee' => 100000,
+        'total_amount' => 1000000,
         'status' => PaymentStatus::PAID,
     ]);
 });
@@ -46,6 +47,8 @@ test('holdFunds creates escrow transaction with correct amounts', function () {
     expect($escrow)->toBeInstanceOf(EscrowTransaction::class)
         ->and($escrow->payment_id)->toBe($this->payment->id)
         ->and($escrow->amount_held)->toEqual(1000000.00)
+        ->and($escrow->platform_fee)->toEqual(100000.00)
+        ->and($escrow->kol_amount)->toEqual(900000.00)
         ->and($escrow->platform_fee)->toEqual(100000.00)
         ->and($escrow->kol_amount)->toEqual(900000.00)
         ->and($escrow->status)->toBe(EscrowStatus::HELD)

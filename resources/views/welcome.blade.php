@@ -69,9 +69,9 @@
                 @foreach($brands as $brand)
                     <div class="group flex flex-col items-center gap-2">
                         <div class="w-16 h-16 rounded-2xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-md border border-gray-200/50 dark:border-gray-700 flex items-center justify-center text-primary-600 dark:text-primary-400 font-black text-2xl shadow-lg group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300">
-                            {{ strtoupper(substr($brand->company_name ?? $brand->user->name, 0, 1)) }}
+                            {{ strtoupper(substr($brand->company_name ?? $brand->user?->name ?? 'B', 0, 1)) }}
                         </div>
-                        <span class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{{ $brand->company_name ?? $brand->user->name }}</span>
+                        <span class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{{ $brand->company_name ?? $brand->user?->name ?? 'Brand' }}</span>
                     </div>
                 @endforeach
             </div>
@@ -187,10 +187,10 @@
             <div class="group bg-white dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 text-center shadow-lg shadow-gray-200/20 dark:shadow-none border border-gray-100 dark:border-gray-700 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500">
                 <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 p-1 mb-4 group-hover:scale-110 transition-transform duration-300">
                     <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">
-                        {{ strtoupper(substr($kol->display_name ?? $kol->user->name, 0, 2)) }}
+                        {{ strtoupper(substr($kol->display_name ?? $kol->user?->name ?? 'KO', 0, 2)) }}
                     </div>
                 </div>
-                <h3 class="font-bold text-gray-900 dark:text-white truncate mb-1">{{ $kol->display_name ?? $kol->user->name }}</h3>
+                <h3 class="font-bold text-gray-900 dark:text-white truncate mb-1">{{ $kol->display_name ?? $kol->user?->name ?? 'KOL' }}</h3>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">{{ $kol->category ?? 'Lifestyle' }}</p>
                 <div class="flex items-center justify-center gap-4 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 py-2 rounded-xl">
                     <span class="flex items-center gap-1">

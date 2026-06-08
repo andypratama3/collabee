@@ -24,7 +24,7 @@
             <div class="logo">Collabee</div>
         </div>
         <div class="body-card">
-            <div class="greeting">Halo, {{ $content->kolProfile->display_name ?? 'KOL' }}!</div>
+            <div class="greeting">Halo, {{ $content->kolProfile?->display_name ?? 'KOL' }}!</div>
             <p class="text">Ini adalah pengingat bahwa tenggat waktu pengumpulan konten akan segera tiba.</p>
             <div class="info-box">
                 <div style="margin-bottom: 12px;">

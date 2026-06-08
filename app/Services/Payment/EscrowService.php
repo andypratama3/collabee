@@ -18,8 +18,8 @@ class EscrowService
     public function holdFunds(Payment $payment): EscrowTransaction
     {
         $escrow = DB::transaction(function () use ($payment) {
-            $amount = $payment->amount;
-            $platformFee = $amount * 0.10;
+            $amount = $payment->total_amount;
+            $platformFee = $payment->platform_fee;
             $kolAmount = $amount - $platformFee;
 
             $escrow = EscrowTransaction::create([
@@ -41,7 +41,8 @@ class EscrowService
             'payment',
             'Pembayaran diterima',
             "Pembayaran untuk campaign sebesar Rp " . number_format($payment->amount, 0, ',', '.') . " telah diterima dan dana diamankan di escrow.",
-            ['payment' => $payment]
+            ['payment' => $payment],
+            route('kol.dashboard')
         );
 
         return $escrow;
@@ -63,6 +64,8 @@ class EscrowService
 
             $kolProfile = $escrow->payment->agreement->hiring->kolProfile;
             $kolProfile->increment('wallet_balance', $escrow->kol_amount);
+            $kolProfile->increment('total_earned', $escrow->kol_amount);
+            $kolProfile->increment('total_campaigns_done');
 
             $escrow->payment->update(['status' => PaymentStatus::RELEASED]);
         });
@@ -72,7 +75,8 @@ class EscrowService
             'payment',
             'Dana escrow dirilis',
             "Dana sebesar Rp " . number_format($escrow->kol_amount, 0, ',', '.') . " telah dirilis ke wallet Anda.",
-            ['payment' => $escrow->payment]
+            ['payment' => $escrow->payment],
+            route('kol.dashboard')
         );
     }
 

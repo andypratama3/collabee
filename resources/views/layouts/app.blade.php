@@ -133,6 +133,7 @@
                                 <x-nav-link href="{{ route('brand.campaign.index') }}" :active="request()->routeIs('brand.campaign.*')" icon="campaign">My Campaigns</x-nav-link>
                                 <x-nav-link href="{{ route('brand.browse-kol') }}" :active="request()->routeIs('brand.browse-kol')" icon="users">Find KOLs</x-nav-link>
                                 <x-nav-link href="{{ route('brand.hiring.index') }}" :active="request()->routeIs('brand.hiring.*')" icon="hiring">Hiring Pipeline</x-nav-link>
+                                <x-nav-link href="{{ route('brand.content.index') }}" :active="request()->routeIs('brand.content.*')" icon="content">Content Review</x-nav-link>
                                 <x-nav-link href="{{ route('brand.chat.index') }}" :active="request()->routeIs('brand.chat.*')" icon="chat">Messages</x-nav-link>
                                 <x-nav-link href="{{ route('brand.agreement.index') }}" :active="request()->routeIs('brand.agreement.*')" icon="agreement">Contracts & Escrow</x-nav-link>
                                 <x-nav-link href="{{ route('brand.payment.index') }}" :active="request()->routeIs('brand.payment.*')" icon="payment">Billing History</x-nav-link>

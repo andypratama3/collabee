@@ -40,17 +40,25 @@
                     @foreach($unpaidAgreements as $agreement)
                         <div class="bg-white dark:bg-gray-800/70 backdrop-blur-sm rounded-xl border border-amber-200/30 dark:border-amber-800/30 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition-all duration-200 hover:bg-white/90 dark:hover:bg-gray-800/90 hover:border-amber-300/50">
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $agreement->hiring->campaign->title ?? 'N/A' }}</p>
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $agreement->hiring?->campaign?->title ?? 'N/A' }}</p>
                                 <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ $agreement->hiring->kolProfile->display_name ?? 'N/A' }}</span>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ $agreement->hiring?->kolProfile?->display_name ?? 'N/A' }}</span>
                                     <span class="text-gray-300 dark:text-gray-600">—</span>
                                     <span class="text-sm font-bold text-amber-600 dark:text-amber-400">Rp. {{ number_format($agreement->total_amount, 0, ',', '.') }}</span>
                                 </div>
                             </div>
-                            <button wire:click="pay({{ $agreement->id }})"
-                                    class="shrink-0 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-amber-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-500/30">
-                                Bayar Sekarang
-                            </button>
+                            @if(config('xendit.demo_mode'))
+                                <button wire:click="simulatePay({{ $agreement->id }})" wire:confirm="Simulasikan pembayaran untuk agreement ini?"
+                                        class="shrink-0 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl hover:from-emerald-600 hover:to-teal-600 shadow-lg shadow-emerald-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-500/30">
+                                    <svg class="w-4 h-4 inline -mt-0.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    Simulasikan Pembayaran
+                                </button>
+                            @else
+                                <button wire:click="pay({{ $agreement->id }})"
+                                        class="shrink-0 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-amber-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-500/30">
+                                    Bayar Sekarang
+                                </button>
+                            @endif
                         </div>
                     @endforeach
                 </div>
@@ -79,8 +87,8 @@
                             <td class="px-6 py-4">
                                 <span class="text-sm font-mono font-semibold text-gray-900 dark:text-white bg-gray-100/50 dark:bg-gray-700/50 px-2 py-0.5 rounded">{{ $payment->invoice_number }}</span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $payment->agreement->hiring->campaign->title ?? 'N/A' }}</td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{{ $payment->agreement->hiring->kolProfile->display_name ?? 'N/A' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $payment->agreement?->hiring?->campaign?->title ?? 'N/A' }}</td>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{{ $payment->agreement?->hiring?->kolProfile?->display_name ?? 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm font-bold text-gray-900 dark:text-white">Rp. {{ number_format($payment->total_amount, 0, ',', '.') }}</td>
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center px-2.5 py-1 text-xs font-bold rounded-full border

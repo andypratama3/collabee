@@ -10,13 +10,15 @@ use App\Models\ChatRoom;
 use App\Models\Hiring;
 use App\Models\HiringApplication;
 use App\Models\KolProfile;
+use App\Services\Campaign\AgreementService;
 use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB;
 
 class HiringService
 {
     public function __construct(
-        private readonly NotificationService $notificationService
+        private readonly NotificationService $notificationService,
+        private readonly AgreementService $agreementService,
     ) {}
 
     public function apply(Campaign $campaign, KolProfile $kolProfile, array $data): HiringApplication
@@ -48,7 +50,8 @@ class HiringService
             'hiring',
             'Ada lamaran baru',
             "KOL {$kolProfile->display_name} melamar campaign {$campaign->title}.",
-            ['hiring' => $application]
+            ['hiring' => $application],
+            route('brand.hiring.index')
         );
 
         return $application;
@@ -86,7 +89,8 @@ class HiringService
             'hiring',
             'Tawaran hiring baru',
             "Brand {$brandProfile->brand_name} ingin merekrut Anda untuk campaign {$campaign->title}.",
-            ['hiring' => $hiring]
+            ['hiring' => $hiring],
+            route('kol.hiring.index')
         );
 
         return $hiring;
@@ -117,12 +121,16 @@ class HiringService
             return $hiring->fresh();
         });
 
+        // Auto-generate agreement after acceptance (idempotent — safe to call even if already exists)
+        $this->agreementService->generate($result);
+
         $this->notificationService->send(
             $result->campaign->brandProfile->user,
             'hiring',
             'KOL menerima tawaran',
             "{$result->kolProfile->display_name} telah menerima tawaran hiring untuk campaign {$result->campaign->title}.",
-            ['hiring' => $result]
+            ['hiring' => $result],
+            route('brand.hiring.index')
         );
 
         return $result;
@@ -148,7 +156,8 @@ class HiringService
             'hiring',
             'KOL menolak tawaran',
             "{$result->kolProfile->display_name} menolak tawaran untuk campaign {$result->campaign->title}." . ($reason ? " Alasan: {$reason}" : ''),
-            ['hiring' => $result]
+            ['hiring' => $result],
+            route('brand.hiring.index')
         );
 
         return $result;
@@ -173,6 +182,91 @@ class HiringService
 
             return $hiring->fresh();
         });
+    }
+
+    /**
+     * Brand accepts a KOL application and converts it into a formal Hiring
+     */
+    public function acceptApplication(HiringApplication $application, BrandProfile $brandProfile): Hiring
+    {
+        $hiring = DB::transaction(function () use ($application, $brandProfile) {
+            if ($application->status !== 'pending') {
+                throw new \RuntimeException('This application has already been processed.');
+            }
+
+            $campaign = $application->campaign;
+
+            if ($campaign->kol_filled >= $campaign->kol_slots) {
+                throw new \RuntimeException('All KOL slots for this campaign are filled.');
+            }
+
+            // Mark application as accepted
+            $application->update(['status' => 'accepted']);
+
+            // Create formal Hiring record
+            $hiring = Hiring::create([
+                'campaign_id' => $campaign->id,
+                'brand_profile_id' => $brandProfile->id,
+                'kol_profile_id' => $application->kol_profile_id,
+                'initiated_by' => 'kol',
+                'status' => HiringStatus::ACCEPTED,
+                'message' => $application->message,
+                'proposed_budget' => $application->proposed_budget ?? $campaign->budget_per_kol,
+                'agreed_budget' => $application->proposed_budget ?? $campaign->budget_per_kol,
+                'accepted_at' => now(),
+                'expires_at' => now()->addDays(7),
+            ]);
+
+            $campaign->increment('kol_filled');
+
+            ChatRoom::firstOrCreate([
+                'hiring_id' => $hiring->id,
+            ], [
+                'brand_user_id' => $campaign->brandProfile->user->id,
+                'kol_user_id' => $application->kolProfile->user->id,
+            ]);
+
+            return $hiring;
+        });
+
+        // Auto-generate agreement
+        $this->agreementService->generate($hiring);
+
+        $this->notificationService->send(
+            $hiring->kolProfile->user,
+            'hiring',
+            'Lamaran Anda diterima',
+            "Brand {$hiring->brandProfile->brand_name} menerima lamaran Anda untuk campaign {$hiring->campaign->title}.",
+            ['hiring' => $hiring],
+            route('kol.hiring.index')
+        );
+
+        return $hiring;
+    }
+
+    /**
+     * Brand rejects a KOL application
+     */
+    public function rejectApplication(HiringApplication $application, ?string $reason = null): HiringApplication
+    {
+        if ($application->status !== 'pending') {
+            throw new \RuntimeException('This application has already been processed.');
+        }
+
+        $application->update([
+            'status' => 'rejected',
+        ]);
+
+        $this->notificationService->send(
+            $application->kolProfile->user,
+            'hiring',
+            'Lamaran Anda ditolak',
+            "Brand telah menolak lamaran Anda untuk campaign {$application->campaign->title}." . ($reason ? " Alasan: {$reason}" : ''),
+            ['application' => $application],
+            route('kol.hiring.index')
+        );
+
+        return $application->fresh();
     }
 
     public function getBrandHirings(BrandProfile $brandProfile, ?string $status = null)

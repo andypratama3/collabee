@@ -27,6 +27,10 @@ class Rating extends Model
     {
         return [
             'overall' => 'decimal:2',
+            'communication' => 'integer',
+            'professionalism' => 'integer',
+            'quality' => 'integer',
+            'timeliness' => 'integer',
         ];
     }
 

@@ -16,6 +16,13 @@ class PlatformReview extends Model
         'review',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'rating' => 'integer',
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

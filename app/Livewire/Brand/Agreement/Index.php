@@ -16,8 +16,16 @@ class Index extends Component
 
     public function render()
     {
-        $query = Agreement::whereHas('hiring', function ($q) {
-            $q->where('brand_profile_id', auth()->user()->brandProfile->id);
+        $brandProfile = auth()->user()->brandProfile;
+
+        if (! $brandProfile) {
+            return view('livewire.brand.agreement.index', [
+                'agreements' => collect(),
+            ])->layout('layouts.app');
+        }
+
+        $query = Agreement::whereHas('hiring', function ($q) use ($brandProfile) {
+            $q->where('brand_profile_id', $brandProfile->id);
         })->with('hiring.campaign', 'hiring.kolProfile.user');
 
         if ($this->filter) {

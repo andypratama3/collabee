@@ -18,7 +18,8 @@ class Show extends Component
     public function mount(Content $content): void
     {
         $this->authorize('review', $content);
-        $this->content->load(['agreement.hiring.campaign', 'kolProfile.user', 'revisions.requester', 'media']);
+        $content->load(['agreement.hiring.campaign', 'kolProfile.user', 'revisions.requester', 'media']);
+        $this->content = $content;
     }
 
     public function render()
@@ -35,7 +36,11 @@ class Show extends Component
         $contentService->approve($this->content);
         $this->content->refresh();
 
-        session()->flash('success', 'Konten berhasil disetujui.');
+        session()->flash('success', 'Konten berhasil disetujui. Dana escrow telah dirilis ke KOL.');
+        $this->redirect(route('shared.rating.create', [
+            'hiring' => $this->content->agreement->hiring_id,
+            'type' => 'kol',
+        ]), navigate: true);
     }
 
     public function requestRevision(ContentService $contentService): void

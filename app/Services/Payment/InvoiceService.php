@@ -36,14 +36,15 @@ class InvoiceService
         }
 
         $amount = $agreement->total_amount;
-        $platformFee = $amount * 0.10;
+        $platformFeePercent = $agreement->platform_fee_percent ?? 10.00;
+        $platformFee = $amount * ($platformFeePercent / 100);
 
         return Payment::create([
             'agreement_id' => $agreement->id,
             'invoice_number' => $this->generateInvoiceNumber(),
-            'amount' => $amount,
+            'amount' => $amount - $platformFee,
             'platform_fee' => $platformFee,
-            'total_amount' => $amount + $platformFee,
+            'total_amount' => $amount,
             'gateway' => 'xendit',
             'status' => PaymentStatus::PENDING,
         ]);

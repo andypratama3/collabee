@@ -108,14 +108,40 @@
                 </div>
             @endif
 
+            <!-- Rejection Message -->
+            @if($content->status->value === 'rejected' && $content->notes)
+                <div class="px-6 py-5 border-t border-gray-100/80 dark:border-gray-700 bg-rose-50/50 dark:bg-rose-900/10">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-rose-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                        <div>
+                            <p class="text-sm font-bold text-rose-700 dark:text-rose-400 mb-1">Konten Ditolak</p>
+                            <p class="text-sm text-rose-600 dark:text-rose-300">{{ $content->notes }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <!-- Actions -->
             <div class="px-6 py-5 flex flex-wrap items-center gap-3 bg-gray-50/50 dark:bg-gray-900/20">
-                @if($content->status->value === 'draft' || $content->status->value === 'revision_requested')
+                @if(in_array($content->status->value, ['draft', 'revision_requested']))
+                    <a href="{{ route('kol.content.edit', $content) }}" wire:navigate
+                       class="px-6 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-300 inline-flex items-center gap-2 ring-1 ring-gray-200 dark:ring-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        Edit Konten
+                    </a>
                     <button wire:click="submit" wire:confirm="Kirim konten untuk review?"
                             class="px-6 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-primary to-primary-dark rounded-xl hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all duration-300 inline-flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                         Kirim untuk Review
                     </button>
+                @endif
+
+                @if($content->status->value === 'rejected')
+                    <a href="{{ route('kol.content.create', $content->agreement_id) }}" wire:navigate
+                       class="px-6 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-rose-500 to-rose-600 rounded-xl hover:shadow-lg hover:shadow-rose-500/25 hover:-translate-y-0.5 transition-all duration-300 inline-flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Upload Ulang Konten
+                    </a>
                 @endif
 
                 @if($content->submitted_at)
@@ -130,6 +156,23 @@
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         Disetujui: {{ $content->approved_at->format('d M Y H:i') }}
                     </span>
+
+                    {{-- Rate Brand button — only show if KOL hasn't rated yet --}}
+                    @php
+                        $hiringId = $content->agreement?->hiring_id;
+                        $alreadyRated = $hiringId
+                            ? \App\Models\Rating::where('hiring_id', $hiringId)
+                                ->where('rater_id', auth()->id())
+                                ->exists()
+                            : true;
+                    @endphp
+                    @if($hiringId && !$alreadyRated)
+                        <a href="{{ route('shared.rating.create', ['hiring' => $hiringId, 'type' => 'brand']) }}" wire:navigate
+                           class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-xl ring-1 ring-amber-200/50 dark:ring-amber-700/30 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-all duration-200">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            Beri Rating Brand
+                        </a>
+                    @endif
                 @endif
             </div>
         </div>

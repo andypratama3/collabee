@@ -48,22 +48,26 @@ class ContentService
     {
         $result = DB::transaction(function () use ($content) {
             $content->update([
-                'status' => ContentStatus::SUBMITTED,
+                'status'       => ContentStatus::SUBMITTED,
                 'submitted_at' => now(),
             ]);
 
             ContentUploaded::dispatch($content);
 
-            return $content->fresh();
+            return $content->fresh()->load('brandProfile.user', 'kolProfile');
         });
 
-        $this->notificationService->send(
-            $result->brandProfile->user,
-            'content_reminder',
-            'Konten baru siap direview',
-            "KOL {$result->kolProfile->display_name} telah mengirimkan konten untuk ditinjau.",
-            ['content' => $result]
-        );
+        // Guard: skip notification if brandProfile has no user
+        if ($result->brandProfile?->user) {
+            $this->notificationService->send(
+                $result->brandProfile->user,
+                'content_reminder',
+                'Konten baru siap direview',
+                "KOL {$result->kolProfile?->display_name} telah mengirimkan konten untuk ditinjau.",
+                ['content' => $result],
+                route('brand.content.show', $result)
+            );
+        }
 
         return $result;
     }
@@ -72,26 +76,30 @@ class ContentService
     {
         $result = DB::transaction(function () use ($content) {
             $content->update([
-                'status' => ContentStatus::APPROVED,
+                'status'      => ContentStatus::APPROVED,
                 'approved_at' => now(),
             ]);
 
-            // Immediately release escrow to KOL wallet on approval
-            $payment = $content->agreement->payment;
+            // Release escrow when content is approved
+            $payment = $content->agreement?->payment;
             if ($payment && $payment->escrowTransaction) {
                 $this->escrowService->releaseEscrow($payment->escrowTransaction, 'content_approved');
             }
 
-            return $content->fresh();
+            return $content->fresh()->load('kolProfile.user', 'brandProfile');
         });
 
-        $this->notificationService->send(
-            $result->kolProfile->user,
-            'content_reminder',
-            'Konten disetujui',
-            "Konten Anda telah disetujui oleh brand {$result->brandProfile->brand_name}. Dana escrow telah dirilis ke wallet Anda.",
-            ['content' => $result]
-        );
+        // Guard: skip notification if kolProfile has no user
+        if ($result->kolProfile?->user) {
+            $this->notificationService->send(
+                $result->kolProfile->user,
+                'content_reminder',
+                'Konten disetujui',
+                "Konten Anda telah disetujui oleh brand {$result->brandProfile?->brand_name}. Dana escrow telah dirilis ke wallet Anda.",
+                ['content' => $result],
+                route('kol.content.show', $result)
+            );
+        }
 
         return $result;
     }
@@ -104,36 +112,52 @@ class ContentService
             ]);
 
             ContentRevision::create([
-                'content_id' => $content->id,
+                'content_id'   => $content->id,
                 'requested_by' => auth()->id(),
-                'note' => $notes,
-                'status' => 'pending',
+                'note'         => $notes,
+                'status'       => 'pending',
             ]);
 
-            return $content->fresh();
+            return $content->fresh()->load('kolProfile.user', 'brandProfile');
         });
 
-        $this->notificationService->send(
-            $result->kolProfile->user,
-            'content_reminder',
-            'Revisi konten diminta',
-            "Brand {$result->brandProfile->brand_name} meminta revisi untuk konten Anda.",
-            ['content' => $result]
-        );
+        if ($result->kolProfile?->user) {
+            $this->notificationService->send(
+                $result->kolProfile->user,
+                'content_reminder',
+                'Revisi konten diminta',
+                "Brand {$result->brandProfile?->brand_name} meminta revisi untuk konten Anda.",
+                ['content' => $result],
+                route('kol.content.show', $result)
+            );
+        }
 
         return $result;
     }
 
     public function reject(Content $content, string $reason): Content
     {
-        return DB::transaction(function () use ($content, $reason) {
+        $result = DB::transaction(function () use ($content, $reason) {
             $content->update([
                 'status' => ContentStatus::REJECTED,
-                'notes' => $reason,
+                'notes'  => $reason,
             ]);
 
-            return $content->fresh();
+            return $content->fresh()->load('kolProfile.user', 'brandProfile');
         });
+
+        if ($result->kolProfile?->user) {
+            $this->notificationService->send(
+                $result->kolProfile->user,
+                'content_reminder',
+                'Konten ditolak',
+                "Konten Anda ditolak oleh brand {$result->brandProfile?->brand_name}.",
+                ['content' => $result],
+                route('kol.content.show', $result)
+            );
+        }
+
+        return $result;
     }
 
     public function getKolContents(KolProfile $kolProfile, ?string $status = null): Collection

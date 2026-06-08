@@ -173,11 +173,11 @@
                             <div class="p-6 flex items-center justify-between hover:bg-white/80 dark:hover:bg-gray-700/80 transition-all duration-200 group">
                                 <div class="flex items-center gap-4">
                                     <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-100 to-indigo-50 border border-indigo-200 dark:from-indigo-900/40 dark:to-indigo-800/20 dark:border-indigo-700 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-black text-lg shadow-sm group-hover:scale-110 transition-transform duration-300">
-                                        {{ strtoupper(substr($hiring->kolProfile->display_name, 0, 1)) }}
+                                        {{ strtoupper(substr($hiring->kolProfile?->display_name ?? '?', 0, 1)) }}
                                     </div>
                                     <div>
-                                        <p class="text-base font-bold text-gray-900 dark:text-white group-hover:text-indigo-500 transition-colors">{{ $hiring->kolProfile->display_name }}</p>
-                                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 line-clamp-1 mt-1">{{ $hiring->campaign->title }}</p>
+                                        <p class="text-base font-bold text-gray-900 dark:text-white group-hover:text-indigo-500 transition-colors">{{ $hiring->kolProfile?->display_name ?? 'Unknown' }}</p>
+                                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 line-clamp-1 mt-1">{{ $hiring->campaign?->title ?? 'N/A' }}</p>
                                     </div>
                                 </div>
                                 <span class="px-3 py-1 text-xs font-bold rounded-full border shadow-sm

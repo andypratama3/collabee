@@ -7,91 +7,183 @@
         </div>
         <div class="sm:flex sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-3xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-600 dark:from-white dark:via-gray-100 dark:to-gray-300 bg-clip-text text-transparent">Hiring Invitations</h1>
-                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Manage your incoming hiring requests</p>
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-600 dark:from-white dark:via-gray-100 dark:to-gray-300 bg-clip-text text-transparent">Hiring & Lamaran</h1>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Kelola undangan hiring dan lamaran campaign Anda</p>
             </div>
         </div>
     </div>
 
-    <!-- Filter Pills -->
-    <div class="flex gap-2 mb-8 flex-wrap">
-        <button wire:click="$set('filter', '')"
-                class="px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 {{ empty($filter) ? 'bg-gradient-to-r from-primary to-primary-dark text-white shadow-lg shadow-primary/25' : 'bg-white dark:bg-gray-800/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 hover:shadow-md' }}">
-            All
+    <!-- Tabs -->
+    <div class="flex gap-1 p-1 bg-white dark:bg-gray-800/60 rounded-2xl border border-gray-200 dark:border-gray-700 w-fit mb-6 shadow-sm">
+        <button wire:click="switchTab('invitations')"
+                class="px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 {{ $activeTab === 'invitations' ? 'bg-gradient-to-r from-primary to-primary-dark text-white shadow-md shadow-primary/25' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200' }}">
+            Undangan Hiring
+            @if($hirings->total() > 0)
+                <span class="ml-1.5 inline-flex items-center justify-center w-5 h-5 text-xs rounded-full {{ $activeTab === 'invitations' ? 'bg-white/30 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400' }}">{{ $hirings->total() }}</span>
+            @endif
         </button>
-        @foreach($statuses as $status)
-            <button wire:click="$set('filter', '{{ $status->value }}')"
-                    class="px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 {{ $filter === $status->value ? 'bg-gradient-to-r from-primary to-primary-dark text-white shadow-lg shadow-primary/25' : 'bg-white dark:bg-gray-800/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 hover:shadow-md' }}">
-                {{ ucfirst($status->value) }}
-            </button>
-        @endforeach
+        <button wire:click="switchTab('applications')"
+                class="px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 {{ $activeTab === 'applications' ? 'bg-gradient-to-r from-primary to-primary-dark text-white shadow-md shadow-primary/25' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200' }}">
+            Lamaran Saya
+            @if($applications->total() > 0)
+                <span class="ml-1.5 inline-flex items-center justify-center w-5 h-5 text-xs rounded-full {{ $activeTab === 'applications' ? 'bg-white/30 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400' }}">{{ $applications->total() }}</span>
+            @endif
+        </button>
     </div>
 
-    <!-- Hiring Cards -->
-    <div class="space-y-4">
-        @forelse($hirings as $hiring)
-            <div class="group bg-white dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 dark:shadow-gray-900/30 border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-gray-200/40 dark:hover:shadow-gray-900/50">
-                <div class="flex flex-col sm:flex-row items-start justify-between gap-4">
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-3 mb-2 flex-wrap">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-400 transition-colors duration-300">{{ $hiring->campaign->title }}</h3>
-                            <span class="px-2.5 py-1 text-xs font-semibold rounded-lg
-                                @if($hiring->status->value === 'pending') bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 ring-1 ring-amber-200/50 dark:ring-amber-700/30
-                                @elseif($hiring->status->value === 'accepted') bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 ring-1 ring-emerald-200/50 dark:ring-emerald-700/30
-                                @elseif($hiring->status->value === 'rejected') bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-400 ring-1 ring-rose-200/50 dark:ring-rose-700/30
-                                @elseif($hiring->status->value === 'cancelled') bg-gray-50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 ring-1 ring-gray-200/50 dark:ring-gray-600/30
-                                @else bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 ring-1 ring-blue-200/50 dark:ring-blue-700/30
-                                @endif">
-                                {{ ucfirst($hiring->status->value) }}
-                            </span>
-                        </div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                            by <span class="font-medium text-gray-700 dark:text-gray-300">{{ $hiring->campaign->brandProfile->brand_name ?? 'Unknown Brand' }}</span>
-                        </p>
-                        @if($hiring->message)
-                            <div class="mb-3 px-4 py-2.5 bg-gray-50/80 dark:bg-gray-700/30 rounded-xl border-l-3 border-primary/30">
-                                <p class="text-sm text-gray-600 dark:text-gray-300 italic">"{{ $hiring->message }}"</p>
-                            </div>
-                        @endif
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-sm text-gray-500 dark:text-gray-400">
-                            <span class="inline-flex items-center gap-1.5">
-                                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                Rp. {{ number_format($hiring->proposed_budget ?? 0, 0, ',', '.') }}
-                            </span>
-                            <span class="inline-flex items-center gap-1.5">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                {{ $hiring->created_at->format('d M Y') }}
-                            </span>
-                            @if($hiring->expires_at)
-                                <span class="inline-flex items-center gap-1.5">
-                                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                    Expires: {{ $hiring->expires_at->format('d M Y') }}
+    @if($activeTab === 'invitations')
+        <!-- Filter Pills -->
+        <div class="flex gap-2 mb-8 flex-wrap">
+            <button wire:click="$set('filter', '')"
+                    class="px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 {{ empty($filter) ? 'bg-gradient-to-r from-primary to-primary-dark text-white shadow-lg shadow-primary/25' : 'bg-white dark:bg-gray-800/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 hover:shadow-md' }}">
+                Semua
+            </button>
+            @foreach($statuses as $status)
+                <button wire:click="$set('filter', '{{ $status->value }}')"
+                        class="px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 {{ $filter === $status->value ? 'bg-gradient-to-r from-primary to-primary-dark text-white shadow-lg shadow-primary/25' : 'bg-white dark:bg-gray-800/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 hover:shadow-md' }}">
+                    {{ ucfirst($status->value) }}
+                </button>
+            @endforeach
+        </div>
+
+        <!-- Hiring Invitation Cards -->
+        <div class="space-y-4">
+            @forelse($hirings as $hiring)
+                <div class="group bg-white dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 dark:shadow-gray-900/30 border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-gray-200/40 dark:hover:shadow-gray-900/50">
+                    <div class="flex flex-col sm:flex-row items-start justify-between gap-4">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-400 transition-colors duration-300">{{ $hiring->campaign?->title ?? 'N/A' }}</h3>
+                                <span class="px-2.5 py-1 text-xs font-semibold rounded-lg
+                                    @if($hiring->status->value === 'pending') bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 ring-1 ring-amber-200/50 dark:ring-amber-700/30
+                                    @elseif($hiring->status->value === 'accepted') bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 ring-1 ring-emerald-200/50 dark:ring-emerald-700/30
+                                    @elseif($hiring->status->value === 'rejected') bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-400 ring-1 ring-rose-200/50 dark:ring-rose-700/30
+                                    @elseif($hiring->status->value === 'cancelled') bg-gray-50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 ring-1 ring-gray-200/50 dark:ring-gray-600/30
+                                    @else bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 ring-1 ring-blue-200/50 dark:ring-blue-700/30
+                                    @endif">
+                                    {{ ucfirst($hiring->status->value) }}
                                 </span>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                oleh <span class="font-medium text-gray-700 dark:text-gray-300">{{ $hiring->campaign?->brandProfile?->brand_name ?? 'Unknown Brand' }}</span>
+                            </p>
+                            @if($hiring->message)
+                                <div class="mb-3 px-4 py-2.5 bg-gray-50/80 dark:bg-gray-700/30 rounded-xl border-l-4 border-primary/30">
+                                    <p class="text-sm text-gray-600 dark:text-gray-300 italic">"{{ $hiring->message }}"</p>
+                                </div>
+                            @endif
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-sm text-gray-500 dark:text-gray-400">
+                                <span class="inline-flex items-center gap-1.5">
+                                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    Rp. {{ number_format($hiring->proposed_budget ?? 0, 0, ',', '.') }}
+                                </span>
+                                <span class="inline-flex items-center gap-1.5">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    {{ $hiring->created_at->format('d M Y') }}
+                                </span>
+                                @if($hiring->expires_at)
+                                    <span class="inline-flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        Expires: {{ $hiring->expires_at->format('d M Y') }}
+                                    </span>
+                                @endif
+                            </div>
+                            @if(in_array($hiring->status->value, ['accepted', 'negotiating']) && $hiring->chatRoom)
+                                <div class="mt-3">
+                                    <a href="{{ route('kol.chat.show', $hiring->chatRoom) }}" wire:navigate
+                                       class="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary-dark">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                                        Buka Chat
+                                    </a>
+                                </div>
+                            @endif
+                            @if($hiring->status->value === 'accepted' && $hiring->agreement)
+                                <div class="mt-2">
+                                    <a href="{{ route('kol.agreement.show', $hiring->agreement) }}" wire:navigate
+                                       class="inline-flex items-center gap-1.5 text-xs font-medium text-violet-600 dark:text-violet-400 hover:text-violet-700">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        Lihat Agreement
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            @if($hiring->status->value === 'pending')
+                                <button wire:click="openRespondModal({{ $hiring->id }}, 'accept')"
+                                        class="px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl hover:from-emerald-600 hover:to-emerald-700 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all duration-300 hover:-translate-y-0.5">
+                                    Terima
+                                </button>
+                                <button wire:click="openRespondModal({{ $hiring->id }}, 'reject')"
+                                        class="px-5 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 rounded-xl hover:bg-rose-100 dark:hover:bg-rose-900/40 ring-1 ring-rose-200/50 dark:ring-rose-700/30 transition-all duration-300 hover:-translate-y-0.5">
+                                    Tolak
+                                </button>
                             @endif
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 shrink-0">
-                        @if($hiring->status->value === 'pending')
-                            <button wire:click="openRespondModal({{ $hiring->id }}, 'accept')"
-                                    class="px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl hover:from-emerald-600 hover:to-emerald-700 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all duration-300 hover:-translate-y-0.5">
-                                Accept
-                            </button>
-                            <button wire:click="openRespondModal({{ $hiring->id }}, 'reject')"
-                                    class="px-5 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 rounded-xl hover:bg-rose-100 dark:hover:bg-rose-900/40 ring-1 ring-rose-200/50 dark:ring-rose-700/30 transition-all duration-300 hover:-translate-y-0.5">
-                                Decline
-                            </button>
-                        @endif
+                </div>
+            @empty
+                <x-empty-state icon="message" title="Belum ada undangan hiring" description="Daftarkan diri ke campaign untuk mendapatkan undangan!" actionLabel="Explore Campaigns" actionUrl="{{ route('campaigns.explore') }}" />
+            @endforelse
+        </div>
+
+        <div class="mt-8">{{ $hirings->links() }}</div>
+    @endif
+
+    @if($activeTab === 'applications')
+        <!-- My Applications -->
+        <div class="space-y-4">
+            @forelse($applications as $application)
+                <div class="group bg-white dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 dark:shadow-gray-900/30 border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-gray-200/40 dark:hover:shadow-gray-900/50">
+                    <div class="flex flex-col sm:flex-row items-start justify-between gap-4">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-400 transition-colors duration-300">{{ $application->campaign?->title ?? 'N/A' }}</h3>
+                                <span class="px-2.5 py-1 text-xs font-semibold rounded-lg
+                                    @if($application->status === 'pending') bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 ring-1 ring-amber-200/50 dark:ring-amber-700/30
+                                    @elseif($application->status === 'accepted') bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 ring-1 ring-emerald-200/50 dark:ring-emerald-700/30
+                                    @elseif($application->status === 'rejected') bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-400 ring-1 ring-rose-200/50 dark:ring-rose-700/30
+                                    @else bg-gray-50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 ring-1 ring-gray-200/50 dark:ring-gray-600/30
+                                    @endif">
+                                    {{ ucfirst($application->status) }}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                Campaign oleh <span class="font-medium text-gray-700 dark:text-gray-300">{{ $application->campaign?->brandProfile?->brand_name ?? 'Unknown Brand' }}</span>
+                            </p>
+                            @if($application->message)
+                                <div class="mb-3 px-4 py-2.5 bg-gray-50/80 dark:bg-gray-700/30 rounded-xl border-l-4 border-violet-300/50">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium">Pesan lamaran Anda:</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300 italic">"{{ $application->message }}"</p>
+                                </div>
+                            @endif
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-sm text-gray-500 dark:text-gray-400">
+                                @if($application->proposed_budget)
+                                    <span class="inline-flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        Rp. {{ number_format($application->proposed_budget, 0, ',', '.') }}
+                                    </span>
+                                @endif
+                                <span class="inline-flex items-center gap-1.5">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    Dikirim {{ $application->created_at->format('d M Y') }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <a href="{{ route('campaigns.detail', $application->campaign) }}" wire:navigate
+                               class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 ring-1 ring-gray-200/50 dark:ring-gray-600/30 transition-all duration-300">
+                                Lihat Campaign
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        @empty
-            <x-empty-state icon="message" title="No hiring invitations" description="Apply to campaigns to get hired!" actionLabel="Explore Campaigns" actionUrl="{{ route('campaigns.explore') }}" />
-        @endforelse
-    </div>
+            @empty
+                <x-empty-state icon="search" title="Belum ada lamaran" description="Anda belum melamar ke campaign manapun." actionLabel="Cari Campaign" actionUrl="{{ route('campaigns.explore') }}" />
+            @endforelse
+        </div>
 
-    <div class="mt-8">
-        {{ $hirings->links() }}
-    </div>
+        <div class="mt-8">{{ $applications->links() }}</div>
+    @endif
 
     <!-- Respond Modal -->
     @if($showRespondModal)
@@ -108,30 +200,30 @@
                         @endif
                     </div>
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        {{ $respondAction === 'accept' ? 'Accept Hiring?' : 'Decline Hiring?' }}
+                        {{ $respondAction === 'accept' ? 'Terima Hiring?' : 'Tolak Hiring?' }}
                     </h3>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">
                     @if($respondAction === 'accept')
-                        By accepting, you agree to work on this campaign under the proposed terms.
+                        Dengan menerima, Anda setuju untuk mengerjakan campaign ini. Agreement akan dibuat secara otomatis.
                     @else
-                        Are you sure you want to decline this hiring invitation?
+                        Apakah Anda yakin ingin menolak undangan hiring ini?
                     @endif
                 </p>
                 @if($respondAction === 'reject')
                     <div class="mb-5">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Reason (optional)</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Alasan (opsional)</label>
                         <textarea wire:model="rejectReason" rows="2"
                                   class="w-full px-4 py-3 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 placeholder:text-gray-400"
-                                  placeholder="Let the brand know why..."></textarea>
+                                  placeholder="Beri tahu brand alasan Anda..."></textarea>
                     </div>
                 @endif
                 <div class="flex justify-end gap-3">
                     <button wire:click="$set('showRespondModal', false)"
-                            class="px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100/80 dark:bg-gray-700/80 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">Close</button>
+                            class="px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100/80 dark:bg-gray-700/80 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">Batal</button>
                     <button wire:click="respond"
                             class="px-5 py-2.5 text-sm font-medium text-white rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-0.5 {{ $respondAction === 'accept' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-emerald-500/20' : 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 shadow-rose-500/20' }}">
-                        {{ $respondAction === 'accept' ? 'Yes, Accept' : 'Yes, Decline' }}
+                        {{ $respondAction === 'accept' ? 'Ya, Terima' : 'Ya, Tolak' }}
                     </button>
                 </div>
             </div>

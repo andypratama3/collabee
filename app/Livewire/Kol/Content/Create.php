@@ -18,6 +18,13 @@ class Create extends Component
     public array $files = [];
     public ?int $agreement_id = null;
 
+    public function mount(?int $agreement = null): void
+    {
+        if ($agreement) {
+            $this->agreement_id = $agreement;
+        }
+    }
+
     public function render()
     {
         $user = auth()->user();
@@ -49,7 +56,7 @@ class Create extends Component
             $q->where('kol_profile_id', $profile->id);
         })->where('status', 'signed')->findOrFail($this->agreement_id);
 
-        $contentService->upload(
+        $content = $contentService->upload(
             $profile,
             $agreement,
             [
@@ -59,7 +66,10 @@ class Create extends Component
             collect($this->files)
         );
 
-        session()->flash('success', 'Konten berhasil diupload.');
+        // Immediately submit for brand review
+        $contentService->submit($content);
+
+        session()->flash('success', 'Konten berhasil diupload dan dikirim untuk review.');
         $this->redirect(route('kol.content.index'), navigate: true);
     }
 }

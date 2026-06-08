@@ -107,10 +107,16 @@ class BrowseKol extends Component
         $brandProfile = auth()->user()->brandProfile;
         $kolProfile = KolProfile::findOrFail($this->selectedKolId);
 
-        $hiringService->brandHire($campaign, $brandProfile, $kolProfile, [
-            'proposed_budget' => $this->proposedBudget,
-            'message' => $this->hireMessage,
-        ]);
+        try {
+            $hiringService->brandHire($campaign, $brandProfile, $kolProfile, [
+                'proposed_budget' => $this->proposedBudget,
+                'message' => $this->hireMessage,
+            ]);
+        } catch (\RuntimeException $e) {
+            $this->showHireModal = false;
+            session()->flash('error', $e->getMessage());
+            return;
+        }
 
         $this->showHireModal = false;
         session()->flash('success', 'Hiring invitation sent to ' . $this->selectedKolName . '!');

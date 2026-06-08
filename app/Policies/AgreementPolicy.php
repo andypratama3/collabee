@@ -9,14 +9,21 @@ class AgreementPolicy
 {
     public function view(User $user, Agreement $agreement): bool
     {
-        return $user->isAdmin()
-            || $agreement->hiring->brandProfile->user_id === $user->id
-            || $agreement->hiring->kolProfile->user_id === $user->id;
+        if ($user->isAdmin()) return true;
+
+        $hiring = $agreement->hiring;
+        if (! $hiring) return false;
+
+        return $hiring->brandProfile?->user_id === $user->id
+            || $hiring->kolProfile?->user_id  === $user->id;
     }
 
     public function sign(User $user, Agreement $agreement): bool
     {
-        return $agreement->hiring->brandProfile->user_id === $user->id
-            || $agreement->hiring->kolProfile->user_id === $user->id;
+        $hiring = $agreement->hiring;
+        if (! $hiring) return false;
+
+        return $hiring->brandProfile?->user_id === $user->id
+            || $hiring->kolProfile?->user_id  === $user->id;
     }
 }

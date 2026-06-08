@@ -5,6 +5,8 @@ namespace App\Livewire\Brand\Payment;
 use App\Enums\PaymentStatus;
 use App\Models\Agreement;
 use App\Models\Payment;
+use App\Services\Payment\EscrowService;
+use App\Services\Payment\InvoiceService;
 use App\Services\Payment\XenditService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Collection;
@@ -21,7 +23,16 @@ class Index extends Component
 
     public function render()
     {
-        $brandProfileId = auth()->user()->brandProfile->id;
+        $brandProfile = auth()->user()->brandProfile;
+
+        if (! $brandProfile) {
+            return view('livewire.brand.payment.index', [
+                'payments' => collect(),
+                'unpaidAgreements' => collect(),
+            ])->layout('layouts.app');
+        }
+
+        $brandProfileId = $brandProfile->id;
 
         $payments = Payment::whereHas('agreement.hiring', function ($q) use ($brandProfileId) {
             $q->where('brand_profile_id', $brandProfileId);
@@ -67,6 +78,32 @@ class Index extends Component
             } else {
                 session()->flash('error', 'Gagal membuat invoice pembayaran.');
             }
+        } catch (\Exception $e) {
+            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function simulatePay(Agreement $agreement, InvoiceService $invoiceService, EscrowService $escrowService): void
+    {
+        $this->authorize('view', $agreement);
+
+        if ($agreement->status !== 'signed') {
+            session()->flash('error', 'Agreement harus ditandatangani terlebih dahulu.');
+            return;
+        }
+
+        if ($agreement->payment && $agreement->payment->status === PaymentStatus::PAID) {
+            session()->flash('warning', 'Pembayaran sudah dilakukan.');
+            return;
+        }
+
+        try {
+            $payment = $invoiceService->createPayment($agreement);
+            $invoiceService->markAsPaid($payment, 'SIMULATED-' . strtoupper(uniqid()));
+            $escrowService->holdFunds($payment);
+
+            session()->flash('success', 'Pembayaran berhasil disimulasikan! Dana telah diamankan di escrow.');
+            $this->redirect(route('brand.payment.index'), navigate: true);
         } catch (\Exception $e) {
             session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }

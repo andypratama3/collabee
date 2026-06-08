@@ -5,6 +5,7 @@ use App\Livewire\Kol\Agreement\Show as AgreementShow;
 use App\Livewire\Kol\Chat\Index as ChatIndex;
 use App\Livewire\Kol\Chat\Show as ChatShow;
 use App\Livewire\Kol\Content\Create as ContentCreate;
+use App\Livewire\Kol\Content\Edit as ContentEdit;
 use App\Livewire\Kol\Content\Index as ContentIndex;
 use App\Livewire\Kol\Content\Show as ContentShow;
 use App\Livewire\Kol\Dashboard;
@@ -20,7 +21,8 @@ Route::middleware(['kol', 'profile.complete'])->prefix('kol')->name('kol.')->gro
     Route::get('/chat', ChatIndex::class)->name('chat.index');
     Route::get('/chat/{chatRoom}', ChatShow::class)->name('chat.show');
     Route::get('/contents', ContentIndex::class)->name('content.index');
-    Route::get('/contents/create', ContentCreate::class)->name('content.create');
+    Route::get('/contents/create/{agreement?}', ContentCreate::class)->name('content.create');
+    Route::get('/contents/{content}/edit', ContentEdit::class)->name('content.edit');
     Route::get('/contents/{content}', ContentShow::class)->name('content.show');
     Route::get('/agreements', AgreementIndex::class)->name('agreement.index');
     Route::get('/agreements/{agreement}', AgreementShow::class)->name('agreement.show');

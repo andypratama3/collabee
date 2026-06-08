@@ -112,7 +112,7 @@
                                             class="w-full text-left px-4 py-2.5 text-sm text-emerald-600 hover:bg-emerald-50/80 dark:hover:bg-emerald-900/20 transition-colors duration-200">Resume Campaign</button>
                                 @endif
                                 @if(in_array($campaign->status->value, ['draft', 'open', 'paused']))
-                                    <button wire:click="confirmCancel({{ $campaign->id }})"
+                                    <button wire:click="cancel({{ $campaign->id }})" wire:confirm="Batalkan campaign ini?"
                                             class="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50/80 dark:hover:bg-red-900/20 transition-colors duration-200">Cancel Campaign</button>
                                 @endif
                                 <div class="my-1 border-t border-gray-100 dark:border-gray-700"></div>

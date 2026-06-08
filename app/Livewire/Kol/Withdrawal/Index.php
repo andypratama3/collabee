@@ -70,7 +70,7 @@ class Index extends Component
         }
 
         try {
-            $withdrawalService->requestWithdrawal($kolProfile, $this->amount, $this->bankAccountId);
+            $withdrawalService->requestWithdrawal($kolProfile, $this->amount, $this->bankAccountId, $this->notes ?: null);
 
             session()->flash('success', 'Permintaan penarikan berhasil diajukan.');
 

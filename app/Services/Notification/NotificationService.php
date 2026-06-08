@@ -27,15 +27,16 @@ class NotificationService
         };
     }
 
-    public function send(User $user, string $type, string $title, string $body, ?array $data = []): Notification
+    public function send(User $user, string $type, string $title, string $body, ?array $data = [], ?string $actionUrl = null): Notification
     {
-        $notification = DB::transaction(function () use ($user, $type, $title, $body, $data) {
+        $notification = DB::transaction(function () use ($user, $type, $title, $body, $data, $actionUrl) {
             return Notification::create([
                 'user_id' => $user->id,
                 'type' => $type,
                 'title' => $title,
                 'body' => $body,
                 'data' => $data,
+                'action_url' => $actionUrl,
                 'is_read' => false,
             ]);
         });

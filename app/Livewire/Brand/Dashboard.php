@@ -33,9 +33,9 @@ class Dashboard extends Component
             'totalCampaigns' => $profile?->total_campaigns ?? 0,
             'totalSpent' => $profile?->total_spent ?? 0,
             'ratingAvg' => $profile?->rating_avg ?? 0,
-            'activeHirings' => $profile?->hirings()->whereIn('status', ['accepted', 'negotiating'])->count() ?? 0,
-            'recentCampaigns' => $profile?->campaigns()->latest()->take(5)->get() ?? collect(),
-            'recentHirings' => $profile?->hirings()->with(['kolProfile', 'campaign'])->latest()->take(5)->get() ?? collect(),
+            'activeHirings' => $profile ? $profile->hirings()->whereIn('status', ['accepted', 'negotiating'])->count() : 0,
+            'recentCampaigns' => $profile ? $profile->campaigns()->latest()->take(5)->get() : collect(),
+            'recentHirings' => $profile ? $profile->hirings()->with(['kolProfile', 'campaign'])->latest()->take(5)->get() : collect(),
             'spendingData' => $spendingData,
             'spendingLabels' => $spendingLabels,
         ])->layout('layouts.app');

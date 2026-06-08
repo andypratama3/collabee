@@ -35,9 +35,9 @@
     <div class="section">
         <h2>Informasi Para Pihak</h2>
         <table class="info-grid">
-            <tr><td class="label">Brand:</td><td>{{ $agreement->hiring->brandProfile->brand_name }} ({{ $agreement->hiring->brandProfile->user->name }})</td></tr>
-            <tr><td class="label">KOL/Influencer:</td><td>{{ $agreement->hiring->kolProfile->display_name }}</td></tr>
-            <tr><td class="label">Kampanye:</td><td>{{ $agreement->hiring->campaign->title }}</td></tr>
+            <tr><td class="label">Brand:</td><td>{{ $agreement->hiring?->brandProfile?->brand_name ?? 'N/A' }} ({{ $agreement->hiring?->brandProfile?->user?->name ?? 'N/A' }})</td></tr>
+            <tr><td class="label">KOL/Influencer:</td><td>{{ $agreement->hiring?->kolProfile?->display_name ?? 'N/A' }}</td></tr>
+            <tr><td class="label">Kampanye:</td><td>{{ $agreement->hiring?->campaign?->title ?? 'N/A' }}</td></tr>
             <tr><td class="label">Platform:</td><td>{{ implode(', ', $agreement->hiring->campaign->platforms ?? []) }}</td></tr>
         </table>
     </div>
@@ -58,7 +58,7 @@
     <div class="signature-section">
         <h2>Tanda Tangan Digital</h2>
         <div class="signature-box">
-            <h3>Brand: {{ $agreement->hiring->brandProfile->brand_name }}</h3>
+            <h3>Brand: {{ $agreement->hiring?->brandProfile?->brand_name ?? 'N/A' }}</h3>
             @if($agreement->brand_signed_at)
                 <div class="signature-line">
                     Ditandatangani: {{ $agreement->brand_signed_at->format('d F Y H:i') }}<br>
@@ -69,7 +69,7 @@
             @endif
         </div>
         <div class="signature-box" style="float: right;">
-            <h3>KOL: {{ $agreement->hiring->kolProfile->display_name }}</h3>
+            <h3>KOL: {{ $agreement->hiring?->kolProfile?->display_name ?? 'N/A' }}</h3>
             @if($agreement->kol_signed_at)
                 <div class="signature-line">
                     Ditandatangani: {{ $agreement->kol_signed_at->format('d F Y H:i') }}<br>

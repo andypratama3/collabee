@@ -42,30 +42,34 @@ class Dashboard extends Component
         }
 
         return view('livewire.kol.dashboard', [
-            'walletBalance' => $profile?->wallet_balance ?? 0,
-            'pendingBalance' => $profile?->pending_balance ?? 0,
-            'totalCampaignsDone' => $profile?->total_campaigns_done ?? 0,
-            'ratingAvg' => $profile?->rating_avg ?? 0,
-            'recentHirings' => $profile?->hirings()->latest()->take(5)->get() ?? collect(),
-            'activeAgreements' => $profile?->hirings()
-                ->whereHas('agreement', function($q) {
-                    $q->where('status', 'active')->orWhere('status', 'signed');
-                })
-                ->with(['agreement', 'campaign'])
-                ->latest()
-                ->take(5)
-                ->get() ?? collect(),
-            'recentNotifications' => $user->notifications()
-                ->latest()
-                ->take(5)
-                ->get(),
-            'earnings' => $profile?->withdrawals()
-                ->selectRaw($this->monthExpr() . ' as month, SUM(amount) as total')
-                ->groupBy('month')
-                ->orderBy('month')
-                ->pluck('total', 'month')
-                ->toArray() ?? [],
-            'profileCompletion' => $profileCompletion,
+            'walletBalance'       => $profile?->wallet_balance ?? 0,
+            'pendingBalance'      => $profile?->pending_balance ?? 0,
+            'totalCampaignsDone'  => $profile?->total_campaigns_done ?? 0,
+            'ratingAvg'           => $profile?->rating_avg ?? 0,
+            'recentHirings'       => $profile
+                ? $profile->hirings()->with('campaign.brandProfile')->latest()->take(5)->get()
+                : collect(),
+            'activeAgreements'    => $profile
+                ? $profile->hirings()
+                    ->whereHas('agreement', function ($q) {
+                        $q->whereIn('status', ['active', 'signed']);
+                    })
+                    ->with(['agreement', 'campaign'])
+                    ->latest()
+                    ->take(5)
+                    ->get()
+                : collect(),
+            'recentNotifications' => $user->notifications()->latest()->take(5)->get(),
+            'earnings'            => $profile
+                ? $profile->withdrawals()
+                    ->where('status', 'completed')
+                    ->selectRaw($this->monthExpr() . ' as month, SUM(amount) as total')
+                    ->groupBy('month')
+                    ->orderBy('month')
+                    ->pluck('total', 'month')
+                    ->toArray()
+                : [],
+            'profileCompletion'   => $profileCompletion,
         ])->layout('layouts.app');
     }
 }

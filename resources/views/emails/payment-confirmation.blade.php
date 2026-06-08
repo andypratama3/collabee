@@ -31,11 +31,11 @@
                     <div class="info-value">{{ $payment->invoice_number }}</div>
                 </div>
                 <div style="margin-bottom: 12px;">
-                    <div class="info-label">Jumlah</div>
+                    <div class="info-label">Jumlah Bersih KOL</div>
                     <div class="info-value">Rp. {{ number_format($payment->amount, 0, ',', '.') }}</div>
                 </div>
                 <div style="margin-bottom: 12px;">
-                    <div class="info-label">Biaya Platform</div>
+                    <div class="info-label">Biaya Platform ({{ $payment->agreement->platform_fee_percent ?? 10 }}%)</div>
                     <div class="info-value">Rp. {{ number_format($payment->platform_fee, 0, ',', '.') }}</div>
                 </div>
                 <div>

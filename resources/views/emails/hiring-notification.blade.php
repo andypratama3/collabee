@@ -24,12 +24,12 @@
             <div class="logo">Collabee</div>
         </div>
         <div class="body-card">
-            <div class="greeting">Halo, {{ $hiring->kolProfile->display_name }}!</div>
-            <p class="text">Anda mendapatkan tawaran kerja sama dari <strong>{{ $hiring->brandProfile->brand_name }}</strong>!</p>
+            <div class="greeting">Halo, {{ $hiring->kolProfile?->display_name ?? 'KOL' }}!</div>
+            <p class="text">Anda mendapatkan tawaran kerja sama dari <strong>{{ $hiring->brandProfile?->brand_name ?? 'Brand' }}</strong>!</p>
             <div class="info-box">
                 <div style="margin-bottom: 12px;">
                     <div class="info-label">Campaign</div>
-                    <div class="info-value">{{ $hiring->campaign->title }}</div>
+                    <div class="info-value">{{ $hiring->campaign?->title ?? 'N/A' }}</div>
                 </div>
                 <div style="margin-bottom: 12px;">
                     <div class="info-label">Budget yang Ditawarkan</div>

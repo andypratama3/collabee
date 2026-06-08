@@ -16,8 +16,14 @@ class Index extends Component
 
     public function render()
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $profile = $user->brandProfile;
+
+        if (! $profile) {
+            return view('livewire.brand.content.index', [
+                'contents' => collect(),
+            ])->layout('layouts.app');
+        }
 
         $query = Content::with(['agreement.hiring.campaign', 'kolProfile.user'])
             ->where('brand_profile_id', $profile->id);

@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Shared\Rating;
 
+use App\Enums\HiringStatus;
 use App\Models\Hiring;
+use App\Models\Rating;
 use App\Services\Rating\RatingService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
@@ -31,43 +33,83 @@ class Create extends Component
     {
         $this->hiring = $hiring;
         $this->type = $type;
+
+        // Check if user already submitted a rating for this hiring
+        $alreadyRated = Rating::where('hiring_id', $hiring->id)
+            ->where('rater_id', auth()->id())
+            ->exists();
+
+        if ($alreadyRated) {
+            session()->flash('info', 'Anda sudah memberikan rating untuk hiring ini.');
+            if (auth()->user()->isBrand()) {
+                $this->redirect(route('brand.hiring.index'), navigate: true);
+            } else {
+                $this->redirect(route('kol.hiring.index'), navigate: true);
+            }
+        }
     }
 
     public function render()
     {
-        return view('livewire.shared.rating.create')
-            ->layout('layouts.app');
+        $this->hiring->loadMissing('campaign.brandProfile.user', 'kolProfile.user');
+
+        return view('livewire.shared.rating.create', [
+            'communication'   => $this->communication,
+            'professionalism' => $this->professionalism,
+            'quality'         => $this->quality,
+            'timeliness'      => $this->timeliness,
+        ])->layout('layouts.app');
     }
 
     public function submitBrandRating(RatingService $ratingService): void
     {
         $this->validate();
 
-        $ratingService->rateKol($this->hiring, auth()->user(), [
-            'communication' => $this->communication,
-            'professionalism' => $this->professionalism,
-            'quality' => $this->quality,
-            'timeliness' => $this->timeliness,
-            'review' => $this->review,
-        ]);
+        if (Rating::where('hiring_id', $this->hiring->id)->where('rater_id', auth()->id())->exists()) {
+            session()->flash('error', 'Anda sudah memberikan rating untuk hiring ini.');
+            $this->redirect(route('brand.hiring.index'), navigate: true);
+            return;
+        }
 
-        session()->flash('success', 'Rating untuk KOL berhasil dikirim.');
-        $this->redirect(route('brand.hiring.index'), navigate: true);
+        try {
+            $ratingService->rateKol($this->hiring, auth()->user(), [
+                'communication'   => $this->communication,
+                'professionalism' => $this->professionalism,
+                'quality'         => $this->quality,
+                'timeliness'      => $this->timeliness,
+                'review'          => $this->review,
+            ]);
+
+            session()->flash('success', 'Rating untuk KOL berhasil dikirim! Terima kasih atas penilaian Anda.');
+            $this->redirect(route('platform.review.create'), navigate: true);
+        } catch (\RuntimeException $e) {
+            session()->flash('error', $e->getMessage());
+        }
     }
 
     public function submitKolRating(RatingService $ratingService): void
     {
         $this->validate();
 
-        $ratingService->rateBrand($this->hiring, auth()->user(), [
-            'communication' => $this->communication,
-            'professionalism' => $this->professionalism,
-            'quality' => $this->quality,
-            'timeliness' => $this->timeliness,
-            'review' => $this->review,
-        ]);
+        if (Rating::where('hiring_id', $this->hiring->id)->where('rater_id', auth()->id())->exists()) {
+            session()->flash('error', 'Anda sudah memberikan rating untuk hiring ini.');
+            $this->redirect(route('kol.hiring.index'), navigate: true);
+            return;
+        }
 
-        session()->flash('success', 'Rating untuk Brand berhasil dikirim.');
-        $this->redirect(route('kol.hiring.index'), navigate: true);
+        try {
+            $ratingService->rateBrand($this->hiring, auth()->user(), [
+                'communication'   => $this->communication,
+                'professionalism' => $this->professionalism,
+                'quality'         => $this->quality,
+                'timeliness'      => $this->timeliness,
+                'review'          => $this->review,
+            ]);
+
+            session()->flash('success', 'Rating untuk Brand berhasil dikirim! Terima kasih atas penilaian Anda.');
+            $this->redirect(route('platform.review.create'), navigate: true);
+        } catch (\RuntimeException $e) {
+            session()->flash('error', $e->getMessage());
+        }
     }
 }

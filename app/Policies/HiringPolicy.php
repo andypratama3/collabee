@@ -14,9 +14,10 @@ class HiringPolicy
 
     public function view(User $user, Hiring $hiring): bool
     {
-        return $user->isAdmin()
-            || $hiring->brandProfile->user_id === $user->id
-            || $hiring->kolProfile->user_id === $user->id;
+        if ($user->isAdmin()) return true;
+
+        return $hiring->brandProfile?->user_id === $user->id
+            || $hiring->kolProfile?->user_id  === $user->id;
     }
 
     public function create(User $user): bool
@@ -32,13 +33,13 @@ class HiringPolicy
     public function update(User $user, Hiring $hiring): bool
     {
         return $user->isAdmin()
-            || $hiring->brandProfile->user_id === $user->id;
+            || $hiring->brandProfile?->user_id === $user->id;
     }
 
     public function cancel(User $user, Hiring $hiring): bool
     {
         return $user->isAdmin()
-            || $hiring->brandProfile->user_id === $user->id
-            || $hiring->kolProfile->user_id === $user->id;
+            || $hiring->brandProfile?->user_id === $user->id
+            || $hiring->kolProfile?->user_id   === $user->id;
     }
 }

@@ -17,7 +17,8 @@ class Show extends Component
     public function mount(Content $content): void
     {
         $this->authorize('view', $content);
-        $this->content->load(['agreement.hiring.campaign', 'revisions.requester', 'media']);
+        $content->load(['agreement.hiring.campaign', 'revisions.requester', 'media']);
+        $this->content = $content;
     }
 
     public function render()

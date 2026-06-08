@@ -41,9 +41,9 @@ test('payment creation via invoice service', function () {
 
     expect($payment)->toBeInstanceOf(Payment::class)
         ->and($payment->agreement_id)->toBe($this->agreement->id)
-        ->and($payment->amount)->toEqual(1000000.00)
+        ->and($payment->amount)->toEqual(900000.00)
         ->and($payment->platform_fee)->toEqual(100000.00)
-        ->and($payment->total_amount)->toEqual(1100000.00)
+        ->and($payment->total_amount)->toEqual(1000000.00)
         ->and($payment->status)->toBe(PaymentStatus::PENDING)
         ->and($payment->invoice_number)->toStartWith('INV-');
 });

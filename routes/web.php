@@ -70,6 +70,8 @@ Route::middleware('auth')->group(function () {
     Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
     Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
     Route::get('/notifications', \App\Livewire\Shared\Notification\Index::class)->name('notifications.index');
+    Route::get('/rating/{hiring}/{type}', \App\Livewire\Shared\Rating\Create::class)->name('shared.rating.create');
+    Route::get('/review-platform', \App\Livewire\Shared\PlatformReview\Create::class)->name('platform.review.create');
 });
 
 Route::get('/track/{trackingCode}', [TrackingController::class, 'click'])->name('track.click');

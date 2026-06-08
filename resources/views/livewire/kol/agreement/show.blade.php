@@ -17,8 +17,8 @@
                     <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Perjanjian {{ $agreement->agreement_number }}</h2>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Kampanye: <span class="font-medium text-gray-700 dark:text-gray-300">{{ $agreement->hiring->campaign->title }}</span> &mdash;
-                    Brand: <span class="font-medium text-gray-700 dark:text-gray-300">{{ $agreement->hiring->brandProfile->user->name }}</span>
+                    Kampanye: <span class="font-medium text-gray-700 dark:text-gray-300">{{ $agreement->hiring?->campaign?->title ?? 'N/A' }}</span> &mdash;
+                    Brand: <span class="font-medium text-gray-700 dark:text-gray-300">{{ $agreement->hiring?->brandProfile?->user?->name ?? 'N/A' }}</span>
                 </p>
             </div>
             <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-semibold rounded-xl self-start
