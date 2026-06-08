@@ -13,12 +13,7 @@
     </div>
 
     @if (session()->has('success'))
-        <div class="mb-6 p-4 bg-emerald-50/80 dark:bg-emerald-900/20 border border-emerald-200/50 dark:border-emerald-800/50 rounded-xl flex items-center gap-3 text-emerald-700 dark:text-emerald-400 backdrop-blur-sm">
-            <div class="p-1 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            </div>
-            <span class="text-sm font-medium">{{ session('success') }}</span>
-        </div>
+        <script>document.addEventListener('DOMContentLoaded', () => window.Swal && window.Swal.mixin({toast:true,position:'top-end',showConfirmButton:false,timer:3000,timerProgressBar:true}).fire({icon:'success',title:@json(session('success'))}));</script>
     @endif
 
     <form wire:submit="update" class="space-y-8">
@@ -105,12 +100,12 @@
                             <div>
                                 <label for="gender" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Jenis Kelamin</label>
                                 <div class="flex gap-3">
-                                    <label class="flex-1 flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all duration-300 {{ $gender === 'male' ? 'ring-2 ring-primary border-primary/30 bg-primary/5 dark:bg-primary/10 shadow-sm' : 'border-gray-200 dark:border-gray-700 dark:bg-gray-900/50 hover:bg-gray-50 dark:hover:bg-gray-800 hover:-translate-y-0.5' }}">
-                                        <input type="radio" wire:model="gender" value="male" class="sr-only">
+                                    <label wire:click="$set('gender', 'male')" class="flex-1 flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all duration-300 {{ $gender === 'male' ? 'ring-2 ring-primary border-primary/30 bg-primary/5 dark:bg-primary/10 shadow-sm' : 'border-gray-200 dark:border-gray-700 dark:bg-gray-900/50 hover:bg-gray-50 dark:hover:bg-gray-800 hover:-translate-y-0.5' }}">
+                                        <input type="radio" name="gender" value="male" class="sr-only" @checked($gender === 'male')>
                                         <span class="text-sm font-medium {{ $gender === 'male' ? 'text-primary dark:text-primary-400' : 'text-gray-700 dark:text-gray-300' }}">Laki-laki</span>
                                     </label>
-                                    <label class="flex-1 flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all duration-300 {{ $gender === 'female' ? 'ring-2 ring-primary border-primary/30 bg-primary/5 dark:bg-primary/10 shadow-sm' : 'border-gray-200 dark:border-gray-700 dark:bg-gray-900/50 hover:bg-gray-50 dark:hover:bg-gray-800 hover:-translate-y-0.5' }}">
-                                        <input type="radio" wire:model="gender" value="female" class="sr-only">
+                                    <label wire:click="$set('gender', 'female')" class="flex-1 flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all duration-300 {{ $gender === 'female' ? 'ring-2 ring-primary border-primary/30 bg-primary/5 dark:bg-primary/10 shadow-sm' : 'border-gray-200 dark:border-gray-700 dark:bg-gray-900/50 hover:bg-gray-50 dark:hover:bg-gray-800 hover:-translate-y-0.5' }}">
+                                        <input type="radio" name="gender" value="female" class="sr-only" @checked($gender === 'female')>
                                         <span class="text-sm font-medium {{ $gender === 'female' ? 'text-primary dark:text-primary-400' : 'text-gray-700 dark:text-gray-300' }}">Perempuan</span>
                                     </label>
                                 </div>

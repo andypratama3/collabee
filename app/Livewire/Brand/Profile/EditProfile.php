@@ -70,7 +70,7 @@ class EditProfile extends Component
             'banner' => $this->banner?->getRealPath(),
         ], $this->profile);
 
-        session()->flash('success', 'Profil Brand berhasil diperbarui.');
+        $this->dispatch('swal:toast', title: 'Profil Brand berhasil diperbarui.', icon: 'success');
 
         $this->redirect(route('brand.profile.edit', $this->profile), navigate: true);
     }

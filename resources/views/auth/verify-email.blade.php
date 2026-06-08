@@ -25,10 +25,7 @@
     </div>
 
     @if (session('status') === 'verification-link-sent')
-        <div class="mb-6 p-4 text-sm text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl border border-emerald-200 dark:border-emerald-800/50 flex items-center justify-center gap-2">
-            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            Link verifikasi baru telah dikirim!
-        </div>
+        <script>document.addEventListener('DOMContentLoaded', () => window.Swal && window.Swal.mixin({toast:true,position:'top-end',showConfirmButton:false,timer:5000,timerProgressBar:true}).fire({icon:'success',title:'Link verifikasi baru telah dikirim!'}));</script>
     @endif
 
     <form method="POST" action="{{ route('verification.resend') }}" class="mb-4">

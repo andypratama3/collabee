@@ -285,6 +285,89 @@ class DemoDataSeeder extends Seeder
             'is_featured' => true,
         ]);
 
+        // Campaign Khusus untuk KOL
+        $campaign4 = Campaign::factory()->create([
+            'brand_profile_id' => $brandProfile1->id,
+            'title' => 'Teras Dimsum Mentai - Fashionable Food Campaign',
+            'status' => CampaignStatus::OPEN,
+            'budget_total' => 4000000,
+            'budget_per_kol' => 400000,
+            'kol_slots' => 3,
+            'kol_filled' => 1,
+            'start_date' => now()->addDays(5),
+            'end_date' => now()->addDays(35),
+            'deadline_apply' => now()->addDays(3),
+            'kol_category' => 'fashion',
+        ]);
+
+        $campaign5 = Campaign::factory()->create([
+            'brand_profile_id' => $brandProfile2->id,
+            'title' => 'Soto Mie Bogor - Beauty Review Campaign',
+            'status' => CampaignStatus::OPEN,
+            'budget_total' => 3500000,
+            'budget_per_kol' => 350000,
+            'kol_slots' => 3,
+            'kol_filled' => 1,
+            'start_date' => now()->addDays(7),
+            'end_date' => now()->addDays(37),
+            'deadline_apply' => now()->addDays(5),
+            'kol_category' => 'beauty',
+        ]);
+
+        // Hiring Teras Dimsum Mentai -> Anggun (Fashion)
+        $hiringAnggun = Hiring::factory()->create([
+            'campaign_id' => $campaign4->id,
+            'brand_profile_id' => $brandProfile1->id,
+            'kol_profile_id' => $kolProfile1->id,
+            'initiated_by' => 'brand',
+            'status' => HiringStatus::ACCEPTED,
+            'proposed_budget' => 400000,
+            'agreed_budget' => 400000,
+            'message' => 'Hai Anggun! Kami dari Teras Dimsum Mentai ingin mengajak kamu collaborate untuk campaign food fashion kami. Tertarik?',
+            'accepted_at' => now()->subDays(3),
+            'expires_at' => now()->addDays(7),
+        ]);
+
+        Agreement::factory()->create([
+            'hiring_id' => $hiringAnggun->id,
+            'agreement_number' => 'AGR-SPK-2025-00003',
+            'total_amount' => 400000,
+            'platform_fee_percent' => 10.00,
+            'status' => 'signed',
+            'terms' => "1. KOL wajib membuat 1 konten Instagram (reels) dan 1 konten TikTok\n2. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n3. KOL wajib mengunjungi langsung outlet Teras Dimsum Mentai\n4. Brand berhak melakukan review sebelum konten dipublikasikan",
+            'brand_signed_at' => now()->subDays(2),
+            'kol_signed_at' => now()->subDays(2),
+            'signed_at' => now()->subDays(2),
+            'expires_at' => now()->addDays(10),
+        ]);
+
+        // Hiring Soto Mie Bogor -> Cindi Widia (Beauty)
+        $hiringCindi = Hiring::factory()->create([
+            'campaign_id' => $campaign5->id,
+            'brand_profile_id' => $brandProfile2->id,
+            'kol_profile_id' => $kolProfile2->id,
+            'initiated_by' => 'brand',
+            'status' => HiringStatus::ACCEPTED,
+            'proposed_budget' => 350000,
+            'agreed_budget' => 350000,
+            'message' => 'Hai Cindi! Soto Mie Bogor ingin mengajak kamu untuk campaign review menu kami. Tertarik?',
+            'accepted_at' => now()->subDays(3),
+            'expires_at' => now()->addDays(7),
+        ]);
+
+        Agreement::factory()->create([
+            'hiring_id' => $hiringCindi->id,
+            'agreement_number' => 'AGR-SPK-2025-00004',
+            'total_amount' => 350000,
+            'platform_fee_percent' => 10.00,
+            'status' => 'signed',
+            'terms' => "1. KOL wajib membuat 1 konten Instagram (feed) dan 1 konten TikTok\n2. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n3. KOL wajib mengunjungi langsung outlet Soto Mie Bogor\n4. Brand berhak melakukan review sebelum konten dipublikasikan",
+            'brand_signed_at' => now()->subDays(2),
+            'kol_signed_at' => now()->subDays(2),
+            'signed_at' => now()->subDays(2),
+            'expires_at' => now()->addDays(10),
+        ]);
+
         // Hiring Teras Dimsum Mentai -> Tata
         $hiring1 = Hiring::factory()->create([
             'campaign_id' => $campaign2->id,

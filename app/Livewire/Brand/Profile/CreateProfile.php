@@ -51,7 +51,7 @@ class CreateProfile extends Component
             'banner' => $this->banner?->getRealPath(),
         ], auth()->user());
 
-        session()->flash('success', 'Profil Brand berhasil dibuat.');
+        $this->dispatch('swal:toast', title: 'Profil Brand berhasil dibuat.', icon: 'success');
 
         return $this->redirect(route('brand.profile.edit', $profile), navigate: true);
     }

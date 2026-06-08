@@ -12,12 +12,7 @@
 
     {{-- Success Message --}}
     @if(session('success'))
-        <div class="flex items-center gap-3 p-4 bg-emerald-50/80 dark:bg-emerald-900/20 backdrop-blur-xl border border-emerald-200/50 dark:border-emerald-800/50 rounded-2xl">
-            <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            </div>
-            <span class="text-sm font-medium text-emerald-800 dark:text-emerald-300">{{ session('success') }}</span>
-        </div>
+        <script>document.addEventListener('DOMContentLoaded', () => window.Swal && window.Swal.mixin({toast:true,position:'top-end',showConfirmButton:false,timer:3000,timerProgressBar:true}).fire({icon:'success',title:@json(session('success'))}));</script>
     @endif
 
     {{-- Settings Form --}}

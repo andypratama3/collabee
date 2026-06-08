@@ -95,8 +95,14 @@ class AgreementService
         ]);
 
         $filename = 'agreements/agreement-' . $agreement->agreement_number . '.pdf';
+        $path = storage_path('app/public/' . $filename);
 
-        $pdf->save(storage_path('app/public/' . $filename));
+        $directory = dirname($path);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        $pdf->save($path);
 
         $agreement->update(['pdf_path' => $filename]);
 

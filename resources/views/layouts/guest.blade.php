@@ -100,11 +100,11 @@
 
         <div class="w-full max-w-md mx-auto mt-16 lg:mt-0">
             @if (session('success'))
-                <x-alert type="success" class="mb-6 rounded-2xl shadow-sm">{{ session('success') }}</x-alert>
+                <script>document.addEventListener('DOMContentLoaded', () => window.Swal && window.Swal.mixin({toast:true,position:'top-end',showConfirmButton:false,timer:3000,timerProgressBar:true}).fire({icon:'success',title:@json(session('success'))}));</script>
             @endif
 
             @if (session('error'))
-                <x-alert type="error" class="mb-6 rounded-2xl shadow-sm">{{ session('error') }}</x-alert>
+                <script>document.addEventListener('DOMContentLoaded', () => window.Swal && window.Swal.mixin({toast:true,position:'top-end',showConfirmButton:false,timer:4000,timerProgressBar:true}).fire({icon:'error',title:@json(session('error'))}));</script>
             @endif
 
             <div class="bg-white dark:bg-gray-900/80 shadow-2xl shadow-gray-300/40 dark:shadow-black/50 rounded-[2rem] border border-gray-200 dark:border-gray-800/60 p-8 sm:p-10 backdrop-blur-xl relative overflow-hidden z-10">
