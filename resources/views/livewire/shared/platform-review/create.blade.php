@@ -1,5 +1,5 @@
 <div>
-    <div class="max-w-2xl mx-auto">
+    <div class="max-w-xl mx-auto">
         {{-- Success confetti header --}}
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-violet-500/20 dark:from-primary/30 dark:to-violet-500/30 mb-4 ring-4 ring-primary/10 dark:ring-primary/20">

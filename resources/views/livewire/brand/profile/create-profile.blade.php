@@ -1,4 +1,4 @@
-<div class="max-w-2xl mx-auto pb-12">
+<div class="max-w-xl mx-auto pb-12">
     <!-- Page Header -->
     <div class="mb-8">
         <div class="flex items-center gap-3 mb-2">
