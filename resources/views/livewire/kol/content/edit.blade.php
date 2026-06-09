@@ -10,27 +10,17 @@
     <div class="space-y-6">
         <!-- Revision Request Banner -->
         @if($content->status->value === 'revision_requested')
-            <div class="bg-amber-50 dark:bg-amber-900/20 rounded-2xl p-5 border border-amber-200/50 dark:border-amber-700/30">
-                <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-amber-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <div>
-                        <p class="text-sm font-bold text-amber-700 dark:text-amber-400 mb-1">Revisi Diminta</p>
-                        <p class="text-sm text-amber-600 dark:text-amber-300">Silakan perbarui konten Anda berdasarkan catatan revisi dari brand, lalu kirim ulang untuk review.</p>
-                    </div>
-                </div>
-            </div>
+            <x-alert type="warning">
+                <p class="font-bold mb-0.5">Revisi Diminta</p>
+                <p class="text-sm">Silakan perbarui konten Anda berdasarkan catatan revisi dari brand, lalu kirim ulang untuk review.</p>
+            </x-alert>
         @endif
 
         @if($content->status->value === 'draft')
-            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-5 border border-blue-200/50 dark:border-blue-700/30">
-                <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <div>
-                        <p class="text-sm font-bold text-blue-700 dark:text-blue-400 mb-1">Mode Draft</p>
-                        <p class="text-sm text-blue-600 dark:text-blue-300">Konten ini masih dalam mode draft. Edit caption atau file, lalu kirim untuk review dari halaman detail konten.</p>
-                    </div>
-                </div>
-            </div>
+            <x-alert type="info">
+                <p class="font-bold mb-0.5">Mode Draft</p>
+                <p class="text-sm">Konten ini masih dalam mode draft. Edit caption atau file, lalu kirim untuk review dari halaman detail konten.</p>
+            </x-alert>
         @endif
 
         <!-- Edit Form -->

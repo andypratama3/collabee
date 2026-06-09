@@ -5,7 +5,7 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Update your campaign details</p>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+        <div class="bg-white dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 dark:shadow-gray-900/30 border border-gray-200 dark:border-gray-700 p-8">
             <div class="space-y-6">
                 <div>
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Campaign Information</h2>
