@@ -89,7 +89,7 @@
                     </div>
                     <div class="space-y-3">
                         @foreach($content->revisions as $revision)
-                            <div class="bg-amber-50/50 dark:bg-amber-900/10 rounded-xl p-4 border border-amber-100/50 dark:border-amber-800/20">
+                            <x-alert type="warning">
                                 <div class="flex items-start justify-between gap-3">
                                     <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{{ $revision->note }}</p>
                                     <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0 ml-2 whitespace-nowrap">{{ $revision->created_at->format('d M Y H:i') }}</span>
@@ -102,7 +102,7 @@
                                         <span class="px-2 py-0.5 text-xs font-semibold rounded-md bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 ring-1 ring-amber-200/50 dark:ring-amber-700/30">Menunggu revisi</span>
                                     @endif
                                 </div>
-                            </div>
+                            </x-alert>
                         @endforeach
                     </div>
                 </div>
@@ -110,14 +110,11 @@
 
             <!-- Rejection Message -->
             @if($content->status->value === 'rejected' && $content->notes)
-                <div class="px-6 py-5 border-t border-gray-100/80 dark:border-gray-700 bg-rose-50/50 dark:bg-rose-900/10">
-                    <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 text-rose-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
-                        <div>
-                            <p class="text-sm font-bold text-rose-700 dark:text-rose-400 mb-1">Konten Ditolak</p>
-                            <p class="text-sm text-rose-600 dark:text-rose-300">{{ $content->notes }}</p>
-                        </div>
-                    </div>
+                <div class="px-6 py-5 border-t border-gray-100/80 dark:border-gray-700">
+                    <x-alert type="error">
+                        <p class="font-bold mb-0.5">Konten Ditolak</p>
+                        <p class="text-sm">{{ $content->notes }}</p>
+                    </x-alert>
                 </div>
             @endif
 

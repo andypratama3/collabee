@@ -32,7 +32,20 @@ class Create extends Component
 
         $agreements = Agreement::whereHas('hiring', function ($q) use ($profile) {
             $q->where('kol_profile_id', $profile->id);
-        })->where('status', 'signed')->with('hiring.campaign')->get();
+        })
+        ->where('status', 'signed')
+        ->where(function ($q) {
+            $q->whereDoesntHave('contents', function ($q) {
+                $q->whereIn('status', [
+                    'draft', 'submitted', 'under_review', 'revision_requested', 'approved', 'posted', 'escalated',
+                ]);
+            });
+            if ($this->agreement_id) {
+                $q->orWhere('id', $this->agreement_id);
+            }
+        })
+        ->with('hiring.campaign')
+        ->get();
 
         return view('livewire.kol.content.create', [
             'agreements' => $agreements,

@@ -117,21 +117,18 @@
 
             {{-- Payment Prompt — shown when agreement is fully signed --}}
             @if($agreement->status === 'signed' && (!$agreement->payment || $agreement->payment->status->value === 'pending'))
-                <div class="mt-4 p-4 rounded-2xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200/50 dark:border-blue-800/50 shadow-sm backdrop-blur-sm">
-                    <div class="flex items-start gap-3">
-                        <div class="shrink-0 mt-0.5 w-8 h-8 rounded-xl bg-blue-100 dark:bg-blue-800/40 flex items-center justify-center">
-                            <svg class="w-4.5 h-4.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="mt-4">
+                    <x-alert type="info">
+                        <p class="font-bold mb-0.5">Agreement telah ditandatangani oleh kedua pihak!</p>
+                        <p class="text-xs">Langkah berikutnya: lakukan pembayaran untuk memulai pengerjaan campaign.</p>
+                        <div class="mt-3">
+                            <a href="{{ route('brand.payment.index') }}" wire:navigate
+                               class="inline-flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-sm shadow-blue-500/20 hover:from-blue-600 hover:to-blue-700 transition-all duration-200">
+                                Bayar Sekarang
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </a>
                         </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-semibold text-blue-700 dark:text-blue-400">Agreement telah ditandatangani oleh kedua pihak!</p>
-                            <p class="text-xs text-blue-600 dark:text-blue-300 mt-0.5">Langkah berikutnya: lakukan pembayaran untuk memulai pengerjaan campaign.</p>
-                        </div>
-                        <a href="{{ route('brand.payment.index') }}" wire:navigate
-                           class="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-sm shadow-blue-500/20 hover:from-blue-600 hover:to-blue-700 transition-all duration-200">
-                            Bayar Sekarang
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
+                    </x-alert>
                 </div>
             @endif
         </div>

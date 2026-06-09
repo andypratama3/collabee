@@ -130,14 +130,13 @@
                             Apply Now
                         </button>
                     @elseif($hasApplied)
-                        <div class="w-full px-6 py-3.5 text-sm font-semibold text-center text-emerald-700 dark:text-emerald-400 bg-emerald-50/80 dark:bg-emerald-900/20 rounded-xl ring-1 ring-emerald-200/50 dark:ring-emerald-700/30 flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                            You have applied to this campaign
-                        </div>
+                        <x-alert type="success">
+                            <p class="font-semibold">You have applied to this campaign</p>
+                        </x-alert>
                     @elseif($campaign->status->value !== 'open')
-                        <div class="w-full px-6 py-3.5 text-sm font-semibold text-center text-gray-500 dark:text-gray-400 bg-gray-50/80 dark:bg-gray-700/30 rounded-xl ring-1 ring-gray-200/50 dark:ring-gray-600/30">
-                            This campaign is {{ $campaign->status->value }}
-                        </div>
+                        <x-alert type="info">
+                            <p class="font-semibold">This campaign is {{ $campaign->status->value }}</p>
+                        </x-alert>
                     @endif
                 @endauth
 

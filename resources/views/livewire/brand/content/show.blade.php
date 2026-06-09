@@ -69,7 +69,7 @@
                     <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Riwayat Revisi</p>
                     <div class="space-y-3">
                         @foreach($content->revisions as $revision)
-                            <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3">
+                            <x-alert type="warning">
                                 <div class="flex items-start justify-between">
                                     <p class="text-sm text-gray-700 dark:text-gray-300">{{ $revision->note }}</p>
                                     <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0 ml-2">{{ $revision->created_at->format('d M Y H:i') }}</span>
@@ -77,7 +77,7 @@
                                 <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
                                     Oleh: {{ $revision->requester?->name ?? 'N/A' }}
                                 </p>
-                            </div>
+                            </x-alert>
                         @endforeach
                     </div>
                 </div>
