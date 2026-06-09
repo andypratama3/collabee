@@ -17,6 +17,10 @@ class XenditService
 
     public function createInvoice(Agreement $agreement, User $user): array
     {
+        if (config('xendit.demo_mode')) {
+            return $this->simulateInvoice($agreement, $user);
+        }
+
         $payment = $this->invoiceService->createPayment($agreement);
 
         \Xendit\Xendit::setApiKey(config('xendit.api_key'));
@@ -44,6 +48,20 @@ class XenditService
         ]);
 
         return $response;
+    }
+
+    public function simulateInvoice(Agreement $agreement, User $user): array
+    {
+        $payment = $this->invoiceService->createPayment($agreement);
+        $this->invoiceService->markAsPaid($payment, 'XENDIT-SIM-' . strtoupper(uniqid()));
+        $this->escrowService->holdFunds($payment);
+
+        return [
+            'id' => $payment->invoice_number,
+            'invoice_url' => route('brand.payment.index'),
+            'status' => 'PAID',
+            'simulated' => true,
+        ];
     }
 
     public function handleWebhook(array $payload): void

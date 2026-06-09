@@ -111,10 +111,17 @@
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $payment->created_at->format('d M Y') }}</td>
                             <td class="px-6 py-4 text-right">
                                 @if($payment->status->value === 'pending' && $payment->agreement->status === 'signed')
-                                    <button wire:click="pay({{ $payment->agreement_id }})"
-                                            class="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-primary to-primary-dark rounded-xl hover:shadow-lg hover:shadow-primary/25 transition-all duration-300">
-                                        Bayar
-                                    </button>
+                                    @if(config('xendit.demo_mode'))
+                                        <button wire:click="simulatePay({{ $payment->agreement_id }})"
+                                                class="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300">
+                                            Simulasikan
+                                        </button>
+                                    @else
+                                        <button wire:click="pay({{ $payment->agreement_id }})"
+                                                class="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-primary to-primary-dark rounded-xl hover:shadow-lg hover:shadow-primary/25 transition-all duration-300">
+                                            Bayar
+                                        </button>
+                                    @endif
                                 @elseif($payment->gateway_invoice_url && $payment->status->value === 'pending')
                                     <a href="{{ $payment->gateway_invoice_url }}" target="_blank"
                                        class="inline-flex items-center px-4 py-2 text-sm font-semibold text-primary dark:text-primary-400 bg-primary/5 dark:bg-primary/10 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/20 transition-all duration-200 border border-primary/10 dark:border-primary/20">

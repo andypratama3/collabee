@@ -11,12 +11,15 @@ class XenditWebhookController extends Controller
 {
     public function handle(Request $request, XenditService $xenditService): \Illuminate\Http\JsonResponse
     {
-        $payloadBody = $request->getContent();
-        $signature = $request->header('x-callback-token', '');
+        // In demo mode, skip signature validation
+        if (!config('xendit.demo_mode')) {
+            $payloadBody = $request->getContent();
+            $signature = $request->header('x-callback-token', '');
 
-        if (!$xenditService->isValidWebhook($payloadBody, $signature)) {
-            Log::warning('Invalid Xendit webhook signature');
-            return response()->json(['error' => 'Invalid signature'], 401);
+            if (!$xenditService->isValidWebhook($payloadBody, $signature)) {
+                Log::warning('Invalid Xendit webhook signature');
+                return response()->json(['error' => 'Invalid signature'], 401);
+            }
         }
 
         try {

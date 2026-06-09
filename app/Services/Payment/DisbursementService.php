@@ -23,6 +23,10 @@ class DisbursementService
      */
     public function createDisbursement(KolWithdrawal $withdrawal): array
     {
+        if (config('xendit.demo_mode')) {
+            return $this->simulateDisbursement($withdrawal);
+        }
+
         $externalId = 'WD-' . now()->format('Ymd') . '-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT);
 
         $payload = [
@@ -88,6 +92,41 @@ class DisbursementService
                 'message' => 'Koneksi ke Xendit gagal: ' . $e->getMessage(),
             ];
         }
+    }
+
+    /**
+     * Simulate disbursement in demo mode
+     */
+    public function simulateDisbursement(KolWithdrawal $withdrawal): array
+    {
+        $externalId = 'WD-SIM-' . now()->format('Ymd') . '-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT);
+
+        $withdrawal->update([
+            'status' => 'completed',
+            'processed_at' => now(),
+            'admin_note' => 'Disbursement SIMULATED via Xendit (demo mode): ' . $externalId,
+        ]);
+
+        $kolProfile = $withdrawal->kolProfile;
+        if ($kolProfile) {
+            $kolProfile->decrement('pending_balance', $withdrawal->amount);
+        }
+
+        Log::info('Xendit disbursement simulated (demo mode)', [
+            'withdrawal_id' => $withdrawal->id,
+            'external_id' => $externalId,
+            'amount' => $withdrawal->net_amount,
+        ]);
+
+        return [
+            'success' => true,
+            'data' => [
+                'id' => $externalId,
+                'status' => 'COMPLETED',
+                'simulated' => true,
+            ],
+            'message' => 'Disbursement berhasil (simulasi demo).',
+        ];
     }
 
     /**
