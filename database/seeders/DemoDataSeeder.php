@@ -3,11 +3,8 @@
 namespace Database\Seeders;
 
 use App\Enums\CampaignStatus;
-use App\Enums\HiringStatus;
-use App\Models\Agreement;
 use App\Models\BrandProfile;
 use App\Models\Campaign;
-use App\Models\Hiring;
 use App\Models\KolBankAccount;
 use App\Models\KolProfile;
 use App\Models\KolSocialAccount;
@@ -282,7 +279,7 @@ class DemoDataSeeder extends Seeder
             'budget_total' => 3000000,
             'budget_per_kol' => 300000,
             'kol_slots' => 3,
-            'kol_filled' => 1,
+            'kol_filled' => 0,
             'start_date' => now()->addDays(14),
             'end_date' => now()->addDays(44),
             'deadline_apply' => now()->addDays(10),
@@ -332,7 +329,7 @@ class DemoDataSeeder extends Seeder
             'budget_total' => 3500000,
             'budget_per_kol' => 350000,
             'kol_slots' => 3,
-            'kol_filled' => 1,
+            'kol_filled' => 0,
             'start_date' => now()->addDays(7),
             'end_date' => now()->addDays(37),
             'deadline_apply' => now()->addDays(5),
@@ -356,127 +353,11 @@ class DemoDataSeeder extends Seeder
             'budget_total' => 4000000,
             'budget_per_kol' => 400000,
             'kol_slots' => 3,
-            'kol_filled' => 1,
+            'kol_filled' => 0,
             'start_date' => now()->addDays(5),
             'end_date' => now()->addDays(35),
             'deadline_apply' => now()->addDays(3),
             'kol_category' => 'food',
         ]);
-
-        // Hiring Teras Dimsum Mentai -> Anggun
-        $hiringAnggun = Hiring::factory()->create([
-            'campaign_id' => $campaign5->id,
-            'brand_profile_id' => $brandProfile1->id,
-            'kol_profile_id' => $kolProfile1->id,
-            'initiated_by' => 'brand',
-            'status' => HiringStatus::ACCEPTED,
-            'proposed_budget' => 400000,
-            'agreed_budget' => 400000,
-            'message' => 'Hai Anggun! Kami dari Teras Dimsum Mentai ingin mengajak kamu collaborate untuk campaign food fashion kami. Tertarik?',
-            'accepted_at' => now()->subDays(3),
-            'expires_at' => now()->addDays(7),
-        ]);
-
-        Agreement::factory()->create([
-            'hiring_id' => $hiringAnggun->id,
-            'agreement_number' => 'AGR-SPK-2025-00003',
-            'total_amount' => 400000,
-            'platform_fee_percent' => 10.00,
-            'status' => 'signed',
-            'terms' => "1. KOL wajib membuat 1 konten Instagram Reels / TikTok Video\n2. KOL wajib membuat 1 Instagram Story\n3. Menampilkan menu yang dicoba\n4. Menandai akun media sosial Teras Dimsum Mentai\n5. Menyebutkan nama brand dan lokasi outlet\n6. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n7. KOL wajib mengunjungi langsung outlet Teras Dimsum Mentai\n8. Brand berhak melakukan review sebelum konten dipublikasikan",
-            'brand_signed_at' => now()->subDays(2),
-            'kol_signed_at' => now()->subDays(2),
-            'signed_at' => now()->subDays(2),
-            'expires_at' => now()->addDays(10),
-        ]);
-
-        // Hiring Soto Mie Bogor -> Cindi Widia
-        $hiringCindi = Hiring::factory()->create([
-            'campaign_id' => $campaign4->id,
-            'brand_profile_id' => $brandProfile2->id,
-            'kol_profile_id' => $kolProfile2->id,
-            'initiated_by' => 'brand',
-            'status' => HiringStatus::ACCEPTED,
-            'proposed_budget' => 350000,
-            'agreed_budget' => 350000,
-            'message' => 'Hai Cindi! Soto Mie Bogor ingin mengajak kamu untuk campaign review menu kami. Tertarik?',
-            'accepted_at' => now()->subDays(3),
-            'expires_at' => now()->addDays(7),
-        ]);
-
-        Agreement::factory()->create([
-            'hiring_id' => $hiringCindi->id,
-            'agreement_number' => 'AGR-SPK-2025-00004',
-            'total_amount' => 350000,
-            'platform_fee_percent' => 10.00,
-            'status' => 'signed',
-            'terms' => "1. KOL wajib membuat 1 konten Instagram Reels / TikTok Video\n2. KOL wajib membuat 1 Instagram Story\n3. Menandai akun brand @sotomiebogor\n4. Menyebutkan nama dan lokasi Soto Mie Bogor\n5. Menyebutkan cita rasa khas, porsi mengenyangkan, dan harga terjangkau\n6. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n7. KOL wajib mengunjungi langsung outlet Soto Mie Bogor\n8. Brand berhak melakukan review sebelum konten dipublikasikan",
-            'brand_signed_at' => now()->subDays(2),
-            'kol_signed_at' => now()->subDays(2),
-            'signed_at' => now()->subDays(2),
-            'expires_at' => now()->addDays(10),
-        ]);
-
-        // Hiring Teras Dimsum Mentai -> Tata
-        $hiring1 = Hiring::factory()->create([
-            'campaign_id' => $campaign2->id,
-            'brand_profile_id' => $brandProfile1->id,
-            'kol_profile_id' => $kolProfile3->id,
-            'initiated_by' => 'brand',
-            'status' => HiringStatus::ACCEPTED,
-            'proposed_budget' => 300000,
-            'agreed_budget' => 300000,
-            'message' => 'Hai Tata! Kami dari Teras Dimsum Mentai tertarik untuk mengajak kamu mereview menu terbaru kami. Tertarik?',
-            'accepted_at' => now()->subDays(2),
-            'expires_at' => now()->addDays(5),
-        ]);
-
-        $hiring2 = Hiring::factory()->create([
-            'campaign_id' => $campaign1->id,
-            'brand_profile_id' => $brandProfile1->id,
-            'kol_profile_id' => $kolProfile3->id,
-            'initiated_by' => 'brand',
-            'status' => HiringStatus::ACCEPTED,
-            'proposed_budget' => 500000,
-            'agreed_budget' => 500000,
-            'message' => 'Tata, kami mau ajak kamu collaborate untuk campaign food review Teras Dimsum Mentai! Mohon konfirmasi.',
-            'accepted_at' => now()->subDays(1),
-            'expires_at' => now()->addDays(7),
-        ]);
-
-        $hiring3 = Hiring::factory()->create([
-            'campaign_id' => $campaign3->id,
-            'brand_profile_id' => $brandProfile2->id,
-            'kol_profile_id' => $kolProfile3->id,
-            'initiated_by' => 'brand',
-            'status' => HiringStatus::PENDING,
-            'proposed_budget' => 300000,
-            'message' => 'Hai Tata! Soto Mie Bogor ingin mengajak kamu kerja sama untuk review menu kami. Tertarik?',
-            'expires_at' => now()->addDays(7),
-        ]);
-
-        $agreement1 = Agreement::factory()->create([
-            'hiring_id' => $hiring1->id,
-            'agreement_number' => 'AGR-SPK-2025-00001',
-            'total_amount' => 300000,
-            'platform_fee_percent' => 10.00,
-            'status' => 'signed',
-            'terms' => "1. KOL wajib membuat 1 konten Instagram Reels / TikTok Video\n2. KOL wajib membuat 1 Instagram Story\n3. Menampilkan menu yang dicoba\n4. Menandai akun media sosial Teras Dimsum Mentai\n5. Menyebutkan nama brand dan lokasi outlet\n6. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n7. KOL wajib mengunjungi langsung outlet Teras Dimsum Mentai\n8. Brand berhak melakukan review sebelum konten dipublikasikan",
-            'brand_signed_at' => now()->subDays(2),
-            'kol_signed_at' => now()->subDays(2),
-            'signed_at' => now()->subDays(2),
-            'expires_at' => now()->addDays(8),
-        ]);
-
-        Agreement::factory()->create([
-            'hiring_id' => $hiring2->id,
-            'agreement_number' => 'AGR-SPK-2025-00002',
-            'total_amount' => 500000,
-            'platform_fee_percent' => 10.00,
-            'status' => 'draft',
-            'expires_at' => now()->addDays(7),
-        ]);
     }
-
-
 }
