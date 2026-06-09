@@ -50,7 +50,7 @@ class DemoDataSeeder extends Seeder
             'industry' => 'food',
             'description' => 'UMKM menyajikan dimsum mentai dengan cita rasa premium yang cocok untuk pecinta kuliner.',
             'location' => 'Jakarta',
-            'total_campaigns' => 2,
+            'total_campaigns' => 3,
             'rating_avg' => 4.3,
             'rating_count' => 6,
             'profile_completed_at' => now(),
@@ -71,7 +71,7 @@ class DemoDataSeeder extends Seeder
             'industry' => 'food',
             'description' => 'Soto mie khas Bogor dengan kuah gurih dan topping melimpah, siap memanjakan lidah Anda.',
             'location' => 'Bogor',
-            'total_campaigns' => 1,
+            'total_campaigns' => 2,
             'rating_avg' => 4.0,
             'rating_count' => 4,
             'profile_completed_at' => now(),
@@ -239,10 +239,20 @@ class DemoDataSeeder extends Seeder
             'account_name' => 'Tata',
         ]);
 
-        // Campaign Teras Dimsum Mentai
+        // Campaign 1: Teras Dimsum Mentai - Food Review Campaign
         $campaign1 = Campaign::factory()->create([
             'brand_profile_id' => $brandProfile1->id,
-            'title' => 'Teras Dimsum Mentai - Food Review by Nano Influencer',
+            'title' => 'Food Review Campaign – Teras Dimsum Mentai',
+            'description' => 'Teras Dimsum Mentai mengajak nano influencer untuk mencoba dan mengulas menu terbaru melalui konten yang menarik, autentik, dan mampu meningkatkan awareness brand di kalangan anak muda dan pecinta kuliner.',
+            'brief' => "Teras Dimsum Mentai mengajak nano influencer untuk mencoba dan mengulas menu terbaru melalui konten yang menarik, autentik, dan mampu meningkatkan awareness brand di kalangan anak muda dan pecinta kuliner.\n\nKriteria:\n- Nano Influencer (1.000–10.000 followers)\n- Domisili Pamulang dan sekitarnya\n- Niche kuliner, lifestyle, atau daily vlog\n- Tidak private account\n- Mampu membuat konten review yang natural dan engaging\n\nSOW:\n- 1x Instagram Reels / TikTok Video\n- 1x Instagram Story\n- Menampilkan menu yang dicoba\n- Menandai akun media sosial Teras Dimsum Mentai\n- Menyebutkan nama brand dan lokasi outlet\n\nTimeline:\n- Pendaftaran: 15 Juli 2026\n- Pengumuman: 17 Juli 2026\n- Periode Campaign: 18–25 Juli 2026\n- Upload konten maksimal H+3 setelah kunjungan",
+            'objectives' => ['Meningkatkan awareness brand Teras Dimsum Mentai', 'Menjangkau audiens baru di kalangan anak muda dan pecinta kuliner', 'Mendorong kunjungan ke outlet'],
+            'platforms' => ['instagram', 'tiktok'],
+            'content_types' => ['reels', 'video', 'story'],
+            'target_gender' => 'all',
+            'location' => 'Pamulang',
+            'min_followers' => 1000,
+            'max_followers' => 10000,
+            'min_engagement' => 2.0,
             'status' => CampaignStatus::OPEN,
             'budget_total' => 5000000,
             'budget_per_kol' => 500000,
@@ -255,9 +265,19 @@ class DemoDataSeeder extends Seeder
             'is_featured' => true,
         ]);
 
+        // Campaign 2: Teras Dimsum Mentai - Review Menu Terbaru
         $campaign2 = Campaign::factory()->create([
             'brand_profile_id' => $brandProfile1->id,
             'title' => 'Review Menu Terbaru Teras Dimsum Mentai',
+            'description' => 'Kami ingin memperkenalkan menu terbaru kami kepada pecinta kuliner melalui review autentik dari nano influencer.',
+            'brief' => "Coba menu terbaru Teras Dimsum Mentai dan bagikan pengalaman kamu!\n\nKriteria:\n- Nano Influencer (1.000–10.000 followers)\n- Domisili Pamulang dan sekitarnya\n- Aktif di Instagram atau TikTok\n- Niche kuliner atau lifestyle\n\nSOW:\n- 1x Instagram Reels / TikTok Video\n- 1x Instagram Story\n- Menampilkan menu yang dicoba\n- Menandai akun media sosial Teras Dimsum Mentai\n\nBenefit:\n- Free menu dari Teras Dimsum Mentai\n- Fee campaign sesuai kategori influencer\n- Kesempatan mengikuti campaign berikutnya\n\nTimeline:\n- Pendaftaran: 20 Juli 2026\n- Pengumuman: 22 Juli 2026\n- Periode Campaign: 23–30 Juli 2026",
+            'platforms' => ['instagram', 'tiktok'],
+            'content_types' => ['reels', 'video', 'story'],
+            'target_gender' => 'all',
+            'location' => 'Pamulang',
+            'min_followers' => 1000,
+            'max_followers' => 10000,
+            'min_engagement' => 2.0,
             'status' => CampaignStatus::OPEN,
             'budget_total' => 3000000,
             'budget_per_kol' => 300000,
@@ -269,10 +289,20 @@ class DemoDataSeeder extends Seeder
             'kol_category' => 'food',
         ]);
 
-        // Campaign Soto Mie Bogor
+        // Campaign 3: Soto Mie Bogor - Food Review Campaign
         $campaign3 = Campaign::factory()->create([
             'brand_profile_id' => $brandProfile2->id,
-            'title' => 'Soto Mie Bogor - Endorsement Nano Influencer Kuliner',
+            'title' => 'Food Review Campaign – Soto Mie Bogor',
+            'description' => 'Soto Mie Bogor mengajak nano influencer kuliner untuk mencoba dan membagikan pengalaman menikmati menu Soto Mie Bogor melalui konten yang menarik dan autentik. Campaign ini bertujuan meningkatkan awareness brand serta menarik lebih banyak pelanggan lokal.',
+            'brief' => "Soto Mie Bogor mengajak nano influencer kuliner untuk mencoba dan membagikan pengalaman menikmati menu Soto Mie Bogor melalui konten yang menarik dan autentik.\n\nKriteria:\n- Nano Influencer (1.000–10.000 followers)\n- Female / Male\n- Domisili Ciater dan sekitarnya\n- Aktif di Instagram atau TikTok\n- Niche kuliner, lifestyle, atau daily vlog\n- Tidak private account\n- Mampu membuat konten review yang natural\n\nSOW:\n- 1x Instagram Reels / TikTok Video\n- 1x Instagram Story\n- Menandai akun brand @sotomiebogor\n- Menyebutkan nama dan lokasi Soto Mie Bogor\n- Menyebutkan cita rasa khas, porsi mengenyangkan, dan harga terjangkau\n\nKey Message:\n- Soto Mie Bogor memiliki cita rasa khas yang lezat\n- Porsi mengenyangkan dengan harga terjangkau\n- Cocok untuk makan bersama teman dan keluarga\n- Kuliner khas Bogor yang wajib dicoba\n\nTimeline:\n- Pendaftaran: 15 Juli 2026\n- Pengumuman: 17 Juli 2026\n- Periode Campaign: 18–25 Juli 2026\n- Upload konten maksimal H+3 setelah kunjungan",
+            'objectives' => ['Meningkatkan awareness brand Soto Mie Bogor', 'Menarik lebih banyak pelanggan lokal', 'Memperkenalkan cita rasa khas Soto Mie Bogor'],
+            'platforms' => ['instagram', 'tiktok'],
+            'content_types' => ['reels', 'video', 'story'],
+            'target_gender' => 'all',
+            'location' => 'Ciater',
+            'min_followers' => 1000,
+            'max_followers' => 10000,
+            'min_engagement' => 2.0,
             'status' => CampaignStatus::OPEN,
             'budget_total' => 3000000,
             'budget_per_kol' => 300000,
@@ -285,24 +315,19 @@ class DemoDataSeeder extends Seeder
             'is_featured' => true,
         ]);
 
-        // Campaign Khusus untuk KOL
+        // Campaign 4: Soto Mie Bogor - Kuliner Khas Bogor
         $campaign4 = Campaign::factory()->create([
-            'brand_profile_id' => $brandProfile1->id,
-            'title' => 'Teras Dimsum Mentai - Fashionable Food Campaign',
-            'status' => CampaignStatus::OPEN,
-            'budget_total' => 4000000,
-            'budget_per_kol' => 400000,
-            'kol_slots' => 3,
-            'kol_filled' => 1,
-            'start_date' => now()->addDays(5),
-            'end_date' => now()->addDays(35),
-            'deadline_apply' => now()->addDays(3),
-            'kol_category' => 'fashion',
-        ]);
-
-        $campaign5 = Campaign::factory()->create([
             'brand_profile_id' => $brandProfile2->id,
-            'title' => 'Soto Mie Bogor - Beauty Review Campaign',
+            'title' => 'Kuliner Khas Bogor – Soto Mie Bogor Review',
+            'description' => 'Ajak更多 pelanggan untuk mencoba Soto Mie Bogor melalui konten review nan menarik dari para nano influencer.',
+            'brief' => "Yuk cobain Soto Mie Bogor dan bagikan pengalaman seru kamu!\n\nKriteria:\n- Nano Influencer (1.000–10.000 followers)\n- Domisili Ciater dan sekitarnya\n- Aktif di Instagram atau TikTok\n- Niche kuliner atau daily vlog\n\nSOW:\n- 1x Instagram Reels / TikTok Video\n- 1x Instagram Story\n- Menandai akun brand @sotomiebogor\n- Menyebutkan nama dan lokasi Soto Mie Bogor\n\nKey Message:\n- Soto Mie Bogor: Kuliner khas Bogor yang wajib dicoba\n- Cocok untuk makan bersama teman dan keluarga\n\nBenefit:\n- Free menu dari Soto Mie Bogor\n- Fee campaign sesuai kategori\n\nTimeline:\n- Pendaftaran: 20 Juli 2026\n- Pengumuman: 22 Juli 2026\n- Periode Campaign: 23–30 Juli 2026",
+            'platforms' => ['instagram', 'tiktok'],
+            'content_types' => ['reels', 'video', 'story'],
+            'target_gender' => 'all',
+            'location' => 'Ciater',
+            'min_followers' => 1000,
+            'max_followers' => 10000,
+            'min_engagement' => 2.0,
             'status' => CampaignStatus::OPEN,
             'budget_total' => 3500000,
             'budget_per_kol' => 350000,
@@ -311,12 +336,36 @@ class DemoDataSeeder extends Seeder
             'start_date' => now()->addDays(7),
             'end_date' => now()->addDays(37),
             'deadline_apply' => now()->addDays(5),
-            'kol_category' => 'beauty',
+            'kol_category' => 'food',
         ]);
 
-        // Hiring Teras Dimsum Mentai -> Anggun (Fashion)
+        // Campaign 5: Teras Dimsum Mentai - Lifestyle Food Campaign
+        $campaign5 = Campaign::factory()->create([
+            'brand_profile_id' => $brandProfile1->id,
+            'title' => 'Teras Dimsum Mentai – Lifestyle & Kuliner Campaign',
+            'description' => 'Campaign kolaborasi Teras Dimsum Mentai dengan influencer lifestyle untuk memperluas jangkauan brand.',
+            'brief' => "Teras Dimsum Mentai mengajak nano influencer lifestyle & kuliner untuk nongkrong seru sambil menikmati dimsum mentai!\n\nKriteria:\n- Nano Influencer (1.000–10.000 followers)\n- Female / Male\n- Domisili Pamulang dan sekitarnya\n- Niche lifestyle, kuliner, atau daily vlog\n\nSOW:\n- 1x Instagram Reels / TikTok Video\n- 1x Instagram Story\n- Menampilkan suasana outlet dan menu yang dicoba\n- Menandai akun media sosial Teras Dimsum Mentai\n\nKey Message:\n- Dimsum mentai yang lezat dan creamy\n- Tempat nyaman untuk nongkrong\n- Harga terjangkau dengan kualitas premium\n\nBenefit:\n- Free menu + fee campaign\n- Kesempatan collaborate kembali\n\nTimeline:\n- Pendaftaran: 25 Juli 2026\n- Pengumuman: 27 Juli 2026\n- Periode Campaign: 28 Juli – 5 Agustus 2026",
+            'platforms' => ['instagram', 'tiktok'],
+            'content_types' => ['reels', 'video', 'story'],
+            'target_gender' => 'all',
+            'location' => 'Pamulang',
+            'min_followers' => 1000,
+            'max_followers' => 10000,
+            'min_engagement' => 2.0,
+            'status' => CampaignStatus::OPEN,
+            'budget_total' => 4000000,
+            'budget_per_kol' => 400000,
+            'kol_slots' => 3,
+            'kol_filled' => 1,
+            'start_date' => now()->addDays(5),
+            'end_date' => now()->addDays(35),
+            'deadline_apply' => now()->addDays(3),
+            'kol_category' => 'food',
+        ]);
+
+        // Hiring Teras Dimsum Mentai -> Anggun
         $hiringAnggun = Hiring::factory()->create([
-            'campaign_id' => $campaign4->id,
+            'campaign_id' => $campaign5->id,
             'brand_profile_id' => $brandProfile1->id,
             'kol_profile_id' => $kolProfile1->id,
             'initiated_by' => 'brand',
@@ -334,16 +383,16 @@ class DemoDataSeeder extends Seeder
             'total_amount' => 400000,
             'platform_fee_percent' => 10.00,
             'status' => 'signed',
-            'terms' => "1. KOL wajib membuat 1 konten Instagram (reels) dan 1 konten TikTok\n2. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n3. KOL wajib mengunjungi langsung outlet Teras Dimsum Mentai\n4. Brand berhak melakukan review sebelum konten dipublikasikan",
+            'terms' => "1. KOL wajib membuat 1 konten Instagram Reels / TikTok Video\n2. KOL wajib membuat 1 Instagram Story\n3. Menampilkan menu yang dicoba\n4. Menandai akun media sosial Teras Dimsum Mentai\n5. Menyebutkan nama brand dan lokasi outlet\n6. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n7. KOL wajib mengunjungi langsung outlet Teras Dimsum Mentai\n8. Brand berhak melakukan review sebelum konten dipublikasikan",
             'brand_signed_at' => now()->subDays(2),
             'kol_signed_at' => now()->subDays(2),
             'signed_at' => now()->subDays(2),
             'expires_at' => now()->addDays(10),
         ]);
 
-        // Hiring Soto Mie Bogor -> Cindi Widia (Beauty)
+        // Hiring Soto Mie Bogor -> Cindi Widia
         $hiringCindi = Hiring::factory()->create([
-            'campaign_id' => $campaign5->id,
+            'campaign_id' => $campaign4->id,
             'brand_profile_id' => $brandProfile2->id,
             'kol_profile_id' => $kolProfile2->id,
             'initiated_by' => 'brand',
@@ -361,7 +410,7 @@ class DemoDataSeeder extends Seeder
             'total_amount' => 350000,
             'platform_fee_percent' => 10.00,
             'status' => 'signed',
-            'terms' => "1. KOL wajib membuat 1 konten Instagram (feed) dan 1 konten TikTok\n2. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n3. KOL wajib mengunjungi langsung outlet Soto Mie Bogor\n4. Brand berhak melakukan review sebelum konten dipublikasikan",
+            'terms' => "1. KOL wajib membuat 1 konten Instagram Reels / TikTok Video\n2. KOL wajib membuat 1 Instagram Story\n3. Menandai akun brand @sotomiebogor\n4. Menyebutkan nama dan lokasi Soto Mie Bogor\n5. Menyebutkan cita rasa khas, porsi mengenyangkan, dan harga terjangkau\n6. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n7. KOL wajib mengunjungi langsung outlet Soto Mie Bogor\n8. Brand berhak melakukan review sebelum konten dipublikasikan",
             'brand_signed_at' => now()->subDays(2),
             'kol_signed_at' => now()->subDays(2),
             'signed_at' => now()->subDays(2),
@@ -387,9 +436,11 @@ class DemoDataSeeder extends Seeder
             'brand_profile_id' => $brandProfile1->id,
             'kol_profile_id' => $kolProfile3->id,
             'initiated_by' => 'brand',
-            'status' => HiringStatus::NEGOTIATING,
+            'status' => HiringStatus::ACCEPTED,
             'proposed_budget' => 500000,
+            'agreed_budget' => 500000,
             'message' => 'Tata, kami mau ajak kamu collaborate untuk campaign food review Teras Dimsum Mentai! Mohon konfirmasi.',
+            'accepted_at' => now()->subDays(1),
             'expires_at' => now()->addDays(7),
         ]);
 
@@ -410,7 +461,7 @@ class DemoDataSeeder extends Seeder
             'total_amount' => 300000,
             'platform_fee_percent' => 10.00,
             'status' => 'signed',
-            'terms' => "1. KOL wajib membuat 1 konten Instagram (feed) dan 1 konten TikTok\n2. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n3. KOL wajib mengunjungi langsung outlet Teras Dimsum Mentai\n4. Brand berhak melakukan review sebelum konten dipublikasikan",
+            'terms' => "1. KOL wajib membuat 1 konten Instagram Reels / TikTok Video\n2. KOL wajib membuat 1 Instagram Story\n3. Menampilkan menu yang dicoba\n4. Menandai akun media sosial Teras Dimsum Mentai\n5. Menyebutkan nama brand dan lokasi outlet\n6. Konten harus dipublikasikan dalam 7 hari setelah agreement ditandatangani\n7. KOL wajib mengunjungi langsung outlet Teras Dimsum Mentai\n8. Brand berhak melakukan review sebelum konten dipublikasikan",
             'brand_signed_at' => now()->subDays(2),
             'kol_signed_at' => now()->subDays(2),
             'signed_at' => now()->subDays(2),
@@ -428,5 +479,4 @@ class DemoDataSeeder extends Seeder
     }
 
 
-    // sisi brand kalau dia hire kol -> 
 }

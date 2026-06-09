@@ -24,8 +24,7 @@ return new class extends Migration
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
 
-            $table->index(['campaign_id', 'kol_profile_id'])->unique();
-            $table->index('kol_profile_id');
+            $table->unique(['campaign_id', 'kol_profile_id']);
             $table->index('status');
         });
     }

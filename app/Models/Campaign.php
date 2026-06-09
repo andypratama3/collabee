@@ -40,7 +40,6 @@ class Campaign extends Model
         'status',
         'is_featured',
         'views_count',
-        'applications_count',
     ];
 
     protected function casts(): array

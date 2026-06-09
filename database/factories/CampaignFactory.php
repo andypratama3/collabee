@@ -12,6 +12,7 @@ class CampaignFactory extends Factory
     public function definition(): array
     {
         return [
+            'brand_profile_id' => \App\Models\BrandProfile::factory(),
             'title' => fake()->sentence(4),
             'description' => fake()->paragraphs(3, true),
             'brief' => fake()->paragraphs(2, true),

@@ -19,4 +19,6 @@ enum KolCategory: string
     case PARENTING = 'parenting';
     case AUTOMOTIVE = 'automotive';
     case PHOTOGRAPHY = 'photography';
+    case FITNESS = 'fitness';
+    case FINANCE = 'finance';
 }

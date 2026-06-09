@@ -68,10 +68,10 @@
                                     @endswitch">{{ ucfirst(str_replace('_', ' ', $campaign->status->value ?? $campaign->status)) }}</span>
                             </td>
                             <td class="px-6 py-4">
-                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ $campaign->deadline?->format('d M Y') ?? '-' }}</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ $campaign->deadline_apply?->format('d M Y') ?? '-' }}</span>
                             </td>
                             <td class="px-6 py-4 text-end">
-                                <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">Rp. {{ number_format($campaign->budget ?? 0, 0, ',', '.') }}</span>
+                                <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">Rp. {{ number_format($campaign->budget_total ?? 0, 0, ',', '.') }}</span>
                             </td>
                         </tr>
                     @empty

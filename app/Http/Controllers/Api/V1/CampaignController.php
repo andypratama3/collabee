@@ -77,11 +77,11 @@ class CampaignController extends Controller
             'min_engagement' => 'nullable|numeric|min:0|max:100',
             'location' => 'nullable|string|max:255',
             'budget_total' => 'required|numeric|min:0',
-            'budget_per_kol' => 'required|numeric|min:0',
-            'kol_slots' => 'required|integer|min:1',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'deadline_apply' => 'nullable|date|before_or_equal:end_date',
+            'budget_per_kol' => 'nullable|numeric|min:0',
+            'kol_slots' => 'required|integer|min:1|max:100',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'deadline_apply' => 'required|date|before_or_equal:end_date',
         ]);
 
         $validated['status'] = CampaignStatus::DRAFT;

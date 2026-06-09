@@ -10,4 +10,6 @@ enum SocialPlatform: string
     case TWITTER = 'twitter';
     case FACEBOOK = 'facebook';
     case LINKEDIN = 'linkedin';
+    case PODCAST = 'podcast';
+    case BLOG = 'blog';
 }

@@ -74,7 +74,7 @@ class KolController extends Controller
             'bankAccount',
         ]);
 
-        $kolProfile->loadCount('hirings as completed_hirings_count');
+        $kolProfile->loadCount(['hirings as completed_hirings_count' => fn($q) => $q->where('status', \App\Enums\HiringStatus::COMPLETED)]);
 
         return ApiResponse::success($kolProfile, 'Detail KOL berhasil diambil.');
     }

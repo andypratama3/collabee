@@ -41,7 +41,7 @@ class Index extends Component
         $this->showDeleteConfirm = true;
     }
 
-    public function delete(CampaignService $campaignService): void
+    public function delete(): void
     {
         $campaign = Campaign::findOrFail($this->selectedCampaign);
         $this->authorize('delete', $campaign);

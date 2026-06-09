@@ -19,7 +19,6 @@ class BrandProfile extends Model implements HasMedia
     protected $fillable = [
         'user_id',
         'brand_name',
-        'slug',
         'description',
         'industry',
         'website',
