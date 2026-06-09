@@ -138,10 +138,18 @@ class ChatService
             $offerData = $message->offer_data;
 
             if ($hiring && $offerData) {
+                $wasNotAccepted = $hiring->status !== HiringStatus::ACCEPTED;
+                $agreedBudget = $offerData['budget'] ?? $hiring->agreed_budget ?? $hiring->proposed_budget;
+
                 $hiring->update([
-                    'status' => HiringStatus::NEGOTIATING,
-                    'agreed_budget' => $offerData['budget'] ?? $hiring->agreed_budget,
+                    'status' => HiringStatus::ACCEPTED,
+                    'accepted_at' => now(),
+                    'agreed_budget' => $agreedBudget,
                 ]);
+
+                if ($wasNotAccepted) {
+                    $hiring->campaign->increment('kol_filled');
+                }
             }
 
             $agreementService = app(AgreementService::class);

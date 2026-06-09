@@ -66,7 +66,15 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $hiring->campaign?->title ?? 'N/A' }}</td>
-                                <td class="px-6 py-4 text-sm font-semibold text-gray-900 dark:text-white">Rp. {{ number_format($hiring->proposed_budget ?? 0, 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 text-sm font-semibold text-gray-900 dark:text-white">
+                                    @if($hiring->agreed_budget && $hiring->agreed_budget != $hiring->proposed_budget)
+                                        <span class="text-gray-400 line-through text-xs">Rp. {{ number_format($hiring->proposed_budget ?? 0, 0, ',', '.') }}</span>
+                                        <br>
+                                        <span class="text-emerald-600 dark:text-emerald-400">Rp. {{ number_format($hiring->agreed_budget, 0, ',', '.') }}</span>
+                                    @else
+                                        Rp. {{ number_format($hiring->proposed_budget ?? 0, 0, ',', '.') }}
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center px-2.5 py-1 text-xs font-bold rounded-full border
                                         @if($hiring->status->value === 'pending') bg-amber-50 text-amber-600 border-amber-200/50 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800/50

@@ -13,16 +13,26 @@ class AgreementService
     public function generate(Hiring $hiring): Agreement
     {
         return DB::transaction(function () use ($hiring) {
-            $existing = Agreement::where('hiring_id', $hiring->id)->first();
-            if ($existing) {
-                return $existing;
-            }
-
             $campaign = $hiring->campaign;
             $agreedBudget = $hiring->agreed_budget ?? $hiring->proposed_budget;
             $platformFeePercent = 10.00;
             $platformFee = $agreedBudget * ($platformFeePercent / 100);
             $totalAmount = $agreedBudget;
+
+            $existing = Agreement::where('hiring_id', $hiring->id)->first();
+            if ($existing) {
+                if ($existing->total_amount == $totalAmount) {
+                    return $existing;
+                }
+
+                $existing->update([
+                    'total_amount' => $totalAmount,
+                    'platform_fee_percent' => $platformFeePercent,
+                    'terms' => $this->generateTerms($campaign, $agreedBudget, $platformFeePercent),
+                ]);
+
+                return $existing->fresh();
+            }
 
             $agreement = Agreement::create([
                 'hiring_id' => $hiring->id,

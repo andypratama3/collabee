@@ -75,7 +75,13 @@
                             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-sm text-gray-500 dark:text-gray-400">
                                 <span class="inline-flex items-center gap-1.5">
                                     <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                    Rp. {{ number_format($hiring->proposed_budget ?? 0, 0, ',', '.') }}
+                                    @if($hiring->agreed_budget && $hiring->agreed_budget != $hiring->proposed_budget)
+                                        <span class="text-gray-400 line-through">Rp. {{ number_format($hiring->proposed_budget ?? 0, 0, ',', '.') }}</span>
+                                        &rarr;
+                                        <span class="text-emerald-600 dark:text-emerald-400 font-semibold">Rp. {{ number_format($hiring->agreed_budget, 0, ',', '.') }}</span>
+                                    @else
+                                        Rp. {{ number_format($hiring->proposed_budget ?? 0, 0, ',', '.') }}
+                                    @endif
                                 </span>
                                 <span class="inline-flex items-center gap-1.5">
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -117,6 +123,10 @@
                                         class="px-5 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 rounded-xl hover:bg-rose-100 dark:hover:bg-rose-900/40 ring-1 ring-rose-200/50 dark:ring-rose-700/30 transition-all duration-300 hover:-translate-y-0.5">
                                     Tolak
                                 </button>
+                            @elseif($hiring->status->value === 'negotiating')
+                                <span class="px-3 py-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg ring-1 ring-amber-200/50 dark:ring-amber-700/30">
+                                    Menunggu persetujuan brand
+                                </span>
                             @endif
                         </div>
                     </div>
@@ -187,6 +197,7 @@
 
     <!-- Respond Modal -->
     @if($showRespondModal)
+        @php $selectedHiringModel = $hirings->firstWhere('id', $selectedHiring); @endphp
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-sm" wire:click.self="$set('showRespondModal', false)"
              x-data x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
             <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl shadow-gray-900/20 dark:shadow-black/40 border border-gray-200 dark:border-gray-700 p-6 w-full max-w-md mx-4"
@@ -205,11 +216,44 @@
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">
                     @if($respondAction === 'accept')
-                        Dengan menerima, Anda setuju untuk mengerjakan campaign ini. Agreement akan dibuat secara otomatis.
+                        Anda dapat menyesuaikan budget sebelum menyetujui. Agreement akan dibuat dengan budget yang disepakati.
                     @else
                         Apakah Anda yakin ingin menolak undangan hiring ini?
                     @endif
                 </p>
+                @if($respondAction === 'accept')
+                    <div class="mb-5 space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Budget yang Diajukan Brand</label>
+                            <p class="text-lg font-bold text-gray-900 dark:text-white">Rp. {{ number_format($selectedHiringModel?->proposed_budget ?? 0, 0, ',', '.') }}</p>
+                        </div>
+                        @php
+                            $rateCards = $selectedHiringModel?->kolProfile?->rateCards?->where('is_active', true) ?? collect();
+                        @endphp
+                        @if($rateCards->isNotEmpty())
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Rate Card Anda</label>
+                                <div class="flex flex-wrap gap-1.5">
+                                    @foreach($rateCards as $rc)
+                                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 rounded-lg">
+                                            {{ $rc->platform }} - {{ $rc->content_type }}: Rp. {{ number_format($rc->price, 0, ',', '.') }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Budget Anda (counter-offer)</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">Rp</span>
+                                <input type="number" wire:model="counterOfferAmount"
+                                       class="w-full pl-10 pr-4 py-3 border border-gray-200/80 dark:border-gray-600/80 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+                                       placeholder="Masukkan budget Anda">
+                            </div>
+                            @error('counterOfferAmount') <p class="text-xs text-red-600 dark:text-red-400 mt-1">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+                @endif
                 @if($respondAction === 'reject')
                     <div class="mb-5">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Alasan (opsional)</label>

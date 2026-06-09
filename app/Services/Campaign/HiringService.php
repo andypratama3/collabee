@@ -96,17 +96,20 @@ class HiringService
         return $hiring;
     }
 
-    public function accept(Hiring $hiring): Hiring
+    public function accept(Hiring $hiring, ?int $counterBudget = null): Hiring
     {
-        $result = DB::transaction(function () use ($hiring) {
-            if ($hiring->status !== HiringStatus::PENDING) {
-                throw new \RuntimeException('Only pending hirings can be accepted.');
+        $result = DB::transaction(function () use ($hiring, $counterBudget) {
+            $allowedStatuses = [HiringStatus::PENDING, HiringStatus::NEGOTIATING];
+            if (!in_array($hiring->status, $allowedStatuses)) {
+                throw new \RuntimeException('Only pending or negotiating hirings can be accepted.');
             }
+
+            $agreedBudget = $counterBudget ?? $hiring->agreed_budget ?? $hiring->proposed_budget;
 
             $hiring->update([
                 'status' => HiringStatus::ACCEPTED,
                 'accepted_at' => now(),
-                'agreed_budget' => $hiring->proposed_budget,
+                'agreed_budget' => $agreedBudget,
             ]);
 
             $hiring->campaign->increment('kol_filled');
@@ -131,6 +134,54 @@ class HiringService
             "{$result->kolProfile->display_name} telah menerima tawaran hiring untuk campaign {$result->campaign->title}.",
             ['hiring' => $result],
             route('brand.hiring.index')
+        );
+
+        return $result;
+    }
+
+    public function counterOffer(Hiring $hiring, int $counterBudget): Hiring
+    {
+        $result = DB::transaction(function () use ($hiring, $counterBudget) {
+            if ($hiring->status !== HiringStatus::PENDING) {
+                throw new \RuntimeException('Only pending hirings can be countered.');
+            }
+
+            $hiring->update([
+                'status' => HiringStatus::NEGOTIATING,
+                'agreed_budget' => $counterBudget,
+            ]);
+
+            ChatRoom::firstOrCreate([
+                'hiring_id' => $hiring->id,
+            ], [
+                'brand_user_id' => $hiring->campaign->brandProfile->user->id,
+                'kol_user_id' => $hiring->kolProfile->user->id,
+            ]);
+
+            // Send an offer message in the chat room from KOL to brand
+            $chatRoom = $hiring->chatRoom;
+            if ($chatRoom) {
+                $kolUser = $hiring->kolProfile->user;
+                $chatService = app(\App\Services\Chat\ChatService::class);
+                $chatService->sendMessage($chatRoom, $kolUser, [
+                    'body' => 'Budget offer: Rp ' . number_format($counterBudget, 0, ',', '.'),
+                    'type' => 'offer',
+                    'offer_data' => [
+                        'budget' => $counterBudget,
+                    ],
+                ]);
+            }
+
+            return $hiring->fresh();
+        });
+
+        $this->notificationService->send(
+            $result->campaign->brandProfile->user,
+            'hiring',
+            'KOL mengajukan counter-offer',
+            "{$result->kolProfile->display_name} mengajukan budget Rp " . number_format($counterBudget, 0, ',', '.') . " untuk campaign {$result->campaign->title}.",
+            ['hiring' => $result],
+            route('brand.chat.show', $result->chatRoom)
         );
 
         return $result;

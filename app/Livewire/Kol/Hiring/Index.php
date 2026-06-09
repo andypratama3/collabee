@@ -20,6 +20,7 @@ class Index extends Component
     public bool $showRespondModal = false;
     public string $respondAction = '';
     public ?string $rejectReason = null;
+    public ?int $counterOfferAmount = null;
 
     protected $queryString = ['filter', 'activeTab'];
 
@@ -37,7 +38,7 @@ class Index extends Component
 
         // Outbound hiring invitations from brands
         $hiringQuery = Hiring::where('kol_profile_id', $kolProfile->id)
-            ->with(['campaign.brandProfile.user', 'agreement', 'chatRoom']);
+            ->with(['campaign.brandProfile.user', 'agreement', 'chatRoom', 'kolProfile.rateCards']);
 
         if ($this->filter) {
             $hiringQuery->where('status', $this->filter);
@@ -60,6 +61,7 @@ class Index extends Component
         $this->selectedHiring = $hiring->id;
         $this->respondAction = $action;
         $this->rejectReason = null;
+        $this->counterOfferAmount = (int) ($hiring->agreed_budget ?? $hiring->proposed_budget);
         $this->showRespondModal = true;
     }
 
@@ -69,8 +71,19 @@ class Index extends Component
         $this->authorize('view', $hiring);
 
         if ($this->respondAction === 'accept') {
-            $hiringService->accept($hiring);
-            session()->flash('success', 'Hiring diterima! Agreement telah dibuat secara otomatis.');
+            $this->validate([
+                'counterOfferAmount' => 'required|numeric|min:1',
+            ]);
+
+            $isCounterOffer = $this->counterOfferAmount !== (int) ($hiring->proposed_budget ?? 0);
+
+            if ($isCounterOffer) {
+                $hiringService->counterOffer($hiring, $this->counterOfferAmount);
+                session()->flash('success', 'Counter-offer Anda telah dikirim ke brand untuk disetujui.');
+            } else {
+                $hiringService->accept($hiring);
+                session()->flash('success', 'Hiring diterima! Agreement telah dibuat secara otomatis.');
+            }
         } else {
             $hiringService->reject($hiring, $this->rejectReason);
             session()->flash('success', 'Hiring ditolak.');
