@@ -29,6 +29,6 @@ Route::middleware(['kol', 'profile.complete'])->prefix('kol')->name('kol.')->gro
     Route::get('/withdrawals', \App\Livewire\Kol\Withdrawal\Index::class)->name('withdrawal.index');
 });
 
-Route::middleware(['kol'])->prefix('kol')->name('kol.')->group(function () {
+Route::middleware(['kol'])->prefix('kols')->name('kol.')->group(function () {
     Route::get('/profile/create', CreateProfile::class)->name('profile.create');
 });

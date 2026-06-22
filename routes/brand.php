@@ -16,7 +16,7 @@ use App\Livewire\Brand\Profile\CreateProfile;
 use App\Livewire\Brand\Profile\EditProfile;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['brand'])->prefix('brand')->name('brand.')->group(function () {
+Route::middleware(['brand'])->prefix('brands')->name('brand.')->group(function () {
     Route::get('/profile/create', CreateProfile::class)->name('profile.create');
 });
 
