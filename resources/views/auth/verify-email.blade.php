@@ -24,8 +24,8 @@
         </p>
     </div>
 
-    @if (session('status') === 'verification-link-sent')
-        <script>document.addEventListener('DOMContentLoaded', () => window.Swal && window.Swal.mixin({toast:true,position:'top-end',showConfirmButton:false,timer:5000,timerProgressBar:true}).fire({icon:'success',title:'Link verifikasi baru telah dikirim!'}));</script>
+    @if (session()->has('status') || session()->has('success'))
+        <script>document.addEventListener('DOMContentLoaded', () => window.Swal && window.Swal.mixin({toast:true,position:'top-end',showConfirmButton:false,timer:5000,timerProgressBar:true}).fire({icon:'success',title:'{{ session('success') ?? 'Link verifikasi baru telah dikirim!' }}'}));</script>
     @endif
 
     <form method="POST" action="{{ route('verification.resend') }}" class="mb-4">
