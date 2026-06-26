@@ -2,11 +2,10 @@
 
 namespace App\Livewire\Brand\Profile;
 
-use App\Models\User;
 use App\Services\Brand\BrandProfileService;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Validate;
 
 class CreateProfile extends Component
 {
@@ -45,7 +44,7 @@ class CreateProfile extends Component
             'description' => $this->description ?: null,
             'industry' => $this->industry ?: null,
             'website' => $this->website ?: null,
-            'target_market' => !empty($this->target_market) ? $this->target_market : null,
+            'target_market' => ! empty($this->target_market) ? $this->target_market : null,
             'location' => $this->location ?: null,
             'logo' => $this->logo?->getRealPath(),
             'banner' => $this->banner?->getRealPath(),

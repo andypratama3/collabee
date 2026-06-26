@@ -14,7 +14,9 @@ class Index extends Component
     use AuthorizesRequests, WithPagination;
 
     public string $filter = '';
+
     public $selectedCampaign = null;
+
     public bool $showDeleteConfirm = false;
 
     protected $queryString = ['filter'];

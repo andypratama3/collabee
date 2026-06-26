@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\HiringStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\KolProfile;
@@ -26,7 +27,7 @@ class KolController extends Controller
         }
 
         if ($request->filled('location')) {
-            $query->where('location', 'like', '%' . $request->location . '%');
+            $query->where('location', 'like', '%'.$request->location.'%');
         }
 
         if ($request->filled('followers_min')) {
@@ -48,8 +49,8 @@ class KolController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('display_name', 'like', '%' . $search . '%')
-                    ->orWhere('bio', 'like', '%' . $search . '%');
+                $q->where('display_name', 'like', '%'.$search.'%')
+                    ->orWhere('bio', 'like', '%'.$search.'%');
             });
         }
 
@@ -70,11 +71,11 @@ class KolController extends Controller
             'user',
             'socialAccounts',
             'portfolios',
-            'rateCards' => fn($q) => $q->where('is_active', true),
+            'rateCards' => fn ($q) => $q->where('is_active', true),
             'bankAccount',
         ]);
 
-        $kolProfile->loadCount(['hirings as completed_hirings_count' => fn($q) => $q->where('status', \App\Enums\HiringStatus::COMPLETED)]);
+        $kolProfile->loadCount(['hirings as completed_hirings_count' => fn ($q) => $q->where('status', HiringStatus::COMPLETED)]);
 
         return ApiResponse::success($kolProfile, 'Detail KOL berhasil diambil.');
     }

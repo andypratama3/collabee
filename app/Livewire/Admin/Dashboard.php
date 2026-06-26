@@ -2,18 +2,21 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\User;
-use App\Models\Campaign;
-use App\Models\Payment;
-use App\Models\KolWithdrawal;
-use App\Models\Dispute;
 use App\Enums\PaymentStatus;
+use App\Models\Campaign;
+use App\Models\Dispute;
+use App\Models\KolWithdrawal;
+use App\Models\Payment;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Dashboard extends Component
 {
     public array $stats = [];
+
     public array $revenueChart = [];
+
     public array $registrationChart = [];
 
     public function mount(): void
@@ -34,7 +37,7 @@ class Dashboard extends Component
 
     private function monthExpression(string $column): string
     {
-        $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+        $driver = DB::connection()->getDriverName();
 
         if (in_array($driver, ['mysql', 'mariadb', 'percona'])) {
             return "DATE_FORMAT($column, '%Y-%m')";
@@ -50,7 +53,7 @@ class Dashboard extends Component
 
     private function getRevenueOverTime(): array
     {
-        $months = collect(range(5, 0))->map(fn($i) => now()->subMonths($i)->format('Y-m'));
+        $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i)->format('Y-m'));
         $expr = $this->monthExpression('paid_at');
 
         $grouped = Payment::where('status', PaymentStatus::PAID)
@@ -60,14 +63,14 @@ class Dashboard extends Component
             ->pluck('total', 'ym');
 
         return [
-            'categories' => $months->map(fn($m) => $this->monthLabel($m))->toArray(),
-            'data' => $months->map(fn($m) => (float) ($grouped[$m] ?? 0))->toArray(),
+            'categories' => $months->map(fn ($m) => $this->monthLabel($m))->toArray(),
+            'data' => $months->map(fn ($m) => (float) ($grouped[$m] ?? 0))->toArray(),
         ];
     }
 
     private function getRegistrationOverTime(): array
     {
-        $months = collect(range(5, 0))->map(fn($i) => now()->subMonths($i)->format('Y-m'));
+        $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i)->format('Y-m'));
         $expr = $this->monthExpression('created_at');
 
         $grouped = User::where('created_at', '>=', now()->subMonths(6)->startOfMonth())
@@ -76,8 +79,8 @@ class Dashboard extends Component
             ->pluck('total', 'ym');
 
         return [
-            'categories' => $months->map(fn($m) => $this->monthLabel($m))->toArray(),
-            'data' => $months->map(fn($m) => (int) ($grouped[$m] ?? 0))->toArray(),
+            'categories' => $months->map(fn ($m) => $this->monthLabel($m))->toArray(),
+            'data' => $months->map(fn ($m) => (int) ($grouped[$m] ?? 0))->toArray(),
         ];
     }
 
@@ -88,6 +91,7 @@ class Dashboard extends Component
             '05' => 'Mei', '06' => 'Jun', '07' => 'Jul', '08' => 'Ags',
             '09' => 'Sep', '10' => 'Okt', '11' => 'Nov', '12' => 'Des',
         ];
+
         return $monthsMap[explode('-', $ym)[1]] ?? $ym;
     }
 

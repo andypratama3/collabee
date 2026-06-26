@@ -81,7 +81,7 @@ test('kol contents page loads', function () {
 });
 
 test('guest cannot access kol pages', function () {
-    $this->post('/logout');
+    auth()->logout();
 
     $this->get(route('kol.dashboard'))->assertRedirect(route('login'));
     $this->get(route('kol.hiring.index'))->assertRedirect(route('login'));

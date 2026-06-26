@@ -13,7 +13,9 @@ class Index extends Component
     use WithPagination;
 
     public float $amount = 0;
+
     public string $bankAccountId = '';
+
     public ?string $notes = null;
 
     protected function rules(): array
@@ -59,13 +61,15 @@ class Index extends Component
 
         $kolProfile = auth()->user()->kolProfile;
 
-        if (!$kolProfile) {
+        if (! $kolProfile) {
             session()->flash('error', 'Profil KOL tidak ditemukan.');
+
             return;
         }
 
         if ($kolProfile->wallet_balance < $this->amount) {
             session()->flash('error', 'Saldo tidak mencukupi.');
+
             return;
         }
 

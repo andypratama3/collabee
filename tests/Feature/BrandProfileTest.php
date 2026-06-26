@@ -77,7 +77,7 @@ test('brand can view contents page', function () {
 });
 
 test('guest cannot access brand pages', function () {
-    $this->post('/logout');
+    auth()->logout();
 
     $this->get(route('brand.dashboard'))->assertRedirect(route('login'));
     $this->get(route('brand.campaign.index'))->assertRedirect(route('login'));

@@ -14,13 +14,15 @@ class ContentPolicy
 
     public function view(User $user, Content $content): bool
     {
-        if ($user->isAdmin()) return true;
+        if ($user->isAdmin()) {
+            return true;
+        }
 
         $brandUserId = $content->brandProfile?->user_id;
-        $kolUserId   = $content->kolProfile?->user_id;
+        $kolUserId = $content->kolProfile?->user_id;
 
         return ($brandUserId && $brandUserId === $user->id)
-            || ($kolUserId   && $kolUserId   === $user->id);
+            || ($kolUserId && $kolUserId === $user->id);
     }
 
     public function create(User $user): bool

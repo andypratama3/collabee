@@ -14,11 +14,11 @@ class Dashboard extends Component
         // Spending data for the last 7 days
         $spendingData = [];
         $spendingLabels = [];
-        
+
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
             $spendingLabels[] = $date->format('D');
-            
+
             $dailySpent = 0;
             if ($profile) {
                 $dailySpent = $profile->hirings()

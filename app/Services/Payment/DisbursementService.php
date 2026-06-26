@@ -5,11 +5,11 @@ namespace App\Services\Payment;
 use App\Models\KolWithdrawal;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class DisbursementService
 {
     private string $apiKey;
+
     private string $baseUrl;
 
     public function __construct()
@@ -27,7 +27,7 @@ class DisbursementService
             return $this->simulateDisbursement($withdrawal);
         }
 
-        $externalId = 'WD-' . now()->format('Ymd') . '-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT);
+        $externalId = 'WD-'.now()->format('Ymd').'-'.str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT);
 
         $payload = [
             'external_id' => $externalId,
@@ -35,7 +35,7 @@ class DisbursementService
             'bank_code' => $this->mapBankCode($withdrawal->bank_name),
             'account_holder_name' => $withdrawal->bank_account_name,
             'account_number' => $withdrawal->bank_account_number,
-            'description' => 'Collabee Withdrawal #' . $withdrawal->id . ' - ' . ($withdrawal->kolProfile?->user?->name ?? 'KOL'),
+            'description' => 'Collabee Withdrawal #'.$withdrawal->id.' - '.($withdrawal->kolProfile?->user?->name ?? 'KOL'),
         ];
 
         try {
@@ -44,7 +44,7 @@ class DisbursementService
                     // Idempotency key prevents double payout on retry
                     'X-IDEMPOTENCY-KEY' => $externalId,
                 ])
-                ->post($this->baseUrl . '/disbursements', $payload);
+                ->post($this->baseUrl.'/disbursements', $payload);
 
             if ($response->successful()) {
                 $data = $response->json();
@@ -54,7 +54,7 @@ class DisbursementService
                 $withdrawal->update([
                     'status' => 'processing',
                     'processed_at' => now(),
-                    'admin_note' => 'Disbursement via Xendit: ' . ($data['id'] ?? $externalId) . ' (status: ' . ($data['status'] ?? 'PENDING') . ')',
+                    'admin_note' => 'Disbursement via Xendit: '.($data['id'] ?? $externalId).' (status: '.($data['status'] ?? 'PENDING').')',
                 ]);
 
                 Log::info('Xendit disbursement created', [
@@ -79,7 +79,7 @@ class DisbursementService
 
             return [
                 'success' => false,
-                'message' => $errorData['message'] ?? 'Gagal membuat disbursement. Status: ' . $response->status(),
+                'message' => $errorData['message'] ?? 'Gagal membuat disbursement. Status: '.$response->status(),
             ];
         } catch (\Exception $e) {
             Log::error('Xendit disbursement exception', [
@@ -89,7 +89,7 @@ class DisbursementService
 
             return [
                 'success' => false,
-                'message' => 'Koneksi ke Xendit gagal: ' . $e->getMessage(),
+                'message' => 'Koneksi ke Xendit gagal: '.$e->getMessage(),
             ];
         }
     }
@@ -99,12 +99,12 @@ class DisbursementService
      */
     public function simulateDisbursement(KolWithdrawal $withdrawal): array
     {
-        $externalId = 'WD-SIM-' . now()->format('Ymd') . '-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT);
+        $externalId = 'WD-SIM-'.now()->format('Ymd').'-'.str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT);
 
         $withdrawal->update([
             'status' => 'completed',
             'processed_at' => now(),
-            'admin_note' => 'Disbursement SIMULATED via Xendit (demo mode): ' . $externalId,
+            'admin_note' => 'Disbursement SIMULATED via Xendit (demo mode): '.$externalId,
         ]);
 
         $kolProfile = $withdrawal->kolProfile;
@@ -175,7 +175,7 @@ class DisbursementService
     {
         try {
             $response = Http::withBasicAuth($this->apiKey, '')
-                ->get($this->baseUrl . '/available_disbursements_banks');
+                ->get($this->baseUrl.'/available_disbursements_banks');
 
             if ($response->successful()) {
                 return $response->json();

@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Shared\Rating;
 
-use App\Enums\HiringStatus;
 use App\Models\Hiring;
 use App\Models\Rating;
 use App\Services\Rating\RatingService;
@@ -14,11 +13,17 @@ class Create extends Component
     use AuthorizesRequests;
 
     public Hiring $hiring;
+
     public string $type = 'kol';
+
     public int $communication = 0;
+
     public int $professionalism = 0;
+
     public int $quality = 0;
+
     public int $timeliness = 0;
+
     public string $review = '';
 
     protected $rules = [
@@ -54,10 +59,10 @@ class Create extends Component
         $this->hiring->loadMissing('campaign.brandProfile.user', 'kolProfile.user');
 
         return view('livewire.shared.rating.create', [
-            'communication'   => $this->communication,
+            'communication' => $this->communication,
             'professionalism' => $this->professionalism,
-            'quality'         => $this->quality,
-            'timeliness'      => $this->timeliness,
+            'quality' => $this->quality,
+            'timeliness' => $this->timeliness,
         ])->layout('layouts.app');
     }
 
@@ -68,16 +73,17 @@ class Create extends Component
         if (Rating::where('hiring_id', $this->hiring->id)->where('rater_id', auth()->id())->exists()) {
             session()->flash('error', 'Anda sudah memberikan rating untuk hiring ini.');
             $this->redirect(route('brand.hiring.index'), navigate: true);
+
             return;
         }
 
         try {
             $ratingService->rateKol($this->hiring, auth()->user(), [
-                'communication'   => $this->communication,
+                'communication' => $this->communication,
                 'professionalism' => $this->professionalism,
-                'quality'         => $this->quality,
-                'timeliness'      => $this->timeliness,
-                'review'          => $this->review,
+                'quality' => $this->quality,
+                'timeliness' => $this->timeliness,
+                'review' => $this->review,
             ]);
 
             session()->flash('success', 'Rating untuk KOL berhasil dikirim! Terima kasih atas penilaian Anda.');
@@ -94,16 +100,17 @@ class Create extends Component
         if (Rating::where('hiring_id', $this->hiring->id)->where('rater_id', auth()->id())->exists()) {
             session()->flash('error', 'Anda sudah memberikan rating untuk hiring ini.');
             $this->redirect(route('kol.hiring.index'), navigate: true);
+
             return;
         }
 
         try {
             $ratingService->rateBrand($this->hiring, auth()->user(), [
-                'communication'   => $this->communication,
+                'communication' => $this->communication,
                 'professionalism' => $this->professionalism,
-                'quality'         => $this->quality,
-                'timeliness'      => $this->timeliness,
-                'review'          => $this->review,
+                'quality' => $this->quality,
+                'timeliness' => $this->timeliness,
+                'review' => $this->review,
             ]);
 
             session()->flash('success', 'Rating untuk Brand berhasil dikirim! Terima kasih atas penilaian Anda.');

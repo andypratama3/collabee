@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\LoginRequest;
 use App\Http\Requests\Api\V1\RegisterRequest;
 use App\Http\Responses\ApiResponse;
+use App\Models\User;
 use App\Services\Auth\RegistrationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,9 +42,9 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        $user = \App\Models\User::where('email', $data['email'])->first();
+        $user = User::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (! $user || ! Hash::check($data['password'], $user->password)) {
             return ApiResponse::error('Email atau password salah.', 401);
         }
 

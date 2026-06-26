@@ -2,19 +2,20 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\User;
 use App\Enums\UserRole;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Auth;
-use Spatie\Activitylog\Models\Activity;
 
 class UserManagement extends Component
 {
     use WithPagination;
 
     public string $search = '';
+
     public string $roleFilter = '';
+
     public string $statusFilter = '';
 
     protected $queryString = ['search', 'roleFilter', 'statusFilter'];
@@ -54,13 +55,15 @@ class UserManagement extends Component
 
     public function impersonate(User $user): void
     {
-        if (!auth()->user()->isAdmin()) {
+        if (! auth()->user()->isAdmin()) {
             session()->flash('error', 'Anda tidak memiliki izin untuk melakukan impersonasi.');
+
             return;
         }
 
         if ($user->isAdmin()) {
             session()->flash('error', 'Tidak dapat melakukan impersonasi ke admin lain.');
+
             return;
         }
 
@@ -74,7 +77,7 @@ class UserManagement extends Component
 
         Auth::login($user);
 
-        session()->flash('success', 'Anda sekarang login sebagai ' . $user->name);
+        session()->flash('success', 'Anda sekarang login sebagai '.$user->name);
 
         if ($user->isBrand()) {
             $this->redirect(route('brand.dashboard'), navigate: true);
@@ -91,8 +94,8 @@ class UserManagement extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%');
+                $q->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('email', 'like', '%'.$this->search.'%');
             });
         }
 

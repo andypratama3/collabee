@@ -7,20 +7,22 @@ use App\Mail\ContentReminderMail;
 use App\Mail\HiringNotificationMail;
 use App\Mail\PaymentConfirmationMail;
 use App\Mail\WelcomeMail;
+use App\Models\Hiring;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class NotificationService
 {
-    private function getMailableForType(string $type, ?array $data = []): ?\Illuminate\Mail\Mailable
+    private function getMailableForType(string $type, ?array $data = []): ?Mailable
     {
         return match ($type) {
             'welcome' => isset($data['user']) ? new WelcomeMail($data['user']) : null,
-            'hiring' => isset($data['hiring']) && $data['hiring'] instanceof \App\Models\Hiring ? new HiringNotificationMail($data['hiring']) : null,
+            'hiring' => isset($data['hiring']) && $data['hiring'] instanceof Hiring ? new HiringNotificationMail($data['hiring']) : null,
             'payment' => isset($data['payment']) ? new PaymentConfirmationMail($data['payment']) : null,
             'content_reminder' => isset($data['content']) ? new ContentReminderMail($data['content']) : null,
             default => null,

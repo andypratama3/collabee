@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Campaign;
 use App\Services\Campaign\CampaignService;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,9 +11,13 @@ class ExploreCampaigns extends Component
     use WithPagination;
 
     public string $search = '';
+
     public array $platforms = [];
+
     public ?string $kol_category = null;
+
     public ?float $budget_min = null;
+
     public ?float $budget_max = null;
 
     protected $queryString = ['search', 'platforms', 'kol_category', 'budget_min', 'budget_max'];
@@ -39,7 +42,7 @@ class ExploreCampaigns extends Component
     public function togglePlatform(string $platform): void
     {
         if (in_array($platform, $this->platforms)) {
-            $this->platforms = array_values(array_filter($this->platforms, fn($p) => $p !== $platform));
+            $this->platforms = array_values(array_filter($this->platforms, fn ($p) => $p !== $platform));
         } else {
             $this->platforms[] = $platform;
         }

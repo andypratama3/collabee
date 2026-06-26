@@ -36,6 +36,7 @@
         "laravel-echo": "^2.3.7",
         "lucide": "^1.17.0",
         "nprogress": "^0.2.0",
+        "pusher-js": "^8.5.0",
         "socket.io-client": "^4.8.3",
         "sweetalert2": "^11.26.25",
         "swiper": "^12.2.0",

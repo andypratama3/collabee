@@ -35,6 +35,10 @@ class EditProfile extends Component
 
     public function mount(BrandProfile $profile): void
     {
+        if ($profile->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $this->profile = $profile;
         $this->brand_name = $profile->brand_name;
         $this->description = $profile->description ?? '';
@@ -64,7 +68,7 @@ class EditProfile extends Component
             'description' => $this->description ?: null,
             'industry' => $this->industry ?: null,
             'website' => $this->website ?: null,
-            'target_market' => !empty($this->target_market) ? $this->target_market : null,
+            'target_market' => ! empty($this->target_market) ? $this->target_market : null,
             'location' => $this->location ?: null,
             'logo' => $this->logo?->getRealPath(),
             'banner' => $this->banner?->getRealPath(),

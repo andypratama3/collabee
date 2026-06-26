@@ -12,6 +12,7 @@ use App\Livewire\Kol\Dashboard;
 use App\Livewire\Kol\Hiring\Index as HiringIndex;
 use App\Livewire\Kol\Profile\CreateProfile;
 use App\Livewire\Kol\Profile\EditProfile;
+use App\Livewire\Kol\Withdrawal\Index;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['kol', 'profile.complete'])->prefix('kol')->name('kol.')->group(function () {
@@ -26,7 +27,7 @@ Route::middleware(['kol', 'profile.complete'])->prefix('kol')->name('kol.')->gro
     Route::get('/contents/{content}', ContentShow::class)->name('content.show');
     Route::get('/agreements', AgreementIndex::class)->name('agreement.index');
     Route::get('/agreements/{agreement}', AgreementShow::class)->name('agreement.show');
-    Route::get('/withdrawals', \App\Livewire\Kol\Withdrawal\Index::class)->name('withdrawal.index');
+    Route::get('/withdrawals', Index::class)->name('withdrawal.index');
 });
 
 Route::middleware(['kol'])->prefix('kols')->name('kol.')->group(function () {

@@ -1,10 +1,7 @@
 <?php
 
-use App\Enums\CampaignStatus;
-use App\Models\BrandProfile;
-use App\Models\Campaign;
-use App\Models\KolProfile;
 use App\Models\User;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 
 beforeEach(function () {
     $this->adminUser = User::factory()->superAdmin()->create();
@@ -53,6 +50,7 @@ test('admin settings page loads', function () {
 });
 
 test('admin can impersonate brand user', function () {
+    $this->withoutMiddleware(ValidateCsrfToken::class);
     $brandUser = User::factory()->brand()->create();
     $brandUser->assignRole('brand');
 
@@ -63,6 +61,7 @@ test('admin can impersonate brand user', function () {
 });
 
 test('admin can stop impersonation', function () {
+    $this->withoutMiddleware(ValidateCsrfToken::class);
     $brandUser = User::factory()->brand()->create();
     $brandUser->assignRole('brand');
 
@@ -86,6 +85,7 @@ test('non-admin cannot access admin pages', function () {
 });
 
 test('admin cannot impersonate another admin', function () {
+    $this->withoutMiddleware(ValidateCsrfToken::class);
     $otherAdmin = User::factory()->admin()->create();
     $otherAdmin->assignRole('admin');
 

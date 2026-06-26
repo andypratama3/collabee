@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Kol\Content;
 
-use App\Enums\ContentStatus;
 use App\Models\Content;
 use App\Services\Content\ContentService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;

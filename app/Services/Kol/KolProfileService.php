@@ -11,34 +11,37 @@ class KolProfileService
     public function create(array $data, User $user): KolProfile
     {
         return DB::transaction(function () use ($data, $user) {
-            $profile = $user->kolProfile()->create([
-                'display_name' => $data['display_name'],
-                'bio' => $data['bio'] ?? null,
-                'category' => $data['category'] ?? null,
-                'sub_categories' => $data['sub_categories'] ?? null,
-                'location' => $data['location'] ?? null,
-                'gender' => $data['gender'] ?? null,
-                'date_of_birth' => $data['date_of_birth'] ?? null,
-                'languages' => $data['languages'] ?? null,
-                'is_open_for_work' => $data['is_open_for_work'] ?? true,
-                'min_budget' => $data['min_budget'] ?? null,
-                'profile_completed_at' => now(),
-            ]);
+            $profile = KolProfile::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'display_name' => $data['display_name'],
+                    'bio' => $data['bio'] ?? null,
+                    'category' => $data['category'],
+                    'sub_categories' => $data['sub_categories'] ?? null,
+                    'location' => $data['location'] ?? null,
+                    'gender' => $data['gender'] ?? null,
+                    'date_of_birth' => $data['date_of_birth'] ?? null,
+                    'languages' => $data['languages'] ?? null,
+                    'is_open_for_work' => $data['is_open_for_work'] ?? true,
+                    'min_budget' => $data['min_budget'] ?? null,
+                    'profile_completed_at' => now(),
+                ]
+            );
 
-            if (!empty($data['avatar'])) {
+            if (! empty($data['avatar'])) {
                 $user->addMedia($data['avatar'])
                     ->toMediaCollection('avatar');
             }
 
-            if (!empty($data['social_accounts'])) {
+            if (! empty($data['social_accounts'])) {
                 $this->syncSocialAccounts($profile, $data['social_accounts']);
             }
 
-            if (!empty($data['portfolios'])) {
+            if (! empty($data['portfolios'])) {
                 $this->syncPortfolios($profile, $data['portfolios']);
             }
 
-            if (!empty($data['rate_cards'])) {
+            if (! empty($data['rate_cards'])) {
                 $this->syncRateCards($profile, $data['rate_cards']);
             }
 
@@ -62,7 +65,7 @@ class KolProfileService
                 'min_budget' => $data['min_budget'] ?? $profile->min_budget,
             ]);
 
-            if (!empty($data['avatar'])) {
+            if (! empty($data['avatar'])) {
                 $profile->user->clearMediaCollection('avatar');
                 $profile->user->addMedia($data['avatar'])
                     ->toMediaCollection('avatar');
@@ -80,7 +83,7 @@ class KolProfileService
                 $this->syncRateCards($profile, $data['rate_cards']);
             }
 
-            if (!$profile->profile_completed_at) {
+            if (! $profile->profile_completed_at) {
                 $profile->update(['profile_completed_at' => now()]);
             }
 

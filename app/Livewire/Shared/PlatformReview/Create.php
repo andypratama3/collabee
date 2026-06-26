@@ -9,6 +9,7 @@ use Livewire\Component;
 class Create extends Component
 {
     public int $rating = 0;
+
     public string $review = '';
 
     protected $rules = [
@@ -18,7 +19,7 @@ class Create extends Component
 
     protected $messages = [
         'rating.required' => 'Pilih rating terlebih dahulu.',
-        'rating.min'      => 'Rating minimal 1 bintang.',
+        'rating.min' => 'Rating minimal 1 bintang.',
     ];
 
     public function mount(): void

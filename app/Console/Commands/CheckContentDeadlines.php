@@ -11,6 +11,7 @@ use Illuminate\Console\Command;
 class CheckContentDeadlines extends Command
 {
     protected $signature = 'content:check-deadlines';
+
     protected $description = 'Auto-escalate content submissions past deadline';
 
     public function __construct(
@@ -44,7 +45,7 @@ class CheckContentDeadlines extends Command
                     $brandUser,
                     'content_reminder',
                     'Konten melewati batas waktu',
-                    "Konten untuk campaign telah melewati batas waktu persetujuan dan otomatis dieskalasi.",
+                    'Konten untuk campaign telah melewati batas waktu persetujuan dan otomatis dieskalasi.',
                     ['content' => $content]
                 );
             }
@@ -54,7 +55,7 @@ class CheckContentDeadlines extends Command
                     $kolUser,
                     'content_reminder',
                     'Konten dieskalasi',
-                    "Konten Anda telah dieskalasi karena melewati batas waktu. Segera hubungi brand untuk tindak lanjut.",
+                    'Konten Anda telah dieskalasi karena melewati batas waktu. Segera hubungi brand untuk tindak lanjut.',
                     ['content' => $content]
                 );
             }

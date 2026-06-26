@@ -16,7 +16,7 @@ class Index extends Component
 
     public function render()
     {
-        $user    = auth()->user();
+        $user = auth()->user();
         $profile = $user->brandProfile;
 
         if (! $profile) {

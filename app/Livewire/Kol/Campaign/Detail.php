@@ -13,9 +13,13 @@ class Detail extends Component
     use AuthorizesRequests;
 
     public Campaign $campaign;
+
     public bool $showApplyModal = false;
+
     public ?float $proposedBudget = null;
+
     public string $applyMessage = '';
+
     public bool $hasApplied = false;
 
     public function mount(Campaign $campaign): void

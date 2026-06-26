@@ -5,7 +5,6 @@ namespace App\Livewire\Kol\Content;
 use App\Models\Agreement;
 use App\Services\Content\ContentService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -14,8 +13,11 @@ class Create extends Component
     use AuthorizesRequests, WithFileUploads;
 
     public string $title = '';
+
     public string $caption = '';
+
     public array $files = [];
+
     public ?int $agreement_id = null;
 
     public function mount(?int $agreement = null): void
@@ -33,19 +35,19 @@ class Create extends Component
         $agreements = Agreement::whereHas('hiring', function ($q) use ($profile) {
             $q->where('kol_profile_id', $profile->id);
         })
-        ->where('status', 'signed')
-        ->where(function ($q) {
-            $q->whereDoesntHave('contents', function ($q) {
-                $q->whereIn('status', [
-                    'draft', 'submitted', 'under_review', 'revision_requested', 'approved', 'posted', 'escalated',
-                ]);
-            });
-            if ($this->agreement_id) {
-                $q->orWhere('id', $this->agreement_id);
-            }
-        })
-        ->with('hiring.campaign')
-        ->get();
+            ->where('status', 'signed')
+            ->where(function ($q) {
+                $q->whereDoesntHave('contents', function ($q) {
+                    $q->whereIn('status', [
+                        'draft', 'submitted', 'under_review', 'revision_requested', 'approved', 'posted', 'escalated',
+                    ]);
+                });
+                if ($this->agreement_id) {
+                    $q->orWhere('id', $this->agreement_id);
+                }
+            })
+            ->with('hiring.campaign')
+            ->get();
 
         return view('livewire.kol.content.create', [
             'agreements' => $agreements,

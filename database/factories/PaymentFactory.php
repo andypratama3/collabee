@@ -16,7 +16,7 @@ class PaymentFactory extends Factory
             'platform_fee' => fake()->numberBetween(50000, 500000),
             'total_amount' => fn (array $attrs) => $attrs['amount'] + $attrs['platform_fee'],
             'gateway' => 'xendit',
-            'invoice_number' => 'INV-2026-' . fake()->unique()->randomNumber(5),
+            'invoice_number' => 'INV-2026-'.fake()->unique()->randomNumber(5),
             'status' => 'pending',
         ];
     }

@@ -1,9 +1,17 @@
 <?php
 
+use App\Http\Middleware\AdminImpersonation;
+use App\Http\Middleware\CheckProfileComplete;
+use App\Http\Middleware\CheckUserIsActive;
+use App\Http\Middleware\EnsureBrand;
+use App\Http\Middleware\EnsureEmailVerified;
+use App\Http\Middleware\EnsureKol;
+use App\Http\Middleware\ForceJson;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Middleware\RoleMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,18 +33,18 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'user.active' => \App\Http\Middleware\CheckUserIsActive::class,
-            'verified' => \App\Http\Middleware\EnsureEmailVerified::class,
-            'brand' => \App\Http\Middleware\EnsureBrand::class,
-            'kol' => \App\Http\Middleware\EnsureKol::class,
-            'profile.complete' => \App\Http\Middleware\CheckProfileComplete::class,
-            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-            'force.json' => \App\Http\Middleware\ForceJson::class,
-            'impersonate' => \App\Http\Middleware\AdminImpersonation::class,
+            'user.active' => CheckUserIsActive::class,
+            'verified' => EnsureEmailVerified::class,
+            'brand' => EnsureBrand::class,
+            'kol' => EnsureKol::class,
+            'profile.complete' => CheckProfileComplete::class,
+            'role' => RoleMiddleware::class,
+            'force.json' => ForceJson::class,
+            'impersonate' => AdminImpersonation::class,
         ]);
 
         $middleware->web(append: [
-            \App\Http\Middleware\AdminImpersonation::class,
+            AdminImpersonation::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

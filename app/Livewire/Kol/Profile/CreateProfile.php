@@ -96,7 +96,7 @@ class CreateProfile extends Component
         $this->validate([
             'display_name' => 'required|string|max:255',
             'bio' => 'nullable|string|max:2000',
-            'category' => 'nullable|string|in:' . implode(',', array_column(KolCategory::cases(), 'value')),
+            'category' => 'required|string|in:'.implode(',', array_column(KolCategory::cases(), 'value')),
             'sub_categories' => 'nullable|array',
             'location' => 'nullable|string|max:255',
             'gender' => 'nullable|in:male,female',
@@ -105,25 +105,25 @@ class CreateProfile extends Component
             'is_open_for_work' => 'boolean',
             'min_budget' => 'nullable|numeric|min:0',
             'avatar' => 'nullable|image|max:2048',
-            'social_accounts.*.platform' => 'required|string|in:' . implode(',', array_column(SocialPlatform::cases(), 'value')),
+            'social_accounts.*.platform' => 'required|string|in:'.implode(',', array_column(SocialPlatform::cases(), 'value')),
             'social_accounts.*.username' => 'required|string|max:255',
             'social_accounts.*.followers_count' => 'nullable|integer|min:0',
             'portfolios.*.title' => 'required|string|max:255',
             'portfolios.*.external_link' => 'nullable|url|max:255',
-            'rate_cards.*.platform' => 'required|string|in:' . implode(',', array_column(SocialPlatform::cases(), 'value')),
+            'rate_cards.*.platform' => 'required|string|in:'.implode(',', array_column(SocialPlatform::cases(), 'value')),
             'rate_cards.*.content_type' => 'required|string|max:255',
             'rate_cards.*.price' => 'required|numeric|min:0',
         ]);
 
-        $service->create([
+        $profile = $service->create([
             'display_name' => $this->display_name,
             'bio' => $this->bio ?: null,
-            'category' => $this->category ?: null,
-            'sub_categories' => !empty($this->sub_categories) ? $this->sub_categories : null,
+            'category' => $this->category,
+            'sub_categories' => ! empty($this->sub_categories) ? $this->sub_categories : null,
             'location' => $this->location ?: null,
             'gender' => $this->gender ?: null,
             'date_of_birth' => $this->date_of_birth ?: null,
-            'languages' => !empty($this->languages) ? $this->languages : null,
+            'languages' => ! empty($this->languages) ? $this->languages : null,
             'is_open_for_work' => $this->is_open_for_work,
             'min_budget' => $this->min_budget ? (float) $this->min_budget : null,
             'avatar' => $this->avatar?->getRealPath(),
@@ -134,7 +134,7 @@ class CreateProfile extends Component
 
         session()->flash('success', 'Profil KOL berhasil dibuat.');
 
-        return $this->redirect(route('kol.profile.edit', auth()->user()->kolProfile), navigate: true);
+        return $this->redirect(route('kol.profile.edit', $profile), navigate: true);
     }
 
     public function render()

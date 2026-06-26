@@ -3,21 +3,26 @@
 namespace App\Livewire\Admin;
 
 use App\Models\KolWithdrawal;
-use App\Models\KolProfile;
 use App\Services\Payment\DisbursementService;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class WithdrawalManagement extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithFileUploads, WithPagination;
 
     public string $statusFilter = '';
+
     public ?int $selectedWithdrawalId = null;
+
     public bool $showRejectModal = false;
+
     public string $rejectReason = '';
+
     public $proofFile = null;
+
     public bool $showProofModal = false;
 
     protected $queryString = ['statusFilter'];
@@ -52,7 +57,7 @@ class WithdrawalManagement extends Component
     {
         $this->validate();
 
-        \Illuminate\Support\Facades\DB::transaction(function () {
+        DB::transaction(function () {
             $withdrawal = KolWithdrawal::lockForUpdate()->findOrFail($this->selectedWithdrawalId);
 
             // Prevent double refund
@@ -113,8 +118,9 @@ class WithdrawalManagement extends Component
      */
     public function disburseViaXendit(KolWithdrawal $withdrawal): void
     {
-        if (!in_array($withdrawal->status, ['approved', 'pending'])) {
+        if (! in_array($withdrawal->status, ['approved', 'pending'])) {
             $this->dispatch('swal:error', title: 'Withdrawal tidak dalam status yang bisa diproses.');
+
             return;
         }
 

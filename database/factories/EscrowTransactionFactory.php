@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\EscrowTransaction;
 use App\Enums\EscrowStatus;
+use App\Models\EscrowTransaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EscrowTransactionFactory extends Factory
@@ -13,6 +13,7 @@ class EscrowTransactionFactory extends Factory
     public function definition(): array
     {
         $amount = fake()->numberBetween(500000, 5000000);
+
         return [
             'amount_held' => $amount,
             'platform_fee' => $amount * 0.10,

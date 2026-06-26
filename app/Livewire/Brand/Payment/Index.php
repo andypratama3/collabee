@@ -9,7 +9,6 @@ use App\Services\Payment\EscrowService;
 use App\Services\Payment\InvoiceService;
 use App\Services\Payment\XenditService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -62,11 +61,13 @@ class Index extends Component
 
         if ($agreement->status !== 'signed') {
             session()->flash('error', 'Agreement harus ditandatangani terlebih dahulu.');
+
             return;
         }
 
         if ($agreement->payment && $agreement->payment->status === PaymentStatus::PAID) {
             session()->flash('warning', 'Pembayaran sudah dilakukan.');
+
             return;
         }
 
@@ -79,7 +80,7 @@ class Index extends Component
                 session()->flash('error', 'Gagal membuat invoice pembayaran.');
             }
         } catch (\Exception $e) {
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            session()->flash('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
@@ -89,23 +90,25 @@ class Index extends Component
 
         if ($agreement->status !== 'signed') {
             session()->flash('error', 'Agreement harus ditandatangani terlebih dahulu.');
+
             return;
         }
 
         if ($agreement->payment && $agreement->payment->status === PaymentStatus::PAID) {
             session()->flash('warning', 'Pembayaran sudah dilakukan.');
+
             return;
         }
 
         try {
             $payment = $invoiceService->createPayment($agreement);
-            $invoiceService->markAsPaid($payment, 'SIMULATED-' . strtoupper(uniqid()));
+            $invoiceService->markAsPaid($payment, 'SIMULATED-'.strtoupper(uniqid()));
             $escrowService->holdFunds($payment);
 
             session()->flash('success', 'Pembayaran berhasil disimulasikan! Dana telah diamankan di escrow.');
             $this->redirect(route('brand.payment.index'), navigate: true);
         } catch (\Exception $e) {
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            session()->flash('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 

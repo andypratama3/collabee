@@ -12,7 +12,7 @@ class AgreementFactory extends Factory
     public function definition(): array
     {
         return [
-            'agreement_number' => 'AGR-' . fake()->unique()->randomNumber(5),
+            'agreement_number' => 'AGR-'.fake()->unique()->randomNumber(5),
             'total_amount' => fake()->numberBetween(500000, 5000000),
             'platform_fee_percent' => 10.00,
             'status' => 'pending',

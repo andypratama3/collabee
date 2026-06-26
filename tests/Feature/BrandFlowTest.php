@@ -4,6 +4,7 @@ use App\Enums\CampaignStatus;
 use App\Enums\HiringStatus;
 use App\Models\BrandProfile;
 use App\Models\Campaign;
+use App\Models\Hiring;
 use App\Models\KolProfile;
 use App\Models\User;
 use App\Services\Campaign\CampaignService;
@@ -109,7 +110,7 @@ test('hire KOL creates hiring record', function () {
         'proposed_budget' => 1000000,
     ]);
 
-    expect($hiring)->toBeInstanceOf(\App\Models\Hiring::class)
+    expect($hiring)->toBeInstanceOf(Hiring::class)
         ->and($hiring->campaign_id)->toBe($campaign->id)
         ->and($hiring->kol_profile_id)->toBe($kolProfile->id)
         ->and($hiring->status)->toBe(HiringStatus::PENDING);
@@ -124,7 +125,7 @@ test('cancel hiring', function () {
     $kolUser = User::factory()->kol()->create();
     $kolProfile = KolProfile::factory()->create(['user_id' => $kolUser->id]);
 
-    $hiring = \App\Models\Hiring::factory()->create([
+    $hiring = Hiring::factory()->create([
         'campaign_id' => $campaign->id,
         'brand_profile_id' => $this->brandProfile->id,
         'kol_profile_id' => $kolProfile->id,

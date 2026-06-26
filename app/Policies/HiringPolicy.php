@@ -14,10 +14,12 @@ class HiringPolicy
 
     public function view(User $user, Hiring $hiring): bool
     {
-        if ($user->isAdmin()) return true;
+        if ($user->isAdmin()) {
+            return true;
+        }
 
         return $hiring->brandProfile?->user_id === $user->id
-            || $hiring->kolProfile?->user_id  === $user->id;
+            || $hiring->kolProfile?->user_id === $user->id;
     }
 
     public function create(User $user): bool
@@ -40,6 +42,6 @@ class HiringPolicy
     {
         return $user->isAdmin()
             || $hiring->brandProfile?->user_id === $user->id
-            || $hiring->kolProfile?->user_id   === $user->id;
+            || $hiring->kolProfile?->user_id === $user->id;
     }
 }

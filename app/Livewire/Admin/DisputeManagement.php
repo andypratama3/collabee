@@ -11,10 +11,15 @@ class DisputeManagement extends Component
     use WithPagination;
 
     public string $statusFilter = '';
+
     public ?int $selectedDisputeId = null;
+
     public bool $showResolveModal = false;
+
     public string $resolution = '';
+
     public bool $showNoteModal = false;
+
     public string $note = '';
 
     protected $queryString = ['statusFilter'];

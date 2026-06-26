@@ -1,36 +1,56 @@
 <?php
 
+use App\Enums\CampaignStatus;
+use App\Enums\PaymentStatus;
+use App\Enums\UserRole;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterBrandController;
 use App\Http\Controllers\Auth\RegisterKolController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\TrackingController;
 use App\Livewire\ExploreCampaigns;
 use App\Livewire\Kol\Campaign\Detail as CampaignDetail;
+use App\Livewire\Shared\Notification\Index;
+use App\Livewire\Shared\Rating\Create;
+use App\Models\BrandProfile;
+use App\Models\Campaign;
+use App\Models\KolProfile;
+use App\Models\Payment;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $stats = [
-        'brands' => \App\Models\User::where('user_type', \App\Enums\UserRole::BRAND)->count(),
-        'kols' => \App\Models\User::where('user_type', \App\Enums\UserRole::KOL)->count(),
-        'campaigns' => \App\Models\Campaign::count(),
-        'transactions' => \App\Models\Payment::where('status', \App\Enums\PaymentStatus::PAID)->sum('total_amount'),
+        'brands' => User::where('user_type', UserRole::BRAND)->count(),
+        'kols' => User::where('user_type', UserRole::KOL)->count(),
+        'campaigns' => Campaign::count(),
+        'transactions' => Payment::where('status', PaymentStatus::PAID)->sum('total_amount'),
     ];
-    $campaigns = \App\Models\Campaign::with('brandProfile.user')->where('status', \App\Enums\CampaignStatus::OPEN)->latest()->take(6)->get();
-    $kols = \App\Models\KolProfile::with('user')->orderByDesc('rating_avg')->orderByDesc('total_followers')->take(8)->get();
-    $brands = \App\Models\BrandProfile::with('user')->inRandomOrder()->take(6)->get();
+    $campaigns = Campaign::with('brandProfile.user')->where('status', CampaignStatus::OPEN)->latest()->take(6)->get();
+    $kols = KolProfile::with('user')->orderByDesc('rating_avg')->orderByDesc('total_followers')->take(8)->get();
+    $brands = BrandProfile::with('user')->inRandomOrder()->take(6)->get();
+
     return view('welcome', compact('stats', 'campaigns', 'kols', 'brands'));
 })->name('home');
 
 Route::get('/dashboard', function () {
-    if (!auth()->check()) return redirect()->route('login');
+    if (! auth()->check()) {
+        return redirect()->route('login');
+    }
     $user = auth()->user();
-    if ($user->isAdmin()) return redirect()->route('admin.dashboard');
-    if ($user->isBrand()) return redirect()->route('brand.dashboard');
-    if ($user->isKol()) return redirect()->route('kol.dashboard');
+    if ($user->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    }
+    if ($user->isBrand()) {
+        return redirect()->route('brand.dashboard');
+    }
+    if ($user->isKol()) {
+        return redirect()->route('kol.dashboard');
+    }
+
     return redirect()->route('login');
 })->name('dashboard');
 
@@ -41,10 +61,17 @@ Route::get('/onboarding', fn () => redirect()->route('home'))->name('onboarding'
 Route::get('/about', fn () => view('about'))->name('about');
 
 Route::get('/my-profile', function () {
-    if (!auth()->check()) return redirect()->route('login');
+    if (! auth()->check()) {
+        return redirect()->route('login');
+    }
     $user = auth()->user();
-    if ($user->isBrand() && $user->brandProfile) return redirect()->route('brand.profile.edit', $user->brandProfile);
-    if ($user->isKol() && $user->kolProfile) return redirect()->route('kol.profile.edit', $user->kolProfile);
+    if ($user->isBrand() && $user->brandProfile) {
+        return redirect()->route('brand.profile.edit', $user->brandProfile);
+    }
+    if ($user->isKol() && $user->kolProfile) {
+        return redirect()->route('kol.profile.edit', $user->kolProfile);
+    }
+
     return redirect()->route('home');
 })->name('my-profile');
 
@@ -69,9 +96,9 @@ Route::middleware('auth')->group(function () {
     Route::get('email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
     Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
     Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-    Route::get('/notifications', \App\Livewire\Shared\Notification\Index::class)->name('notifications.index');
-    Route::get('/rating/{hiring}/{type}', \App\Livewire\Shared\Rating\Create::class)->name('shared.rating.create');
-    Route::get('/review-platform', \App\Livewire\Shared\PlatformReview\Create::class)->name('platform.review.create');
+    Route::get('/notifications', Index::class)->name('notifications.index');
+    Route::get('/rating/{hiring}/{type}', Create::class)->name('shared.rating.create');
+    Route::get('/review-platform', App\Livewire\Shared\PlatformReview\Create::class)->name('platform.review.create');
 });
 
 Route::get('/track/{trackingCode}', [TrackingController::class, 'click'])->name('track.click');

@@ -39,6 +39,16 @@
             <option value="photography">Photography & Art</option>
         </x-form.select>
 
+        <x-form.input id="phone" type="tel" placeholder="0812-3456-7890">No. Telepon (Opsional)</x-form.input>
+
+        <x-form.input id="location" placeholder="Jakarta, Indonesia">Lokasi (Opsional)</x-form.input>
+
+        <div>
+            <label for="bio" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Bio (Opsional)</label>
+            <textarea id="bio" name="bio" rows="3" placeholder="Ceritakan tentang diri Anda..."
+                      class="block w-full rounded-xl border-gray-200 dark:border-gray-700/80 bg-white dark:bg-gray-900 py-3 px-4 text-sm leading-relaxed text-gray-900 dark:text-gray-100 placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none resize-y"></textarea>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <x-form.input id="password" type="password" placeholder="••••••••">Password</x-form.input>
             <x-form.input id="password_confirmation" type="password" placeholder="••••••••">Konfirmasi Password</x-form.input>

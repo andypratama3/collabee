@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Kol\Chat;
 
-use App\Models\ChatRoom;
 use App\Services\Chat\ChatService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;

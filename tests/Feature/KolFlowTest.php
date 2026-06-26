@@ -2,16 +2,20 @@
 
 use App\Enums\ContentStatus;
 use App\Enums\HiringStatus;
+use App\Models\Agreement;
 use App\Models\BrandProfile;
 use App\Models\Campaign;
 use App\Models\Content;
 use App\Models\Hiring;
+use App\Models\HiringApplication;
+use App\Models\KolBankAccount;
 use App\Models\KolProfile;
 use App\Models\KolWithdrawal;
 use App\Models\User;
+use App\Services\Campaign\HiringService;
 use App\Services\Content\ContentService;
 use App\Services\Kol\KolProfileService;
-use App\Services\Campaign\HiringService;
+use App\Services\Payment\WithdrawalService;
 
 beforeEach(function () {
     $this->kolUser = User::factory()->kol()->create();
@@ -71,7 +75,7 @@ test('KOL apply to campaign', function () {
         'message' => 'Saya tertarik!',
     ]);
 
-    expect($application)->toBeInstanceOf(\App\Models\HiringApplication::class)
+    expect($application)->toBeInstanceOf(HiringApplication::class)
         ->and($application->campaign_id)->toBe($campaign->id)
         ->and($application->kol_profile_id)->toBe($kolProfile->id);
 });
@@ -136,7 +140,7 @@ test('KOL content upload', function () {
         'kol_profile_id' => $kolProfile->id,
         'status' => HiringStatus::ACCEPTED,
     ]);
-    $agreement = \App\Models\Agreement::factory()->create([
+    $agreement = Agreement::factory()->create([
         'hiring_id' => $hiring->id,
     ]);
 
@@ -157,11 +161,11 @@ test('KOL earnings and withdrawal', function () {
         'wallet_balance' => 500000,
     ]);
 
-    $bankAccount = \App\Models\KolBankAccount::factory()->create([
+    $bankAccount = KolBankAccount::factory()->create([
         'kol_profile_id' => $kolProfile->id,
     ]);
 
-    $service = app(\App\Services\Payment\WithdrawalService::class);
+    $service = app(WithdrawalService::class);
     $withdrawal = $service->requestWithdrawal($kolProfile, 200000, $bankAccount->id);
 
     expect($withdrawal)->toBeInstanceOf(KolWithdrawal::class)

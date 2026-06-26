@@ -15,11 +15,17 @@ class Index extends Component
     use AuthorizesRequests, WithPagination;
 
     public string $filter = '';
+
     public string $activeTab = 'invitations'; // 'invitations' | 'applications'
+
     public $selectedHiring = null;
+
     public bool $showRespondModal = false;
+
     public string $respondAction = '';
+
     public ?string $rejectReason = null;
+
     public ?int $counterOfferAmount = null;
 
     protected $queryString = ['filter', 'activeTab'];
@@ -30,9 +36,9 @@ class Index extends Component
 
         if (! $kolProfile) {
             return view('livewire.kol.hiring.index', [
-                'hirings'     => collect(),
+                'hirings' => collect(),
                 'applications' => collect(),
-                'statuses'    => HiringStatus::cases(),
+                'statuses' => HiringStatus::cases(),
             ])->layout('layouts.app');
         }
 
@@ -49,9 +55,9 @@ class Index extends Component
             ->with(['campaign.brandProfile.user']);
 
         return view('livewire.kol.hiring.index', [
-            'hirings'      => $hiringQuery->orderBy('created_at', 'desc')->paginate(15, pageName: 'hiringsPage'),
+            'hirings' => $hiringQuery->orderBy('created_at', 'desc')->paginate(15, pageName: 'hiringsPage'),
             'applications' => $applicationQuery->orderBy('created_at', 'desc')->paginate(15, pageName: 'appsPage'),
-            'statuses'     => HiringStatus::cases(),
+            'statuses' => HiringStatus::cases(),
         ])->layout('layouts.app');
     }
 

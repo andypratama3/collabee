@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Content;
 use App\Enums\ContentStatus;
+use App\Models\Content;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ContentFactory extends Factory

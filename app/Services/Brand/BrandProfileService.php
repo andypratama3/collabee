@@ -5,29 +5,31 @@ namespace App\Services\Brand;
 use App\Models\BrandProfile;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class BrandProfileService
 {
     public function create(array $data, User $user): BrandProfile
     {
         return DB::transaction(function () use ($data, $user) {
-            $profile = $user->brandProfile()->create([
-                'brand_name' => $data['brand_name'],
-                'description' => $data['description'] ?? null,
-                'industry' => $data['industry'] ?? null,
-                'website' => $data['website'] ?? null,
-                'target_market' => $data['target_market'] ?? null,
-                'location' => $data['location'] ?? null,
-                'profile_completed_at' => now(),
-            ]);
+            $profile = BrandProfile::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'brand_name' => $data['brand_name'],
+                    'description' => $data['description'] ?? null,
+                    'industry' => $data['industry'] ?? null,
+                    'website' => $data['website'] ?? null,
+                    'target_market' => $data['target_market'] ?? null,
+                    'location' => $data['location'] ?? null,
+                    'profile_completed_at' => now(),
+                ]
+            );
 
-            if (!empty($data['logo'])) {
+            if (! empty($data['logo'])) {
                 $profile->addMedia($data['logo'])
                     ->toMediaCollection('brand_logo');
             }
 
-            if (!empty($data['banner'])) {
+            if (! empty($data['banner'])) {
                 $profile->addMedia($data['banner'])
                     ->toMediaCollection('brand_banner');
             }
@@ -48,19 +50,19 @@ class BrandProfileService
                 'location' => $data['location'] ?? $profile->location,
             ]);
 
-            if (!empty($data['logo'])) {
+            if (! empty($data['logo'])) {
                 $profile->clearMediaCollection('brand_logo');
                 $profile->addMedia($data['logo'])
                     ->toMediaCollection('brand_logo');
             }
 
-            if (!empty($data['banner'])) {
+            if (! empty($data['banner'])) {
                 $profile->clearMediaCollection('brand_banner');
                 $profile->addMedia($data['banner'])
                     ->toMediaCollection('brand_banner');
             }
 
-            if (!$profile->profile_completed_at) {
+            if (! $profile->profile_completed_at) {
                 $profile->update(['profile_completed_at' => now()]);
             }
 

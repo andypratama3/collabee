@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\ContentStatus;
 use App\Enums\EscrowStatus;
 use App\Enums\HiringStatus;
 use App\Enums\PaymentStatus;
@@ -10,11 +9,13 @@ use App\Models\Campaign;
 use App\Models\Content;
 use App\Models\EscrowTransaction;
 use App\Models\Hiring;
+use App\Models\KolBankAccount;
 use App\Models\KolProfile;
 use App\Models\KolWithdrawal;
 use App\Models\Payment;
 use App\Models\User;
 use App\Services\Payment\EscrowService;
+use App\Services\Payment\InvoiceService;
 use App\Services\Payment\WithdrawalService;
 
 beforeEach(function () {
@@ -36,7 +37,7 @@ beforeEach(function () {
 });
 
 test('payment creation via invoice service', function () {
-    $invoiceService = app(\App\Services\Payment\InvoiceService::class);
+    $invoiceService = app(InvoiceService::class);
     $payment = $invoiceService->createPayment($this->agreement);
 
     expect($payment)->toBeInstanceOf(Payment::class)
@@ -49,7 +50,7 @@ test('payment creation via invoice service', function () {
 });
 
 test('escrow hold on payment', function () {
-    $invoiceService = app(\App\Services\Payment\InvoiceService::class);
+    $invoiceService = app(InvoiceService::class);
     $payment = $invoiceService->createPayment($this->agreement);
     $payment->update(['status' => PaymentStatus::PAID]);
 
@@ -64,7 +65,7 @@ test('escrow hold on payment', function () {
 });
 
 test('escrow release on content approval', function () {
-    $invoiceService = app(\App\Services\Payment\InvoiceService::class);
+    $invoiceService = app(InvoiceService::class);
     $payment = $invoiceService->createPayment($this->agreement);
     $payment->update(['status' => PaymentStatus::PAID]);
 
@@ -92,7 +93,7 @@ test('withdrawal request and approval', function () {
 
     $withdrawalService = app(WithdrawalService::class);
 
-    $bankAccount = \App\Models\KolBankAccount::factory()->create([
+    $bankAccount = KolBankAccount::factory()->create([
         'kol_profile_id' => $this->kolProfile->id,
     ]);
 
@@ -124,7 +125,7 @@ test('xendit webhook handling', function () {
     $webhookToken = 'test-webhook-token';
     config(['xendit.webhook_token' => $webhookToken]);
 
-    $invoiceService = app(\App\Services\Payment\InvoiceService::class);
+    $invoiceService = app(InvoiceService::class);
     $payment = $invoiceService->createPayment($this->agreement);
 
     $payload = [

@@ -12,6 +12,7 @@ use App\Livewire\Brand\Content\Index as ContentIndex;
 use App\Livewire\Brand\Content\Show as ContentShow;
 use App\Livewire\Brand\Dashboard;
 use App\Livewire\Brand\Hiring\Index as HiringIndex;
+use App\Livewire\Brand\Payment\Index;
 use App\Livewire\Brand\Profile\CreateProfile;
 use App\Livewire\Brand\Profile\EditProfile;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,5 @@ Route::middleware(['brand', 'profile.complete'])->prefix('brand')->name('brand.'
     Route::get('/contents/{content}', ContentShow::class)->name('content.show');
     Route::get('/agreements', AgreementIndex::class)->name('agreement.index');
     Route::get('/agreements/{agreement}', AgreementShow::class)->name('agreement.show');
-    Route::get('/payments', \App\Livewire\Brand\Payment\Index::class)->name('payment.index');
+    Route::get('/payments', Index::class)->name('payment.index');
 });
-

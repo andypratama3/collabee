@@ -2,11 +2,15 @@
 
 namespace App\Services\Payment;
 
+use App\Enums\PaymentStatus;
 use App\Models\Agreement;
+use App\Models\KolWithdrawal;
 use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Xendit\Invoice;
+use Xendit\Xendit;
 
 class XenditService
 {
@@ -23,7 +27,7 @@ class XenditService
 
         $payment = $this->invoiceService->createPayment($agreement);
 
-        \Xendit\Xendit::setApiKey(config('xendit.api_key'));
+        Xendit::setApiKey(config('xendit.api_key'));
 
         $customer = [
             'given_names' => $user->name,
@@ -33,14 +37,14 @@ class XenditService
         $params = [
             'external_id' => $payment->invoice_number,
             'amount' => (float) $payment->total_amount,
-            'description' => 'Pembayaran Campaign: ' . ($agreement->hiring->campaign->title ?? ''),
+            'description' => 'Pembayaran Campaign: '.($agreement->hiring->campaign->title ?? ''),
             'customer' => $customer,
             'success_redirect_url' => route('brand.payment.index'),
             'failure_redirect_url' => route('brand.payment.index'),
             'currency' => 'IDR',
         ];
 
-        $response = \Xendit\Invoice::create($params);
+        $response = Invoice::create($params);
 
         $payment->update([
             'gateway_payment_id' => $response['id'] ?? null,
@@ -53,7 +57,7 @@ class XenditService
     public function simulateInvoice(Agreement $agreement, User $user): array
     {
         $payment = $this->invoiceService->createPayment($agreement);
-        $this->invoiceService->markAsPaid($payment, 'XENDIT-SIM-' . strtoupper(uniqid()));
+        $this->invoiceService->markAsPaid($payment, 'XENDIT-SIM-'.strtoupper(uniqid()));
         $this->escrowService->holdFunds($payment);
 
         return [
@@ -82,29 +86,32 @@ class XenditService
 
         if ($isDisbursementEvent) {
             $this->handleDisbursementWebhook($payload);
+
             return;
         }
 
-        if (!$isPaidEvent) {
+        if (! $isPaidEvent) {
             return;
         }
 
         $externalId = $payload['external_id'] ?? null;
 
-        if (!$externalId) {
+        if (! $externalId) {
             Log::warning('Xendit webhook received without external_id');
+
             return;
         }
 
         DB::transaction(function () use ($externalId, $payload) {
             $payment = Payment::where('invoice_number', $externalId)->first();
 
-            if (!$payment) {
+            if (! $payment) {
                 Log::warning('Payment not found for Xendit webhook', ['external_id' => $externalId]);
+
                 return;
             }
 
-            if ($payment->status === \App\Enums\PaymentStatus::PAID) {
+            if ($payment->status === PaymentStatus::PAID) {
                 return;
             }
 
@@ -121,7 +128,7 @@ class XenditService
     {
         $externalId = $payload['external_id'] ?? null;
 
-        if (!$externalId || !str_starts_with($externalId, 'WD-')) {
+        if (! $externalId || ! str_starts_with($externalId, 'WD-')) {
             return;
         }
 
@@ -129,15 +136,17 @@ class XenditService
         $parts = explode('-', $externalId);
         $withdrawalId = (int) ltrim(end($parts), '0');
 
-        if (!$withdrawalId) {
+        if (! $withdrawalId) {
             Log::warning('Could not parse withdrawal ID from Xendit disbursement webhook', ['external_id' => $externalId]);
+
             return;
         }
 
-        $withdrawal = \App\Models\KolWithdrawal::find($withdrawalId);
+        $withdrawal = KolWithdrawal::find($withdrawalId);
 
-        if (!$withdrawal) {
+        if (! $withdrawal) {
             Log::warning('Withdrawal not found for Xendit disbursement webhook', ['external_id' => $externalId]);
+
             return;
         }
 
@@ -155,7 +164,7 @@ class XenditService
                 $withdrawal->update([
                     'status' => 'completed',
                     'processed_at' => now(),
-                    'admin_note' => ($withdrawal->admin_note ?? '') . ' | Confirmed via webhook: ' . $externalId,
+                    'admin_note' => ($withdrawal->admin_note ?? '').' | Confirmed via webhook: '.$externalId,
                 ]);
 
                 // Deduct from pending_balance — funds have now truly left the platform
@@ -170,7 +179,7 @@ class XenditService
                 $withdrawal->update([
                     'status' => 'failed',
                     'processed_at' => now(),
-                    'admin_note' => ($withdrawal->admin_note ?? '') . ' | Disbursement FAILED via webhook: ' . ($payload['failure_code'] ?? 'UNKNOWN'),
+                    'admin_note' => ($withdrawal->admin_note ?? '').' | Disbursement FAILED via webhook: '.($payload['failure_code'] ?? 'UNKNOWN'),
                 ]);
 
                 $kolProfile = $withdrawal->kolProfile;
@@ -190,6 +199,7 @@ class XenditService
 
         if (empty($webhookToken)) {
             Log::warning('Xendit webhook token not configured');
+
             return false;
         }
 

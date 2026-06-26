@@ -2,11 +2,13 @@
 
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 
 test('brand registration creates user and brand profile', function () {
+    $this->withoutMiddleware(ValidateCsrfToken::class);
     $response = $this->post(route('register.brand'), [
         'name' => 'PT Maju Jaya',
         'email' => 'brand@example.com',
@@ -33,6 +35,7 @@ test('brand registration creates user and brand profile', function () {
 });
 
 test('KOL registration creates user and kol profile', function () {
+    $this->withoutMiddleware(ValidateCsrfToken::class);
     $response = $this->post(route('register.kol'), [
         'name' => 'Budi Santoso',
         'email' => 'kol@example.com',
@@ -59,6 +62,7 @@ test('KOL registration creates user and kol profile', function () {
 });
 
 test('login with valid credentials', function () {
+    $this->withoutMiddleware(ValidateCsrfToken::class);
     $user = User::factory()->brand()->create([
         'email' => 'test@example.com',
         'password' => Hash::make('password'),
@@ -74,6 +78,7 @@ test('login with valid credentials', function () {
 });
 
 test('login with invalid credentials', function () {
+    $this->withoutMiddleware(ValidateCsrfToken::class);
     $user = User::factory()->brand()->create([
         'email' => 'test@example.com',
         'password' => Hash::make('password'),
@@ -109,6 +114,7 @@ test('email verification flow', function () {
 });
 
 test('forgot password sends reset link', function () {
+    $this->withoutMiddleware(ValidateCsrfToken::class);
     Notification::fake();
 
     $user = User::factory()->brand()->create();
@@ -123,6 +129,7 @@ test('forgot password sends reset link', function () {
 });
 
 test('reset password with valid token', function () {
+    $this->withoutMiddleware(ValidateCsrfToken::class);
     $user = User::factory()->brand()->create();
 
     $token = Password::createToken($user);

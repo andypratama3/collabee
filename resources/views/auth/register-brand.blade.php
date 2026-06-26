@@ -35,6 +35,13 @@
             <option value="Other">Lainnya</option>
         </x-form.select>
 
+        <x-form.input id="phone" type="tel" placeholder="0812-3456-7890">No. Telepon (Opsional)</x-form.input>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <x-form.input id="location" placeholder="Jakarta, Indonesia">Lokasi (Opsional)</x-form.input>
+            <x-form.input id="website" type="url" placeholder="https://perusahaan.com">Website (Opsional)</x-form.input>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <x-form.input id="password" type="password" placeholder="••••••••">Password</x-form.input>
             <x-form.input id="password_confirmation" type="password" placeholder="••••••••">Konfirmasi Password</x-form.input>

@@ -9,8 +9,10 @@ use App\Models\ChatRoom;
 use App\Models\Hiring;
 use App\Models\KolProfile;
 use App\Models\User;
+use App\Services\Campaign\HiringService;
 use App\Services\Chat\ChatService;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 
 beforeEach(function () {
     $this->brandUser = User::factory()->create(['user_type' => 'brand']);
@@ -134,7 +136,7 @@ test('offer can be accepted', function () {
 
     expect($message->offer_status)->toBe('accepted');
     $this->hiring->refresh();
-    expect($this->hiring->status)->toBe(HiringStatus::NEGOTIATING);
+    expect($this->hiring->status)->toBe(HiringStatus::ACCEPTED);
 });
 
 test('offer can be rejected', function () {
@@ -176,7 +178,7 @@ test('unread count returns correct value', function () {
 test('chat room auto-created when hiring is accepted', function () {
     $this->hiring->update(['status' => HiringStatus::PENDING]);
 
-    $hiringService = app(\App\Services\Campaign\HiringService::class);
+    $hiringService = app(HiringService::class);
     $hiringService->accept($this->hiring);
 
     $this->assertDatabaseHas('chat_rooms', [
@@ -190,12 +192,12 @@ test('chat policy allows room participants', function () {
     $room = $this->chatService->createRoom($this->hiring);
 
     expect(auth()->login($this->brandUser))
-        ->and(\Illuminate\Support\Facades\Gate::allows('view', $room))->toBeTrue()
-        ->and(\Illuminate\Support\Facades\Gate::allows('send', $room))->toBeTrue();
+        ->and(Gate::allows('view', $room))->toBeTrue()
+        ->and(Gate::allows('send', $room))->toBeTrue();
 
     expect(auth()->login($this->kolUser))
-        ->and(\Illuminate\Support\Facades\Gate::allows('view', $room))->toBeTrue()
-        ->and(\Illuminate\Support\Facades\Gate::allows('send', $room))->toBeTrue();
+        ->and(Gate::allows('view', $room))->toBeTrue()
+        ->and(Gate::allows('send', $room))->toBeTrue();
 });
 
 test('chat policy denies non-participants', function () {
@@ -203,6 +205,6 @@ test('chat policy denies non-participants', function () {
     $otherUser = User::factory()->create(['user_type' => 'brand']);
 
     auth()->login($otherUser);
-    expect(\Illuminate\Support\Facades\Gate::allows('view', $room))->toBeFalse()
-        ->and(\Illuminate\Support\Facades\Gate::allows('send', $room))->toBeFalse();
+    expect(Gate::allows('view', $room))->toBeFalse()
+        ->and(Gate::allows('send', $room))->toBeFalse();
 });

@@ -1,6 +1,8 @@
 import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 import { io } from 'socket.io-client';
 
+window.Pusher = Pusher;
 window.io = io;
 
 window.Echo = new Echo({

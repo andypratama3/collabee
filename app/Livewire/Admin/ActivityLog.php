@@ -11,9 +11,13 @@ class ActivityLog extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $eventFilter = '';
+
     public string $dateFrom = '';
+
     public string $dateTo = '';
+
     public ?int $expandedId = null;
 
     protected $queryString = ['search', 'eventFilter', 'dateFrom', 'dateTo'];
@@ -49,9 +53,9 @@ class ActivityLog extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('description', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('causer', fn($q) => $q->where('name', 'like', '%' . $this->search . '%'))
-                    ->orWhereHas('subject', fn($q) => $q->where('name', 'like', '%' . $this->search . '%'));
+                $q->where('description', 'like', '%'.$this->search.'%')
+                    ->orWhereHas('causer', fn ($q) => $q->where('name', 'like', '%'.$this->search.'%'))
+                    ->orWhereHas('subject', fn ($q) => $q->where('name', 'like', '%'.$this->search.'%'));
             });
         }
 

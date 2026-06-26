@@ -13,8 +13,8 @@ use App\Services\Notification\NotificationService;
 use App\Services\Payment\EscrowService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Facades\DB;
 
 class ContentService
 {
@@ -22,6 +22,7 @@ class ContentService
         private readonly NotificationService $notificationService,
         private readonly EscrowService $escrowService,
     ) {}
+
     public function upload(KolProfile $kolProfile, Agreement $agreement, array $data, BaseCollection $files): Content
     {
         return DB::transaction(function () use ($kolProfile, $agreement, $data, $files) {
@@ -48,7 +49,7 @@ class ContentService
     {
         $result = DB::transaction(function () use ($content) {
             $content->update([
-                'status'       => ContentStatus::SUBMITTED,
+                'status' => ContentStatus::SUBMITTED,
                 'submitted_at' => now(),
             ]);
 
@@ -76,7 +77,7 @@ class ContentService
     {
         $result = DB::transaction(function () use ($content) {
             $content->update([
-                'status'      => ContentStatus::APPROVED,
+                'status' => ContentStatus::APPROVED,
                 'approved_at' => now(),
             ]);
 
@@ -112,10 +113,10 @@ class ContentService
             ]);
 
             ContentRevision::create([
-                'content_id'   => $content->id,
+                'content_id' => $content->id,
                 'requested_by' => auth()->id(),
-                'note'         => $notes,
-                'status'       => 'pending',
+                'note' => $notes,
+                'status' => 'pending',
             ]);
 
             return $content->fresh()->load('kolProfile.user', 'brandProfile');
@@ -140,7 +141,7 @@ class ContentService
         $result = DB::transaction(function () use ($content, $reason) {
             $content->update([
                 'status' => ContentStatus::REJECTED,
-                'notes'  => $reason,
+                'notes' => $reason,
             ]);
 
             return $content->fresh()->load('kolProfile.user', 'brandProfile');

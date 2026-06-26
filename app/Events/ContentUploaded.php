@@ -18,7 +18,7 @@ class ContentUploaded implements ShouldBroadcast
 
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel('agreement.' . $this->content->agreement_id);
+        return new PrivateChannel('agreement.'.$this->content->agreement_id);
     }
 
     public function broadcastWith(): array

@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Kol;
 
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Dashboard extends Component
 {
     private function monthExpr(): string
     {
-        $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+        $driver = DB::connection()->getDriverName();
 
         if (in_array($driver, ['mysql', 'mariadb'])) {
             return "DATE_FORMAT(created_at, '%Y-%m')";
@@ -16,6 +17,7 @@ class Dashboard extends Component
         if ($driver === 'pgsql') {
             return "to_char(created_at, 'YYYY-MM')";
         }
+
         return "strftime('%Y-%m', created_at)";
     }
 
@@ -29,7 +31,7 @@ class Dashboard extends Component
             $fields = ['display_name', 'bio', 'category', 'location', 'gender', 'date_of_birth', 'min_budget'];
             $filled = 0;
             foreach ($fields as $field) {
-                if (!empty($profile->$field)) {
+                if (! empty($profile->$field)) {
                     $filled++;
                 }
             }
@@ -42,14 +44,14 @@ class Dashboard extends Component
         }
 
         return view('livewire.kol.dashboard', [
-            'walletBalance'       => $profile?->wallet_balance ?? 0,
-            'pendingBalance'      => $profile?->pending_balance ?? 0,
-            'totalCampaignsDone'  => $profile?->total_campaigns_done ?? 0,
-            'ratingAvg'           => $profile?->rating_avg ?? 0,
-            'recentHirings'       => $profile
+            'walletBalance' => $profile?->wallet_balance ?? 0,
+            'pendingBalance' => $profile?->pending_balance ?? 0,
+            'totalCampaignsDone' => $profile?->total_campaigns_done ?? 0,
+            'ratingAvg' => $profile?->rating_avg ?? 0,
+            'recentHirings' => $profile
                 ? $profile->hirings()->with('campaign.brandProfile')->latest()->take(5)->get()
                 : collect(),
-            'activeAgreements'    => $profile
+            'activeAgreements' => $profile
                 ? $profile->hirings()
                     ->whereHas('agreement', function ($q) {
                         $q->whereIn('status', ['active', 'signed']);
@@ -60,16 +62,16 @@ class Dashboard extends Component
                     ->get()
                 : collect(),
             'recentNotifications' => $user->notifications()->latest()->take(5)->get(),
-            'earnings'            => $profile
+            'earnings' => $profile
                 ? $profile->withdrawals()
                     ->where('status', 'completed')
-                    ->selectRaw($this->monthExpr() . ' as month, SUM(amount) as total')
+                    ->selectRaw($this->monthExpr().' as month, SUM(amount) as total')
                     ->groupBy('month')
                     ->orderBy('month')
                     ->pluck('total', 'month')
                     ->toArray()
                 : [],
-            'profileCompletion'   => $profileCompletion,
+            'profileCompletion' => $profileCompletion,
         ])->layout('layouts.app');
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -21,7 +20,7 @@ class UserTyping implements ShouldBroadcast
 
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel('chat.room.' . $this->chatRoomId);
+        return new PrivateChannel('chat.room.'.$this->chatRoomId);
     }
 
     public function broadcastWith(): array

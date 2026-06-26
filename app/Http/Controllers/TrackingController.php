@@ -15,7 +15,7 @@ class TrackingController extends Controller
     {
         $content = $this->socialPostService->recordClick($trackingCode);
 
-        if (!$content) {
+        if (! $content) {
             abort(404, 'Tracking code tidak valid.');
         }
 

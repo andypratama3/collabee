@@ -19,7 +19,7 @@ class ChatRoomUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('chat.room.' . $this->chatRoom->id),
+            new PrivateChannel('chat.room.'.$this->chatRoom->id),
         ];
     }
 

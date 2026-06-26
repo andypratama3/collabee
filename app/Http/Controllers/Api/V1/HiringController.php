@@ -24,13 +24,13 @@ class HiringController extends Controller
 
         if ($user->isBrand()) {
             $brandProfile = $user->brandProfile;
-            if (!$brandProfile) {
+            if (! $brandProfile) {
                 return ApiResponse::error('Profil brand tidak ditemukan.', 400);
             }
             $hirings = $this->hiringService->getBrandHirings($brandProfile, $status);
         } elseif ($user->isKol()) {
             $kolProfile = $user->kolProfile;
-            if (!$kolProfile) {
+            if (! $kolProfile) {
                 return ApiResponse::error('Profil KOL tidak ditemukan.', 400);
             }
             $hirings = $this->hiringService->getKolHirings($kolProfile, $status);
@@ -45,12 +45,12 @@ class HiringController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->isBrand()) {
+        if (! $user->isBrand()) {
             return ApiResponse::error('Hanya brand yang dapat melakukan hiring.', 403);
         }
 
         $brandProfile = $user->brandProfile;
-        if (!$brandProfile) {
+        if (! $brandProfile) {
             return ApiResponse::error('Profil brand tidak ditemukan.', 400);
         }
 
@@ -70,6 +70,7 @@ class HiringController extends Controller
 
         try {
             $hiring = $this->hiringService->brandHire($campaign, $brandProfile, $kolProfile, $validated);
+
             return ApiResponse::success($hiring, 'Undangan kerja sama berhasil dikirim.', 201);
         } catch (\RuntimeException $e) {
             return ApiResponse::error($e->getMessage(), 400);
@@ -80,12 +81,13 @@ class HiringController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->isKol() || !$user->kolProfile || $hiring->kol_profile_id !== $user->kolProfile->id) {
+        if (! $user->isKol() || ! $user->kolProfile || $hiring->kol_profile_id !== $user->kolProfile->id) {
             return ApiResponse::error('Anda tidak memiliki akses ke hiring ini.', 403);
         }
 
         try {
             $hiring = $this->hiringService->accept($hiring);
+
             return ApiResponse::success($hiring, 'Undangan kerja sama diterima.');
         } catch (\RuntimeException $e) {
             return ApiResponse::error($e->getMessage(), 400);
@@ -96,7 +98,7 @@ class HiringController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->isKol() || !$user->kolProfile || $hiring->kol_profile_id !== $user->kolProfile->id) {
+        if (! $user->isKol() || ! $user->kolProfile || $hiring->kol_profile_id !== $user->kolProfile->id) {
             return ApiResponse::error('Anda tidak memiliki akses ke hiring ini.', 403);
         }
 
@@ -104,6 +106,7 @@ class HiringController extends Controller
 
         try {
             $hiring = $this->hiringService->reject($hiring, $reason);
+
             return ApiResponse::success($hiring, 'Undangan kerja sama ditolak.');
         } catch (\RuntimeException $e) {
             return ApiResponse::error($e->getMessage(), 400);

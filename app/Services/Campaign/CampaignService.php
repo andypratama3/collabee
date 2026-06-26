@@ -44,7 +44,7 @@ class CampaignService
 
     public function cancel(Campaign $campaign): Campaign
     {
-        if (!in_array($campaign->status, [CampaignStatus::DRAFT, CampaignStatus::OPEN, CampaignStatus::PAUSED])) {
+        if (! in_array($campaign->status, [CampaignStatus::DRAFT, CampaignStatus::OPEN, CampaignStatus::PAUSED])) {
             throw new \RuntimeException('This campaign cannot be cancelled.');
         }
 
@@ -102,7 +102,7 @@ class CampaignService
             ->orderBy('is_featured', 'desc')
             ->orderBy('created_at', 'desc');
 
-        if (!empty($filters['platforms'])) {
+        if (! empty($filters['platforms'])) {
             $query->where(function ($q) use ($filters) {
                 foreach ((array) $filters['platforms'] as $platform) {
                     $q->orWhereJsonContains('platforms', $platform);
@@ -110,22 +110,22 @@ class CampaignService
             });
         }
 
-        if (!empty($filters['kol_category'])) {
+        if (! empty($filters['kol_category'])) {
             $query->where('kol_category', $filters['kol_category']);
         }
 
-        if (!empty($filters['budget_min'])) {
+        if (! empty($filters['budget_min'])) {
             $query->where('budget_total', '>=', $filters['budget_min']);
         }
 
-        if (!empty($filters['budget_max'])) {
+        if (! empty($filters['budget_max'])) {
             $query->where('budget_total', '<=', $filters['budget_max']);
         }
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('title', 'like', '%' . $filters['search'] . '%')
-                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+                $q->where('title', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('description', 'like', '%'.$filters['search'].'%');
             });
         }
 

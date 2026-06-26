@@ -12,7 +12,9 @@ class Show extends Component
     use AuthorizesRequests;
 
     public Content $content;
+
     public string $revisionNotes = '';
+
     public string $rejectReason = '';
 
     public function mount(Content $content): void

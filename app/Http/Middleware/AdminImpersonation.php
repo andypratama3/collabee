@@ -2,10 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminImpersonation
@@ -15,7 +14,7 @@ class AdminImpersonation
         $originalAdminId = session('original_admin_id');
 
         if ($originalAdminId) {
-            $admin = \App\Models\User::find($originalAdminId);
+            $admin = User::find($originalAdminId);
             view()->share('isImpersonating', true);
             view()->share('impersonatedBy', $admin);
         } else {

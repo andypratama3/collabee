@@ -6,12 +6,10 @@ use App\Enums\CampaignStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Campaign;
-use App\Models\HiringApplication;
 use App\Services\Campaign\CampaignService;
 use App\Services\Campaign\HiringService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CampaignController extends Controller
 {
@@ -52,13 +50,13 @@ class CampaignController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->isBrand()) {
+        if (! $user->isBrand()) {
             return ApiResponse::error('Hanya brand yang dapat membuat campaign.', 403);
         }
 
         $brandProfile = $user->brandProfile;
 
-        if (!$brandProfile) {
+        if (! $brandProfile) {
             return ApiResponse::error('Lengkapi profil brand terlebih dahulu.', 400);
         }
 
@@ -81,7 +79,7 @@ class CampaignController extends Controller
             'kol_slots' => 'required|integer|min:1|max:100',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'deadline_apply' => 'required|date|before_or_equal:end_date',
+            'deadline_apply' => 'required|date|before_or_equal:start_date',
         ]);
 
         $validated['status'] = CampaignStatus::DRAFT;
@@ -95,7 +93,7 @@ class CampaignController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->isBrand()) {
+        if (! $user->isBrand()) {
             return ApiResponse::error('Hanya brand yang dapat mengubah campaign.', 403);
         }
 
@@ -134,13 +132,13 @@ class CampaignController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->isKol()) {
+        if (! $user->isKol()) {
             return ApiResponse::error('Hanya KOL yang dapat melamar campaign.', 403);
         }
 
         $kolProfile = $user->kolProfile;
 
-        if (!$kolProfile) {
+        if (! $kolProfile) {
             return ApiResponse::error('Lengkapi profil KOL terlebih dahulu.', 400);
         }
 
@@ -151,6 +149,7 @@ class CampaignController extends Controller
 
         try {
             $application = $this->hiringService->apply($campaign, $kolProfile, $validated);
+
             return ApiResponse::success($application, 'Lamaran berhasil dikirim.', 201);
         } catch (\RuntimeException $e) {
             return ApiResponse::error($e->getMessage(), 400);

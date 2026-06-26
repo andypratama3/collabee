@@ -12,23 +12,41 @@ class EditCampaign extends Component
     use AuthorizesRequests;
 
     public Campaign $campaign;
+
     public string $title = '';
+
     public string $description = '';
+
     public ?string $objectives = null;
+
     public array $platforms = [];
+
     public array $content_types = [];
+
     public ?string $kol_category = null;
+
     public ?int $min_followers = null;
+
     public ?int $max_followers = null;
+
     public ?float $min_engagement = null;
+
     public string $target_gender = 'all';
+
     public ?string $location = null;
+
     public ?string $brief = null;
+
     public float $budget_total = 0;
+
     public ?float $budget_per_kol = null;
+
     public int $kol_slots = 1;
+
     public string $start_date = '';
+
     public string $end_date = '';
+
     public string $deadline_apply = '';
 
     public function mount(Campaign $campaign): void
@@ -68,7 +86,7 @@ class EditCampaign extends Component
         $data = [
             'title' => $this->title,
             'description' => $this->description,
-            'objectives' => $this->objectives ? array_map('trim', explode("\n", $this->objectives)) : null,
+            'objectives' => $this->objectives ? array_values(array_filter(array_map('trim', explode("\n", str_replace("\r\n", "\n", $this->objectives))))) : null,
             'platforms' => $this->platforms,
             'content_types' => $this->content_types,
             'kol_category' => $this->kol_category,
@@ -120,7 +138,7 @@ class EditCampaign extends Component
     public function togglePlatform(string $platform): void
     {
         if (in_array($platform, $this->platforms)) {
-            $this->platforms = array_values(array_filter($this->platforms, fn($p) => $p !== $platform));
+            $this->platforms = array_values(array_filter($this->platforms, fn ($p) => $p !== $platform));
         } else {
             $this->platforms[] = $platform;
         }
@@ -129,7 +147,7 @@ class EditCampaign extends Component
     public function toggleContentType(string $type): void
     {
         if (in_array($type, $this->content_types)) {
-            $this->content_types = array_values(array_filter($this->content_types, fn($t) => $t !== $type));
+            $this->content_types = array_values(array_filter($this->content_types, fn ($t) => $t !== $type));
         } else {
             $this->content_types[] = $type;
         }

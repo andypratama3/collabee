@@ -14,9 +14,13 @@ class Show extends Component
     use AuthorizesRequests;
 
     public ChatRoom $chatRoom;
+
     public string $newMessage = '';
+
     public ?int $offerBudget = null;
+
     public bool $showOfferForm = false;
+
     public bool $partnerTyping = false;
 
     public function mount(ChatRoom $chatRoom): void
@@ -58,7 +62,7 @@ class Show extends Component
 
         $chatService->sendMessage($this->chatRoom, auth()->user(), [
             'type' => 'offer',
-            'body' => 'Budget offer: Rp ' . number_format($this->offerBudget, 0, ',', '.'),
+            'body' => 'Budget offer: Rp '.number_format($this->offerBudget, 0, ',', '.'),
             'offer_data' => [
                 'budget' => $this->offerBudget,
             ],
@@ -98,7 +102,7 @@ class Show extends Component
 
     public function updatedNewMessage(ChatService $chatService): void
     {
-        if (!empty($this->newMessage)) {
+        if (! empty($this->newMessage)) {
             $chatService->broadcastTyping($this->chatRoom, auth()->user(), true);
         }
     }

@@ -9,7 +9,7 @@ class SocialPostService
 {
     public function generateTrackingUrl(Content $content): string
     {
-        if (!$content->tracking_code) {
+        if (! $content->tracking_code) {
             $content->update([
                 'tracking_code' => Str::random(12),
                 'click_count' => 0,
@@ -23,7 +23,7 @@ class SocialPostService
     {
         $content = Content::query()->where('tracking_code', $trackingCode)->first();
 
-        if (!$content) {
+        if (! $content) {
             return null;
         }
 

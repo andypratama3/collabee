@@ -8,12 +8,19 @@ use Livewire\Component;
 class Settings extends Component
 {
     public string $platformFeePercent = '';
+
     public string $minWithdrawal = '';
+
     public string $maxWithdrawal = '';
+
     public string $contactEmail = '';
+
     public string $aboutText = '';
+
     public string $termsText = '';
+
     public string $privacyText = '';
+
     public bool $maintenanceMode = false;
 
     public function mount(): void
@@ -48,7 +55,7 @@ class Settings extends Component
         $this->validate([
             'platformFeePercent' => 'required|numeric|min:0|max:100',
             'minWithdrawal' => 'required|numeric|min:0',
-            'maxWithdrawal' => 'required|numeric|min:0',
+            'maxWithdrawal' => 'required|numeric|min:0|gte:minWithdrawal',
             'contactEmail' => 'required|email',
         ]);
 

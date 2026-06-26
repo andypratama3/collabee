@@ -3,11 +3,11 @@
 namespace App\Livewire\Admin;
 
 use App\Enums\PaymentStatus;
+use App\Exports\PaymentsExport;
 use App\Models\Payment;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\PaymentsExport;
 
 class PaymentManagement extends Component
 {
@@ -24,7 +24,7 @@ class PaymentManagement extends Component
 
     public function export()
     {
-        return Excel::download(new PaymentsExport, 'payments-' . now()->format('Y-m-d') . '.xlsx');
+        return Excel::download(new PaymentsExport, 'payments-'.now()->format('Y-m-d').'.xlsx');
     }
 
     public function render()

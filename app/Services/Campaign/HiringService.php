@@ -10,7 +10,7 @@ use App\Models\ChatRoom;
 use App\Models\Hiring;
 use App\Models\HiringApplication;
 use App\Models\KolProfile;
-use App\Services\Campaign\AgreementService;
+use App\Services\Chat\ChatService;
 use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +26,12 @@ class HiringService
         $application = DB::transaction(function () use ($campaign, $kolProfile, $data) {
             if ($campaign->status !== CampaignStatus::OPEN) {
                 throw new \RuntimeException('This campaign is not accepting applications.');
+            }
+
+            if (HiringApplication::where('campaign_id', $campaign->id)
+                ->where('kol_profile_id', $kolProfile->id)
+                ->exists()) {
+                throw new \RuntimeException('Anda sudah melamar campaign ini.');
             }
 
             if ($campaign->applications_count >= $campaign->kol_slots * 5) {
@@ -100,7 +106,7 @@ class HiringService
     {
         $result = DB::transaction(function () use ($hiring, $counterBudget) {
             $allowedStatuses = [HiringStatus::PENDING, HiringStatus::NEGOTIATING];
-            if (!in_array($hiring->status, $allowedStatuses)) {
+            if (! in_array($hiring->status, $allowedStatuses)) {
                 throw new \RuntimeException('Only pending or negotiating hirings can be accepted.');
             }
 
@@ -162,9 +168,9 @@ class HiringService
             $chatRoom = $hiring->chatRoom;
             if ($chatRoom) {
                 $kolUser = $hiring->kolProfile->user;
-                $chatService = app(\App\Services\Chat\ChatService::class);
+                $chatService = app(ChatService::class);
                 $chatService->sendMessage($chatRoom, $kolUser, [
-                    'body' => 'Budget offer: Rp ' . number_format($counterBudget, 0, ',', '.'),
+                    'body' => 'Budget offer: Rp '.number_format($counterBudget, 0, ',', '.'),
                     'type' => 'offer',
                     'offer_data' => [
                         'budget' => $counterBudget,
@@ -179,7 +185,7 @@ class HiringService
             $result->campaign->brandProfile->user,
             'hiring',
             'KOL mengajukan counter-offer',
-            "{$result->kolProfile->display_name} mengajukan budget Rp " . number_format($counterBudget, 0, ',', '.') . " untuk campaign {$result->campaign->title}.",
+            "{$result->kolProfile->display_name} mengajukan budget Rp ".number_format($counterBudget, 0, ',', '.')." untuk campaign {$result->campaign->title}.",
             ['hiring' => $result],
             route('brand.chat.show', $result->chatRoom)
         );
@@ -206,7 +212,7 @@ class HiringService
             $result->campaign->brandProfile->user,
             'hiring',
             'KOL menolak tawaran',
-            "{$result->kolProfile->display_name} menolak tawaran untuk campaign {$result->campaign->title}." . ($reason ? " Alasan: {$reason}" : ''),
+            "{$result->kolProfile->display_name} menolak tawaran untuk campaign {$result->campaign->title}.".($reason ? " Alasan: {$reason}" : ''),
             ['hiring' => $result],
             route('brand.hiring.index')
         );
@@ -312,7 +318,7 @@ class HiringService
             $application->kolProfile->user,
             'hiring',
             'Lamaran Anda ditolak',
-            "Brand telah menolak lamaran Anda untuk campaign {$application->campaign->title}." . ($reason ? " Alasan: {$reason}" : ''),
+            "Brand telah menolak lamaran Anda untuk campaign {$application->campaign->title}.".($reason ? " Alasan: {$reason}" : ''),
             ['application' => $application],
             route('kol.hiring.index')
         );

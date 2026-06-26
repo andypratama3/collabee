@@ -12,6 +12,7 @@ class CampaignManagement extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $statusFilter = '';
 
     protected $queryString = ['search', 'statusFilter'];
@@ -55,7 +56,7 @@ class CampaignManagement extends Component
         $query = Campaign::with('brandProfile.user');
 
         if ($this->search) {
-            $query->where('title', 'like', '%' . $this->search . '%');
+            $query->where('title', 'like', '%'.$this->search.'%');
         }
 
         if ($this->statusFilter) {

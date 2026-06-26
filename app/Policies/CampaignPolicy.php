@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\CampaignStatus;
 use App\Models\Campaign;
 use App\Models\User;
 
@@ -14,8 +15,8 @@ class CampaignPolicy
 
     public function view(?User $user, Campaign $campaign): bool
     {
-        if (!$user) {
-            return $campaign->status === \App\Enums\CampaignStatus::OPEN;
+        if (! $user) {
+            return $campaign->status === CampaignStatus::OPEN;
         }
 
         return $user->isAdmin()

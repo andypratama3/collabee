@@ -3,7 +3,6 @@
 namespace App\Livewire\Brand;
 
 use App\Models\Campaign;
-use App\Models\Hiring;
 use App\Models\KolProfile;
 use App\Services\Campaign\HiringService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -15,20 +14,33 @@ class BrowseKol extends Component
     use AuthorizesRequests, WithPagination;
 
     public string $search = '';
+
     public ?string $category = null;
+
     public ?int $minFollowers = null;
+
     public ?int $maxFollowers = null;
+
     public ?float $minEngagement = null;
+
     public ?float $maxBudget = null;
+
     public ?string $location = null;
+
     public bool $openForWork = true;
 
     public bool $showHireModal = false;
+
     public $selectedKolId = null;
+
     public $selectedKolName = '';
+
     public ?int $hireCampaignId = null;
+
     public ?float $proposedBudget = null;
+
     public string $hireMessage = '';
+
     public array $campaigns = [];
 
     protected $queryString = ['search', 'category', 'minFollowers', 'minEngagement'];
@@ -45,8 +57,8 @@ class BrowseKol extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('display_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('bio', 'like', '%' . $this->search . '%');
+                $q->where('display_name', 'like', '%'.$this->search.'%')
+                    ->orWhere('bio', 'like', '%'.$this->search.'%');
             });
         }
 
@@ -71,7 +83,7 @@ class BrowseKol extends Component
         }
 
         if ($this->location) {
-            $query->where('location', 'like', '%' . $this->location . '%');
+            $query->where('location', 'like', '%'.$this->location.'%');
         }
 
         return view('livewire.brand.browse-kol', [
@@ -115,11 +127,12 @@ class BrowseKol extends Component
         } catch (\RuntimeException $e) {
             $this->showHireModal = false;
             session()->flash('error', $e->getMessage());
+
             return;
         }
 
         $this->showHireModal = false;
-        session()->flash('success', 'Hiring invitation sent to ' . $this->selectedKolName . '!');
+        session()->flash('success', 'Hiring invitation sent to '.$this->selectedKolName.'!');
     }
 
     public function updatingSearch(): void

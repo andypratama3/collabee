@@ -40,7 +40,7 @@ class EscrowService
             $payment->agreement->hiring->kolProfile->user,
             'payment',
             'Pembayaran diterima',
-            "Pembayaran untuk campaign sebesar Rp " . number_format($payment->amount, 0, ',', '.') . " telah diterima dan dana diamankan di escrow.",
+            'Pembayaran untuk campaign sebesar Rp '.number_format($payment->amount, 0, ',', '.').' telah diterima dan dana diamankan di escrow.',
             ['payment' => $payment],
             route('kol.dashboard')
         );
@@ -74,7 +74,7 @@ class EscrowService
             $escrow->payment->agreement->hiring->kolProfile->user,
             'payment',
             'Dana escrow dirilis',
-            "Dana sebesar Rp " . number_format($escrow->kol_amount, 0, ',', '.') . " telah dirilis ke wallet Anda.",
+            'Dana sebesar Rp '.number_format($escrow->kol_amount, 0, ',', '.').' telah dirilis ke wallet Anda.',
             ['payment' => $escrow->payment],
             route('kol.dashboard')
         );

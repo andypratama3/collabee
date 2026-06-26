@@ -1,16 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Livewire\Admin\Dashboard;
-use App\Livewire\Admin\UserManagement;
-use App\Livewire\Admin\CampaignManagement;
-use App\Livewire\Admin\PaymentManagement;
-use App\Livewire\Admin\WithdrawalManagement;
-use App\Livewire\Admin\DisputeManagement;
-use App\Livewire\Admin\Settings;
 use App\Livewire\Admin\ActivityLog;
-use Illuminate\Http\Request;
+use App\Livewire\Admin\CampaignManagement;
+use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\DisputeManagement;
+use App\Livewire\Admin\PaymentManagement;
+use App\Livewire\Admin\Settings;
+use App\Livewire\Admin\UserManagement;
+use App\Livewire\Admin\WithdrawalManagement;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:super_admin|admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
@@ -22,8 +22,8 @@ Route::middleware(['auth', 'role:super_admin|admin'])->prefix('admin')->name('ad
     Route::get('/activity-log', ActivityLog::class)->name('activity-log');
     Route::get('/settings', Settings::class)->name('settings');
 
-    Route::post('/users/{user}/impersonate', function (\App\Models\User $user) {
-        if (!auth()->user()->isAdmin() || $user->isAdmin()) {
+    Route::post('/users/{user}/impersonate', function (User $user) {
+        if (! auth()->user()->isAdmin() || $user->isAdmin()) {
             return back()->with('error', 'Tidak dapat melakukan impersonasi.');
         }
 
@@ -37,7 +37,7 @@ Route::middleware(['auth', 'role:super_admin|admin'])->prefix('admin')->name('ad
 
         Auth::login($user);
 
-        return redirect()->to('/')->with('success', 'Anda sekarang login sebagai ' . $user->name);
+        return redirect()->to('/')->with('success', 'Anda sekarang login sebagai '.$user->name);
     })->name('users.impersonate');
 });
 
@@ -45,14 +45,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/users/stop-impersonate', function () {
         $originalAdminId = session('original_admin_id');
 
-        if (!$originalAdminId) {
+        if (! $originalAdminId) {
             return back()->with('error', 'Tidak dalam mode impersonasi.');
         }
 
-        $admin = \App\Models\User::find($originalAdminId);
+        $admin = User::find($originalAdminId);
 
-        if (!$admin) {
+        if (! $admin) {
             session()->forget('original_admin_id');
+
             return redirect()->route('login');
         }
 

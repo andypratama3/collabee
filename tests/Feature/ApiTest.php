@@ -95,7 +95,7 @@ test('api show campaign detail', function () {
     $token = $this->kolUser->createToken('test-token')->plainTextToken;
 
     $response = $this->withHeader('Authorization', "Bearer $token")
-        ->getJson('/api/v1/campaigns/' . $this->campaign->id);
+        ->getJson('/api/v1/campaigns/'.$this->campaign->id);
 
     $response->assertOk()
         ->assertJsonPath('data.id', $this->campaign->id);
@@ -111,7 +111,7 @@ test('api list KOLs', function () {
 test('api show KOL detail', function () {
     $kolProfile = $this->kolUser->kolProfile;
 
-    $response = $this->getJson('/api/v1/kols/' . $kolProfile->id);
+    $response = $this->getJson('/api/v1/kols/'.$kolProfile->id);
 
     $response->assertOk()
         ->assertJsonPath('data.id', $kolProfile->id);
@@ -121,7 +121,7 @@ test('api apply to campaign', function () {
     $token = $this->kolUser->createToken('test-token')->plainTextToken;
 
     $response = $this->withHeader('Authorization', "Bearer $token")
-        ->postJson('/api/v1/campaigns/' . $this->campaign->id . '/apply', [
+        ->postJson('/api/v1/campaigns/'.$this->campaign->id.'/apply', [
             'proposed_budget' => 1000000,
             'message' => 'Saya tertarik!',
         ]);

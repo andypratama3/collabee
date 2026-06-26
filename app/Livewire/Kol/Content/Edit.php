@@ -14,9 +14,13 @@ class Edit extends Component
     use AuthorizesRequests, WithFileUploads;
 
     public Content $content;
+
     public string $title = '';
+
     public string $caption = '';
+
     public array $files = [];
+
     public array $deletedMediaIds = [];
 
     public function mount(Content $content): void

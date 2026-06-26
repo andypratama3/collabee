@@ -3,8 +3,8 @@
 namespace App\Services\Chat;
 
 use App\Enums\HiringStatus;
-use App\Events\MessageSent;
 use App\Events\ChatRoomUpdated;
+use App\Events\MessageSent;
 use App\Events\UserTyping;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;

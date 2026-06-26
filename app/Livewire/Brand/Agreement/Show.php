@@ -39,6 +39,7 @@ class Show extends Component
             if ($this->agreement->status === 'signed') {
                 session()->flash('success', 'Agreement telah ditandatangani oleh kedua pihak. Silakan lakukan pembayaran.');
                 $this->redirect(route('brand.payment.index'), navigate: true);
+
                 return;
             }
 
@@ -52,7 +53,7 @@ class Show extends Component
     {
         $this->authorize('view', $this->agreement);
 
-        if (!$this->agreement->pdf_path) {
+        if (! $this->agreement->pdf_path) {
             // Generate PDF on demand if not exists
             $agreementService->generatePdf($this->agreement);
             $this->agreement->refresh();

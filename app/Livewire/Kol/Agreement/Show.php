@@ -44,7 +44,7 @@ class Show extends Component
     {
         $this->authorize('view', $this->agreement);
 
-        if (!$this->agreement->pdf_path) {
+        if (! $this->agreement->pdf_path) {
             $agreementService->generatePdf($this->agreement);
             $this->agreement->refresh();
         }

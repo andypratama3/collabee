@@ -9,6 +9,7 @@ use Livewire\Component;
 class Bell extends Component
 {
     public int $unreadCount = 0;
+
     public $notifications = [];
 
     protected $listeners = ['notification-received' => 'refreshNotifications'];
